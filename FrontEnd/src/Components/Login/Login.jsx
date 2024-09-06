@@ -82,7 +82,7 @@ const Login = () => {
 
       {/* Forgot Password Link */}
       <NavLink
-        to="/forgot-password"
+        to="/ForgetPassword"
         variant="body2"
         style={{ display: "block", marginTop: "1rem" }}
       >

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Login from "./Components/Login/Login.jsx";
-import Forgotpassword from "./Components/Forgotpassword/Forgotpassword.jsx";
-import Signup from "./Components/Signup/Signup.jsx";
+import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
+import SignUp from "./Components/SignUp/SignUp.jsx";
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
+import  NotFoundImg from './assets/404.svg';
+import Placeholder from "./Components/Placeholder/Placeholder.jsx";
 import "./App.css";
 
 function App() {
@@ -18,8 +20,9 @@ function App() {
        
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/forgot-password" element={<Forgotpassword />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/ForgetPassword" element={<ForgotPassword />} />
+            <Route path="/SignUp" element={<SignUp />} />
+            <Route path='/*' element={<Placeholder img={NotFoundImg} text="Page Not Found"/>}/>
           </Routes>
         
      
