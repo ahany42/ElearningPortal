@@ -1,0 +1,14 @@
+.PlaceholderImage{
+    width:50%;
+}
+.TextContainer{
+    margin: 0.5em;
+}
+@media (max-width:650px){
+    .PlaceholderDiv{
+        min-height: 72vh;
+    }
+    .PlaceholderImage{
+        width:70%;
+    }
+}
