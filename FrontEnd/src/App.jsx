@@ -8,7 +8,10 @@ function App() {
 
   return (
     <>
-     <h1>App Component</h1>
+     <h1 className="blue-text alignCenter-text">App Component</h1>
+     <h1 className="green-text alignCenter-text">App Component</h1>
+     <h1 className="alignCenter-text">App Component</h1>
+     <h1 className="light-text dark-bg alignCenter-text">App Component</h1>
     </>
   )
 }

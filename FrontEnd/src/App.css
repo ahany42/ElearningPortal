@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100..900&family=Lobster&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
+  background-color:#f7f5ed;
+}
+.page-component{
+  margin-top:100px;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* Font Size */
+h1{
+  font-size:2.5em;
+}
+h2{
+  font-size:2em;
+}
+h3{
+  font-size:1.75em;
+}
+h4{
+  font-size:1.5em;
+}
+h5{
+  font-size:1.25em;
+}
+h6{
+  font-size:1em;
+}
+/* Font Weight */
+.noBold-text{
+  font-weight:200;
+}
+.semiBold-text{
+  font-weight:400;
+  }
+.bold-text{
+  font-weight:600;
+}
+.extraBold-text{
+  font-weight:800;
+}
+/* Font Color */
+.blue-text{
+  color:#1330BE;
+}
+.green-text{
+  color:#274546;
+}
+.light-text{
+  color:#f7f5ed;
+}
+/* Text Alignment */
+.alignRight-text{
+  text-align:right;
+}
+.alignJustify-text{
+  text-align: justify;
+}
+.alignCenter-text{
+  text-align: center;
+}
+/* Text Case */
+.lowerCase-text{
+  text-transform: lowercase;
+}
+.pascalCase-text{
+  text-transform: capitalize;
+}
+.upperCase-text{
+  text-transform: uppercase;
+}
+/* Background Color */
+.blue-bg{
+  background-color: #1330BE;
+}
+.green-bg{
+  background-color: #274546;
+}
+.dark-bg{
+  background-color: black;
+}
+
