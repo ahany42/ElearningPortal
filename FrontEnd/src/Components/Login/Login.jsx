@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Button,
   FormControl,
@@ -6,6 +6,7 @@ import {
   OutlinedInput,
   TextField,
   InputAdornment,
+  Box,
   IconButton,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -15,6 +16,10 @@ import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+      email: '',
+      password: ''
+  });
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
@@ -28,23 +33,16 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
       {/* Email Field */}
       <TextField
         label="Email"
         name="email"
-        type="email"
-        size="small"
         fullWidth
+        type="email"
+        value={formData.email}
+        onChange={(e) => setFormData({...formData, email: e.target.value})}
         required
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <AccountCircle />
-            </InputAdornment>
-          ),
-        }}
-        variant="outlined"
         sx={{ my: 2 }}
       />
 
@@ -53,6 +51,8 @@ const Login = () => {
         <InputLabel>Password</InputLabel>
         <OutlinedInput
           name="password"
+          value={formData.password}
+          onChange={(e) => setFormData({...formData, password: e.target.value})}
           type={showPassword ? "text" : "password"}
           endAdornment={
             <InputAdornment position="end">
@@ -97,7 +97,7 @@ const Login = () => {
       >
         Don't have an account? Sign up
       </NavLink>
-    </form>
+    </Box>
   );
 };
 
