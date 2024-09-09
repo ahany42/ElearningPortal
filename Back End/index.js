@@ -8,14 +8,22 @@ const CourseRouter = require('./router/CourseRouter');
 const AssignmentRouter = require('./router/AssignmentRouter');
 const SessionRouter = require('./router/SessionRouter');
 const ExamRouter = require('./router/ExamRouter');
+
+// Middleware to monitor requests and responses
+app.use((req, res, next) => {
+    console.log(`Request URL: ${req.url}, Request Method: ${req.method}`);
+    next();
+});
+
 app.use(UserRouter);
 app.use(CourseRouter); app.use(AssignmentRouter);
 app.use(SessionRouter); app.use(ExamRouter);
+
 const port = 3008;
 
-app.get((req, res, next) => {
-    // Middleware to monitor requests and responses
-    console.log(`Request URL: ${req.url}, Request Method: ${req.method}`);
+// Middleware to catch any errors
+app.use((req, res) => {
+    console.log(`ERROR IN => Request URL: ${req.url}, Request Method: ${req.method}`);
     res.end();
 });
 
