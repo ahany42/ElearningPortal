@@ -7,12 +7,14 @@ import { Routes, Route } from "react-router-dom";
 import  NotFoundImg from './assets/404.svg';
 import Placeholder from "./Components/Placeholder/Placeholder.jsx";
 import "./App.css";
+import Header from "./Components/Header/Header.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
+      <Header />
       <h1 className="blue-text alignCenter-text">App Component</h1>
       <h1 className="green-text alignCenter-text">App Component</h1>
       <h1 className="alignCenter-text">App Component</h1>
@@ -22,7 +24,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/ForgetPassword" element={<ForgotPassword />} />
             <Route path="/SignUp" element={<SignUp />} />
-            <Route path='/*' element={<Placeholder img={NotFoundImg} text="Page Not Found"/>}/>
+            <Route path='*' element={<Placeholder img={NotFoundImg} text="Page Not Found"/>}/>
           </Routes>
         
      
