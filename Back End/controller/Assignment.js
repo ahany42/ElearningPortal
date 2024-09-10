@@ -14,6 +14,11 @@ class AssignmentController {
                 return res.status(200).json({ error: "All fields are required" });
             }
 
+            // Check if the user is logged in
+            if (!await Session.findOne()) {
+                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            }
+
             // Check if the assignment title already exists
             if (await Assignment.findOne({ title })) {
                 return res.status(200).json({ error: "Assignment with the same title already exists" });
@@ -91,7 +96,7 @@ class AssignmentController {
 
             // Check if the assignment exists
             const assignment =
-                await Assignment.findOne({ id: assignmentID });
+                await Assignment.findOne({ _id: assignmentID });
             if (!assignment) {
                 return res.status(200).json({ error: "Assignment not found" });
             }
@@ -108,7 +113,7 @@ class AssignmentController {
                 id: uuidv4(),
                 document,
                 assignmentID: assignment._id,
-                studentID,
+                studentID: student.userID,
                 grade: null // Grade can be null initially, to be graded later by the instructor
             });
 
@@ -123,6 +128,12 @@ class AssignmentController {
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {
+
+            // Check if the user is logged in
+            if (!await Session.findOne()) {
+                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            }
+
             const assignments = await Assignment.find().populate('courseID', 'title');
             return res.status(200).json(assignments);
         } catch (err) {
@@ -133,6 +144,12 @@ class AssignmentController {
     // Get a single assignment by ID
     async getAssignmentById(req, res, next) {
         try {
+
+            // Check if the user is logged in
+            if (!await Session.findOne()) {
+                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            }
+
             const assignmentID = req.params.id;
             const assignment = await Assignment.findOne({ id: assignmentID }).populate('courseID', 'title');
 
@@ -151,6 +168,11 @@ class AssignmentController {
         try {
             const assignmentID = req.params.id;
             const { title, document, startDate, endDate, duration } = req.body;
+
+            // Check if the user is logged in
+            if (!await Session.findOne()) {
+                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            }
 
             // Find the assignment
             const assignment = await Assignment.findOne({ id: assignmentID });
@@ -184,6 +206,11 @@ class AssignmentController {
     async deleteAssignment(req, res, next) {
         try {
             const assignmentID = req.params.id;
+
+            // Check if the user is logged in
+            if (!await Session.findOne()) {
+                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            }
 
             // Find and delete the assignment
             const assignment = await Assignment.findOneAndDelete({ id: assignmentID });

@@ -1,8 +1,11 @@
 const assert = require('assert');  // Use Node.js assert for assertions
-const app = require('../index.js');  // Import your Express app
-const BASE_URL = 'http://localhost:3008';  // Replace with your actual base URL
+const app = require('../index.js');
+const {Session, User, Assignment, AssignmentAnswer} = require("../db/Database");  // Import your Express app
+const BASE_URL = 'http://localhost:3008';
+const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 
-let server;
+let server; let newUser;
 
 // Utility function to safely parse JSON
 async function safelyParseJSON(response) {
@@ -14,6 +17,34 @@ async function safelyParseJSON(response) {
     }
 }
 
+async function createInitialDocs() {
+    // Insert a new user
+    newUser = new User({
+        name: 'John Doe',
+        id: uuidv4(),
+        gender: 'Male',
+        email: 'john.doe@example.com',
+        username: 'john_doe',
+        password: bcrypt.hashSync('password', 10),
+        role: 'Student'
+    });
+    await newUser.save();
+
+    // Simulate a user login by creating a session
+    await Session.insertMany([
+        {
+            userID: newUser._id,
+            createDate: new Date()
+        }
+    ]);
+}
+
+async function clearInitialDocs() {
+    // Clean up after running tests
+    await Session.deleteMany({}); await User.deleteMany({});
+    await Assignment.deleteMany({}); await AssignmentAnswer.deleteMany({});
+}
+
 // Define the test suite
 describe('AssignmentController Test Suite', () => {
 
@@ -23,6 +54,7 @@ describe('AssignmentController Test Suite', () => {
             console.log('Test server running on port 3009');
             done();
         });
+        createInitialDocs();
     });
 
     describe('POST /createAssignment', () => {
@@ -295,9 +327,220 @@ describe('AssignmentController Test Suite', () => {
         });
     });
 
+    describe('POST /solveAssignment', () => {
+        it('should successfully submit an assignment with valid data', async () => {
+            const assignment = await Assignment.findOne();
+
+            if (!assignment) {
+                assert.fail(`No assignment found in the database. Please create an assignment first.`);
+            }
+
+            const response = await fetch(`${BASE_URL}/solveAssignment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    assignmentID: assignment._id,
+                    document: 'Submitted assignment document'
+                })
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+
+            // Check if there's an error key in the response
+            if (resBody && resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+
+        it('should return an error if assignment ID or document is missing', async () => {
+            const response = await fetch(`${BASE_URL}/solveAssignment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ document: 'No assignment ID' }) // Missing assignment ID
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && !resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+
+        it('should return an error if the user is not logged in', async () => {
+
+            const assignmentId = await Assignment.findOne().select('_id');
+
+            if (!assignmentId) {
+                assert.fail('No assignment found in the database. Please create an assignment first.');
+            }
+
+            const response = await fetch(`${BASE_URL}/solveAssignment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    assignmentID: assignmentId,
+                    document: 'Submitted assignment document'
+                })
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && !resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+    });
+
+    describe('GET /getAssignments', () => {
+        it('should return a list of assignments', async () => {
+            const response = await fetch(`${BASE_URL}/getAssignments`, {
+                method: 'GET',
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+    });
+
+    describe('GET /getAssignment/:id', () => {
+        it('should return a single assignment with a valid ID', async () => {
+            const assignment = await Assignment.findOne();
+
+            if (!assignment) {
+                assert.fail(`No assignment found in the database. Please create an assignment first.`);
+            }
+
+            const response = await fetch(`${BASE_URL}/getAssignment/${assignment.id}`, {
+                method: 'GET',
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+
+        it('should return an error if assignment is not found', async () => {
+            const response = await fetch(`${BASE_URL}/getAssignment/invalid-assignment-id`, {
+                method: 'GET',
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && !resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+    });
+
+    describe('PUT /updateAssignment/:id', () => {
+        it('should successfully update an assignment', async () => {
+            const assignment = await Assignment.findOne();
+
+            if (!assignment) {
+                assert.fail(`No assignment found in the database. Please create an assignment first.`);
+            }
+
+            const response = await fetch(`${BASE_URL}/updateAssignment/${assignment.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: 'Updated Assignment Title',
+                    document: 'Updated document',
+                    startDate: '2024-09-15',
+                    endDate: '2024-09-16',
+                    duration: 2
+                })
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+
+        it('should return an error if assignment does not exist', async () => {
+            const response = await fetch(`${BASE_URL}/updateAssignment/invalid-assignment-id`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: 'Updated Assignment Title',
+                    document: 'Updated document',
+                    startDate: '2024-09-15',
+                    endDate: '2024-09-16',
+                    duration: 2
+                })
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && !resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+    });
+
+    describe('DELETE /deleteAssignment/:id', () => {
+        it('should delete an assignment successfully', async () => {
+            const assignment = await Assignment.findOne();
+
+            if (!assignment) {
+                assert.fail(`No assignment found in the database. Please create an assignment first.`);
+            }
+
+            const response = await fetch(`${BASE_URL}/deleteAssignment/${assignment.id}`, {
+                method: 'DELETE',
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+
+        it('should return an error if assignment does not exist', async () => {
+            const response = await fetch(`${BASE_URL}/deleteAssignment/invalid-assignment-id`, {
+                method: 'DELETE',
+            });
+
+            // Basic JavaScript assertions
+            const resBody = await safelyParseJSON(response);
+
+            // Check if there's an error key in the response
+            if (resBody && !resBody.error) {
+                assert.fail(`Unexpected error: ${resBody.error}`);
+            }
+        });
+    });
 
     after((done) => {
         // Stop the server after running tests
         server.close(done);
+        clearInitialDocs();
     });
+
 });
