@@ -1,5 +1,4 @@
-const { User } = require("../db/Database");
-const SessionController = require("./Session");
+const { User, setIntervalAndExecute, Session} = require("../db/Database");
 const bcrypt = require("bcrypt");
 
 /*
@@ -15,18 +14,27 @@ const bcrypt = require("bcrypt");
 */
 
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
+    try {
     const { email, password } = req.body;
-    hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.findOne({ email, password });
+    let hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.findOne({ email, password: hashedPassword });
     if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.status(200).json({ error: "Invalid email or password" });
     } else {
+        await Session.insertMany([{
+            userID: user._id,
+            createDate: Date.now()
+        }]);
+        setIntervalAndExecute(); // Start Session Timer
         res.status(200).json({ message: "Login successful" });
+    }} catch(error) {
+        console.log(`ERROR IN: login function => ${error}`);
+        next(error);
     }
 };
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     try {
         const { name, id, gender, email, username, password, role } = req.body;
 
@@ -46,53 +54,47 @@ exports.register = async (req, res) => {
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
         res
-            .status(500)
-            .json({ message: "Error registering user", error: error.message });
+            .status(200)
+            .json({ message: "ERROR IN: register function => ", error: error.message });
     }
 };
 
 exports.getUser = async (req, res) => {
-    const { userID } = req.body;
-    const user = await User.findOne({ id: userID });
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
+    try {
+        const {userID} = req.body;
+        const user = await User.findOne({id: userID});
+        if (!user) {
+            return res.status(200).json({error: "User not found"});
+        }
+        res.status(200).json(user);
+    } catch(error) {
+        console.log(`ERROR IN: getUser function => ${error}`);
+        next(error);
     }
-    res.status(200).json(user);
 };
 
 exports.getUsers = async (req, res) => {
-    const users = await User.find();
-    res.status(200).json(users);
-};
-
-exports.logout = async (req, res) => {
-    const { sessionID } = req.body;
-    await SessionController.deleteSession(sessionID);
-    res.status(200).json({ message: "Logged out successfully" });
-};
-
-exports.updateUser = async (req, res) => {
-    const { userID } = req.params;
-    const { name, email, password, role } = req.body;
-    const user = await User.findByIdAndUpdate(userID, {
-        name,
-        email,
-        password,
-        role,
-    });
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch(error){
+        console.log(`ERROR IN: getUsers function => ${error}`);
+        next(error);
     }
-    res.status(200).json({ message: "User updated successfully" });
 };
 
 exports.deleteUser = async (req, res) => {
-    const { userID } = req.params;
-    const user = await User.findByIdAndDelete(userID);
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
+    try {
+        const {userID} = req.body;
+        const user = await User.findOne({userID});
+        if (!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        res.status(200).json({message: "User deleted successfully"});
+    } catch(error) {
+        console.log(`ERROR IN: deleteUser function => ${error}`);
+        next(error);
     }
-    res.status(200).json({ message: "User deleted successfully" });
 };
 
 exports.forgotPassword = async (req, res) => {
@@ -103,3 +105,34 @@ exports.forgotPassword = async (req, res) => {
     }
     res.status(200).json({ message: "Password reset link sent successfully" });
 };
+
+exports.logout = async (req, res) => {
+    try {
+        await Session.deleteOne();
+        res.status(200).json({message: "Logged out successfully"});
+    } catch (err) {
+        next(`ERROR IN: Logout Function => ${err}`);
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    try {
+    const { id } = req.params;
+    const { name, email, password, role } = req.body;
+    const user = await User.findByIdAndUpdate(userID, {
+        name,
+        email,
+        password,
+        role,
+    });
+    if (!user) {
+        return res.status(200).json({ error: "User not found" });
+    }
+    res.status(200).json({ message: "User updated successfully" });
+        } catch(error) {
+        console.lo(`ERROR IN: updateUser fuction => ${error}`);
+        next
+    }
+};
+
+

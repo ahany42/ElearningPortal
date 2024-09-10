@@ -12,6 +12,7 @@ router.post("/register", Controller.register); // verified
 router.get("/getUser", Controller.getUser); // verified
 router.get("/getUsers", Controller.getUsers); // verified
 router.put("/updateUser", Controller.updateUser);
-router.delete("/deleteUser", Controller.deleteUser);
+router.post("/deleteUser", Controller.deleteUser);  // verified
+router.post("/forgotPassword", Controller.forgotPassword);  // verified
 
 module.exports = router;

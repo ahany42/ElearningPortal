@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/e-learning')
@@ -42,8 +42,7 @@ const Instructor_Course = mongoose.model('Instructor_Course', new mongoose.Schem
 
 const Session = mongoose.model('Session', new mongoose.Schema({
     userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createDate: { type: Date, default: Date.now },
-    expireDate: { type: Date, required: true }
+    createDate: { type: Date, default: Date.now }
 }, { timestamps: true }));
 
 const Exam = mongoose.model('Exam', new mongoose.Schema({
@@ -86,5 +85,29 @@ const StudentExam = mongoose.model('StudentExam', new mongoose.Schema({
     grade: { type: Number }
 }, { timestamps: true }));
 
-module.exports = { User, Course, Student_Course, Instructor_Course, Session,
+// SESSION TIME OUT CODE
+const SESSION_TIMEOUT_SECONDS = 60 * 60;  // Every hour
+let loginTimout;
+
+const deleteExpiredSessions = async () => {
+    try {
+        // Find and delete sessions that have expired
+        if (! await SessionUser.findOne()){
+            clearInterval(loginTimout);
+            return;
+        }
+        const result = await SessionUser.deleteOne();
+        console.log(`${result.deletedCount} expired sessions deleted.`);
+    } catch (err) {
+        console.error('Error deleting expired sessions:', err);
+    }
+};
+
+function setIntervalAndExecute() {
+    clearInterval(loginTimout);
+    loginTimout = setInterval(deleteExpiredSessions, 1000 * SESSION_TIMEOUT_SECONDS);
+}
+//--------------------------------------------
+
+module.exports = { User, Course, Student_Course, Instructor_Course, Session, setIntervalAndExecute,
                    Exam, Assignment, StudentExam, AssignmentAnswer, Question };
