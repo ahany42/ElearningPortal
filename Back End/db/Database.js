@@ -95,13 +95,8 @@ let loginTimout;
 
 const deleteExpiredSessions = async () => {
     try {
-        // Find and delete sessions that have expired
-        if (! await SessionUser.findOne()){
-            clearInterval(loginTimout);
-            return;
-        }
-        const result = await SessionUser.deleteOne();
-        console.log(`${result.deletedCount} expired sessions deleted.`);
+        await Session.deleteOne();
+        clearInterval(loginTimout);
     } catch (err) {
         console.error('Error deleting expired sessions:', err);
     }
