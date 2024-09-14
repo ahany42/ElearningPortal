@@ -7,9 +7,18 @@
   font-family: 'Poppins', sans-serif;
   /*background-color:#f7f5ed;*/ /* ELL BACKGROUND DAH 3AMEL HIDE 3ALA KOLL ELL TAGS */
 }
+.body-container{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.body-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .page-component{
-  margin-top:100px;
-  min-height: 85vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
