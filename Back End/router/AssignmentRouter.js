@@ -4,6 +4,7 @@ const router = Router();
 
 router.post('/createAssignment', Controller.createAssignment);
 router.post('/solveAssignment', Controller.solveAssignment);
+router.post('/gradeAssignment', Controller.gradeAssignment);
 router.put('/updateAssignment/:id', Controller.updateAssignment);
 router.get('/getAssignments', Controller.getAllAssignments);
 router.get('/getAssignment/:id', Controller.getAssignmentById);

@@ -1,4 +1,4 @@
-const {Assignment, AssignmentAnswer, Session} = require('../db/Database');
+const {Assignment, AssignmentAnswer, Session, User, Course} = require('../db/Database');
 const { v4: uuidv4 } = require('uuid');
 
 // Controller for Assignments
@@ -7,7 +7,7 @@ class AssignmentController {
     // Create a new assignment
     async createAssignment(req, res, next) {
         try {
-            const { courseID, startDate, duration, endDate, title, document } = req.body;
+            const { courseID, startDate, duration, endDate, title, document } = req.body; // courseID as v4 uuid
 
             // Validate input
             if (!courseID || !startDate || !duration || !endDate || !title || !document) {
@@ -44,8 +44,14 @@ class AssignmentController {
                 return res.status(200).json({error: "Start date must be in the future"});
             }
 
+            // Check if the course exists
+            const course = await Course.findOne({ id: courseID });
+            if (!course) {
+                return res.status(200).json({ error: "Course not found" });
+            }
+
             // Check if the assignment already exists
-            if (await Assignment.findOne({ courseID, startDate, endDate })) {
+            if (await Assignment.findOne({ courseID: course._id, startDate, endDate })) {
                 return res.status(200).json({error: "Assignment with the same start and end date already exists"});
             }
 
@@ -62,7 +68,7 @@ class AssignmentController {
             // Create a new assignment object
             const newAssignment = new Assignment({
                 id: uuidv4(),
-                courseID,
+                courseID: course._id,
                 startDate,
                 duration,
                 endDate,
@@ -72,7 +78,7 @@ class AssignmentController {
 
             // Save to database
             const savedAssignment = await newAssignment.save();
-            return res.status(200).json(savedAssignment);
+            return res.status(200).json({data: savedAssignment});
         } catch (err) {
             next(`ERROR IN: Create Assignment Function => ${err}`);
         }
@@ -81,7 +87,7 @@ class AssignmentController {
     // Solve (submit) an assignment
     async solveAssignment(req, res, next) {
         try {
-            const { assignmentID, document } = req.body;
+            const { assignmentID, document } = req.body; // assignmentID as v4 uuid
             const student = await Session.findOne();
 
             // Check user logged in
@@ -96,7 +102,7 @@ class AssignmentController {
 
             // Check if the assignment exists
             const assignment =
-                await Assignment.findOne({ _id: assignmentID });
+                await Assignment.findOne({ id: assignmentID });
             if (!assignment) {
                 return res.status(200).json({ error: "Assignment not found" });
             }
@@ -125,6 +131,50 @@ class AssignmentController {
         }
     }
 
+    // Grade an assignment
+    async gradeAssignment(req, res, next) {
+        try {
+            const { assignmentID, studentID, grade } = req.body; // Get the assignment ID, student ID as v4 uuid
+            const instructor = await Session.findOne();
+
+            // Check if the user is logged in
+            if (!instructor) {
+                return res.status(200).json({ error: "You must be logged in to grade an assignment" });
+            }
+
+            // Validate input
+            if (!assignmentID || !studentID || !grade) {
+                return res.status(200).json({ error: "Assignment ID, student ID, and grade are required" });
+            }
+
+            // Check if the assignment exists
+            const assignment = await Assignment.findOne({ id: assignmentID });
+            if (!assignment) {
+                return res.status(200).json({ error: "Assignment not found" });
+            }
+
+            // Check if the student exists
+            const student = await User.findOne({ id: studentID });
+            if (!student) {
+                return res.status(200).json({ error: "Student not found" });
+            }
+
+            // Check if the student has submitted an answer for this assignment
+            const answer = await AssignmentAnswer.findOne({ assignmentID: assignment._id,
+                            studentID: student._id });
+            if (!answer) {
+                return res.status(200).json({ error: "Student has not submitted an answer for this assignment" });
+            }
+
+            // Update the grade
+            answer.grade = grade;
+            const updatedAnswer = await answer.save();
+            return res.status(200).json({ message: "Assignment graded successfully", data: updatedAnswer });
+        } catch (err) {
+            next(`ERROR IN: Grade Assignment Function => ${err}`);
+        }
+    }
+
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {
@@ -135,7 +185,7 @@ class AssignmentController {
             }
 
             const assignments = await Assignment.find().populate('courseID', 'title');
-            return res.status(200).json(assignments);
+            return res.status(200).json({ data: assignments });
         } catch (err) {
             next(`ERROR IN: Get All Assignments Function => ${err}`);
         }
@@ -166,7 +216,7 @@ class AssignmentController {
     // Update an existing assignment
     async updateAssignment(req, res, next) {
         try {
-            const assignmentID = req.params.id;
+            const assignmentID = req.params.id; // assignmentID as v4 uuid
             const { title, document, startDate, endDate, duration } = req.body;
 
             // Check if the user is logged in
@@ -205,7 +255,7 @@ class AssignmentController {
     // Delete an assignment by ID
     async deleteAssignment(req, res, next) {
         try {
-            const assignmentID = req.params.id;
+            const assignmentID = req.params.id; // assignmentID as v4 uuid
 
             // Check if the user is logged in
             if (!await Session.findOne()) {
