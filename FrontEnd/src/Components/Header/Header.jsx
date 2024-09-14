@@ -1,5 +1,6 @@
 import "./Header.css";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -11,9 +12,9 @@ const Header = () => {
     return (
         <div className="navbar">
             <ul className={menuOpen ? "show" : ""}>
-                <li><a href="#">Home</a></li>
-                <li><a href="Courses">Courses</a></li>
-                <li><a href="Deadlines">Deadlines</a></li>
+                <li><NavLink to='/'>Home</NavLink></li>
+                <li><NavLink to='/courses'>Courses</NavLink></li>
+                <li><NavLink to='/deadlines'>Deadlines</NavLink></li>
             </ul>
             <button className="toggle-menu" onClick={toggleMenu}>
                 <span></span>
