@@ -14,6 +14,40 @@ const bcrypt = require("bcrypt");
 */
 
 
+// exports.login = async (req, res, next) => {
+//     try {
+//         const { email, password } = req.body;
+//         const user = await User.findOne({ email });
+
+//         // If no user is found, return an error
+//         if (!user) {
+//             return res.status(200).json({ error: "Invalid email or password" });
+//         }
+
+//         // Compare the provided password with the stored hashed password
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(200).json({ error: "Invalid email or password" });
+//         }
+
+//         // If passwords match, proceed with login
+//         await Session.insertMany([{
+//             userID: user._id,
+//             createDate: Date.now(),
+//         }]);
+
+//         setIntervalAndExecute(); // Start Session Timer
+//         res.status(200).json({ message: "Login successful" });
+//     } catch (error) {
+//         console.log(`ERROR IN: login function => ${error}`);
+//         next(error);
+//     }
+// };
+
+
+
+
+
 exports.login = async (req, res, next) => {
     try {
     const { email, password } = req.body;

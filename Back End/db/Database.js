@@ -91,13 +91,13 @@ const StudentExam = mongoose.model('StudentExam', new mongoose.Schema({
 
 // SESSION TIME OUT CODE
 const SESSION_TIMEOUT_SECONDS = 60 * 60;  // Every hour
-let loginTimout;
+let loginTimeout;
 
 const deleteExpiredSessions = async () => {
     try {
         // Find and delete sessions that have expired
         if (! await SessionUser.findOne()){
-            clearInterval(loginTimout);
+            clearInterval(loginTimeout);
             return;
         }
         const result = await SessionUser.deleteOne();
@@ -108,8 +108,8 @@ const deleteExpiredSessions = async () => {
 };
 
 function setIntervalAndExecute() {
-    clearInterval(loginTimout);
-    loginTimout = setInterval(deleteExpiredSessions, 1000 * SESSION_TIMEOUT_SECONDS);
+    clearInterval(loginTimeout);
+    loginTimeout = setInterval(deleteExpiredSessions, 1000 * SESSION_TIMEOUT_SECONDS);
 }
 //--------------------------------------------
 

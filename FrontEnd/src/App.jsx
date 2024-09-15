@@ -12,15 +12,51 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from "@mui/material";
 import Footer from "./Components/Footer/Footer.jsx";
 import PageNotFound from "./Components/4O4/PageNotFound.jsx";
+import Coursescards from "./Components/Coursescards/Coursescards.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
-    '/SignUp'
+    '/SignUp','/courses'
 ];
 
+let data = [
+  {
+    id: Math.random(Math.floor() * 100),
+    title: "html&css",
+    desc: "basics of frontend",
+    hours: 2,
+  },
+  {
+    id: Math.random(Math.floor() * 100),
+    title: "js",
+    desc: "javascript content",
+    hours: 3,
+  },
+  {
+    id: Math.random(Math.floor() * 100),
+    title: "react",
+    desc: "important of react",
+    hours: 4,
+  },
+  {
+    id: Math.random(Math.floor() * 100),
+    title: "node.js",
+    desc: "basics of backend",
+    hours: 5,
+  },
+];
+const addCourse = [
+  {
+    id: Math.random(Math.floor() * 100),
+    title: "php",
+    desc: "basics of php",
+    hours: 4,
+  },
+];
 function App() {
     const routes = useLocation();
     const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
+    const[courses,setCourses]=useState(data)
 
 
   useEffect(() => {
@@ -32,20 +68,44 @@ function App() {
         }
   }, [routes])
 
+  const addCourseHandler = (addCourse) => {
+setCourses((prevState)=>{
+    return [...prevState,addCourse]
+})
+
+  };
+
+
+
   return (
-    <div className='body-container'>
-        {showHeaderAndFooter && <Header />}
+    <div className="body-container">
+      {showHeaderAndFooter && <Header />}
 
-        <div className='body-content'>
-            <Routes>
-                <Route path="/" element={<><Login /></>} />
-                <Route path="/ForgetPassword" element={<ForgotPassword />} />
-                <Route path="/SignUp" element={<SignUp />} />
-                <Route path='*'  element={<PageNotFound />}/>
-            </Routes>
-        </div>
+      <div className="body-content">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Login />
+              </>
+            }
+          />
+          <Route path="/ForgetPassword" element={<ForgotPassword />} />
+          <Route path="/SignUp" element={<SignUp />} />
+          <Route
+            path="/courses"
+            element={
+              <Coursescards
+                courses={courses}
+               addCourseHandler={addCourseHandler}/>
+            }
+          />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </div>
 
-        {showHeaderAndFooter && <Footer/>}
+      {showHeaderAndFooter && <Footer />}
     </div>
   );
 }
