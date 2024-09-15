@@ -8,10 +8,11 @@ const Coursescards = ({ courses, addCourseHandler }) => {
 
 
   return (
-    <div className="cards">
+    <>
       <i className="fa-solid fa-plus" onClick={addCourseHandler}></i>
-      {myCards}
-    </div>
+
+      <div className="cards">{myCards}</div>
+    </>
   );
 };
 

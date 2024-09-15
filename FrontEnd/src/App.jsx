@@ -45,14 +45,16 @@ let data = [
     hours: 5,
   },
 ];
-const addCourse = [
+
+
+const addCourse = 
   {
     id: Math.random(Math.floor() * 100),
     title: "php",
     desc: "basics of php",
     hours: 4,
-  },
-];
+  }
+
 function App() {
     const routes = useLocation();
     const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
@@ -68,9 +70,13 @@ function App() {
         }
   }, [routes])
 
-  const addCourseHandler = (addCourse) => {
+
+
+
+  const addCourseHandler = () => {
 setCourses((prevState)=>{
     return [...prevState,addCourse]
+   
 })
 
   };
