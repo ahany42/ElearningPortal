@@ -25,9 +25,65 @@ function passwordAcceptance(password) {
   return passwordRegex.test(String(password));
 }
 
+<<<<<<< HEAD
+// exports.login = async (req, res, next) => {
+//     try {
+//         const { email, password } = req.body;
+//         const user = await User.findOne({ email });
+
+//         // If no user is found, return an error
+//         if (!user) {
+//             return res.status(200).json({ error: "Invalid email or password" });
+//         }
+
+//         // Compare the provided password with the stored hashed password
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(200).json({ error: "Invalid email or password" });
+//         }
+
+//         // If passwords match, proceed with login
+//         await Session.insertMany([{
+//             userID: user._id,
+//             createDate: Date.now(),
+//         }]);
+
+//         setIntervalAndExecute(); // Start Session Timer
+//         res.status(200).json({ message: "Login successful" });
+//     } catch (error) {
+//         console.log(`ERROR IN: login function => ${error}`);
+//         next(error);
+//     }
+// };
+
+
+
+
+
+exports.login = async (req, res, next) => {
+    try {
+    const { email, password } = req.body;
+    let hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.findOne({ email, password: hashedPassword });
+    if (!user) {
+        return res.status(200).json({ error: "Invalid email or password" });
+    } else {
+        await Session.insertMany([{
+            userID: user._id,
+            createDate: Date.now()
+        }]);
+        setIntervalAndExecute(); // Start Session Timer
+        res.status(200).json({ message: "Login successful" });
+    }} catch(error) {
+        console.log(`ERROR IN: login function => ${error}`);
+        next(error);
+    }
+};
+=======
 function idValidation(id) {
   return User.findOne({ id }) ? true : false;
 }
+>>>>>>> 3ab3b46ae00f1ade6187cb187dbd7ef747820632
 
 exports.register = async (req, res, next) => {
   try {
