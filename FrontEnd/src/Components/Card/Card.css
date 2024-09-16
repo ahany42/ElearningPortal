@@ -3,7 +3,8 @@
     background-color: #f9f9f9; 
     border-radius: 10px; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for a floating effect */
-    width: 250px; 
+    width: 250px;
+    height: 175px;
     padding: 20px; 
     margin: 20px; 
     font-family: Arial, sans-serif; 
@@ -49,6 +50,14 @@
   position: absolute;
   bottom: 10px;
   right: 45px;
+}
+
+.examIcon {
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    right: 80px;
+    margin: 10px;
 }
 
 .fa-list-check {

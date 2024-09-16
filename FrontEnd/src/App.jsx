@@ -16,7 +16,7 @@ import Coursescards from "./Components/Coursescards/Coursescards.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
-    '/SignUp','/courses'
+    '/SignUp'
 ];
 
 let data = [
@@ -61,59 +61,52 @@ function App() {
     const[courses,setCourses]=useState(data)
 
 
-  useEffect(() => {
+    useEffect(() => {
         if(pathsWithNoHeaderAndFooter.includes(routes.pathname) ||
             document.querySelector('.body-content').innerHTML.includes('Page Not Found')) {
             setShowHeaderAndFooter(false);
         } else {
             setShowHeaderAndFooter(true);
         }
-  }, [routes])
+    }, [routes]);
 
+    const addCourseHandler = (newCourse) => {
+        setCourses((prevState) => {
+            return [...prevState, newCourse]
+        });
+    };
 
+    return (
+      <div className="body-container">
+        {showHeaderAndFooter && <Header />}
 
+        <div className="body-content">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Login />
+                </>
+              }
+            />
+            <Route path="/ForgetPassword" element={<ForgotPassword />} />
+            <Route path="/SignUp" element={<SignUp />} />
+            <Route
+              path="/courses"
+              element={
+                <Coursescards
+                  courses={courses}
+                 addCourseHandler={addCourseHandler}/>
+              }
+            />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </div>
 
-  const addCourseHandler = () => {
-setCourses((prevState)=>{
-    return [...prevState,addCourse]
-   
-})
-
-  };
-
-
-
-  return (
-    <div className="body-container">
-      {showHeaderAndFooter && <Header />}
-
-      <div className="body-content">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Login />
-              </>
-            }
-          />
-          <Route path="/ForgetPassword" element={<ForgotPassword />} />
-          <Route path="/SignUp" element={<SignUp />} />
-          <Route
-            path="/courses"
-            element={
-              <Coursescards
-                courses={courses}
-               addCourseHandler={addCourseHandler}/>
-            }
-          />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        {showHeaderAndFooter && <Footer />}
       </div>
-
-      {showHeaderAndFooter && <Footer />}
-    </div>
-  );
+    );
 }
 
 export default App;

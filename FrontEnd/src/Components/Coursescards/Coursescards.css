@@ -1,6 +1,18 @@
-
 .fa-solid {
   font-size: 30px;
   margin: 10px;
   color: #616161;
+}
+
+.cards {
+  min-height: 450px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.fa-plus:hover {
+  cursor: pointer;
+  color: #3f51b5;
 }
