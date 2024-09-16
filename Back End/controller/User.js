@@ -1,20 +1,9 @@
 const { User, setIntervalAndExecute, Session } = require("../db/Database");
 const bcrypt = require("bcrypt");
 
-/*
-    Functions to be implemented:
-    - login
-    - logout
-    - register
-    - getUser
-    - getUsers (students, instructors, admins)
-    - updateUser
-    - deleteUser
-    - forgotPassword
-*/
 function emailAcceptance(email) {
   const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
 
@@ -25,7 +14,6 @@ function passwordAcceptance(password) {
   return passwordRegex.test(String(password));
 }
 
-<<<<<<< HEAD
 // exports.login = async (req, res, next) => {
 //     try {
 //         const { email, password } = req.body;
@@ -57,9 +45,6 @@ function passwordAcceptance(password) {
 // };
 
 
-
-
-
 exports.login = async (req, res, next) => {
     try {
     const { email, password } = req.body;
@@ -79,11 +64,10 @@ exports.login = async (req, res, next) => {
         next(error);
     }
 };
-=======
-function idValidation(id) {
-  return User.findOne({ id }) ? true : false;
+
+async function idValidation(id) {
+  return !!(await User.findOne({id}));
 }
->>>>>>> 3ab3b46ae00f1ade6187cb187dbd7ef747820632
 
 exports.register = async (req, res, next) => {
   try {
@@ -115,6 +99,7 @@ exports.register = async (req, res, next) => {
       message: "ERROR IN: register function => ",
       error: error.message,
     });
+    next(error);
   }
 };
 
@@ -217,13 +202,12 @@ exports.updateUser = async (req, res) => {
     }
     user.name = name;
     user.email = email;
-    const encryptedPassword = await bcrypt.hash(password, 10);
-    user.password = encryptedPassword;
+    user.password = await bcrypt.hash(password, 10);
     user.role = role;
     await user.save();
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
     console.log(`ERROR IN: updateUser fuction => ${error}`);
-    // next;
+    // next(`ERROR IN: updateUser fuction => ${error}`);
   }
 };
