@@ -3,7 +3,7 @@ import Card from '../Card/Card'
 import './Coursescards.css'
 import AddCourseForm from '../AddCourseForm/Form';
 
-const Coursescards = ({ courses, addCourseHandler }) => {
+const Coursescards = ({ courses, addCourseHandler ,filterHandler}) => {
     const [showForm, setShowForm] = useState(false);
     const CardsContainer = useRef(null);
 
@@ -23,24 +23,33 @@ const Coursescards = ({ courses, addCourseHandler }) => {
       setShowForm(!showForm);
     };
 
-    const myCards = courses.map((course) => {
+
+
+
+    const myCards = filterHandler(courses).map((course) => {
       return <Card key={course.id} {...course} />;
     });
 
 
     return (
-        <>
-            {showForm && (
-                <AddCourseForm addHandler={addCourseHandler} showFormHandler={showFormHandler} />
-            )}
-            <span ref={CardsContainer}>
-                <div className='d-flex'>
-                    <i title='Add Course' className="fa-solid fa-plus w-auto me-5 ms-auto"
-                       onClick={showFormHandler}></i>
-                </div>
-              <div className="cards">{myCards}</div>
-            </span>
-        </>
+      <>
+        {showForm && (
+          <AddCourseForm
+            addHandler={addCourseHandler}
+            showFormHandler={showFormHandler}
+          />
+        )}
+        <span ref={CardsContainer}>
+          <div className="d-flex">
+            <i
+              title="Add Course"
+              className="fa-solid fa-plus w-auto me-5 ms-auto"
+              onClick={showFormHandler}
+            ></i>
+          </div>
+          <div className="cards">{myCards}</div>
+        </span>
+      </>
     );
 };
 

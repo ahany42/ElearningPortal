@@ -1,8 +1,9 @@
 import React from 'react'
 import './Card.css'
-import ExamIcon from '../../assets/exam-icon.webp'
+
 
 const Card = ({ id, title, desc, hours }) => {
+    
   return (
       <div className="myCard" key={id}>
           <i className="fa-solid fa-pen-to-square"></i>

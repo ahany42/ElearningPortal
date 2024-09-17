@@ -58,6 +58,7 @@ function App() {
     const routes = useLocation();
     const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
     const[courses,setCourses]=useState(data)
+    const [filter, setFilter] = useState("");
 
 
     useEffect(() => {
@@ -74,13 +75,21 @@ function App() {
             return [...prevState, newCourse]
         });
     };
+        const filterHandler = ( courses) => {
+          if (!courses) {
+          return [];
+          }
+          if (!filter) {
+          return courses
+          }
+          return courses.filter((el) =>
+            el.title.toLowerCase().includes(filter.toLowerCase())
+          );
+        };
 
     return (
       <div className="body-container">
-         {showHeaderAndFooter && 
-
-      <Header />
-    } 
+        {showHeaderAndFooter && <Header />}
         <div className="body-content">
           <Routes>
             <Route
@@ -96,18 +105,44 @@ function App() {
             <Route
               path="/courses"
               element={
-                <Coursescards
-                  courses={courses}
-                 addCourseHandler={addCourseHandler}/>
+                <>
+                  <input
+                    style={{
+                      backgroundColor: "#616161",
+                      opacity: "0.7",
+                      border: "grey solid 3px",
+                      borderRadius: "10%",
+                      width: "fit-content",
+                      margin: "auto",
+                    }}
+                    type="text"
+                    placeholder="Search"
+                    id="filter"
+                    onChange={(e) => setFilter(e.target.value)}
+                  />
+                  <Coursescards
+                    courses={courses}
+                    addCourseHandler={addCourseHandler}
+                    filterHandler={filterHandler}
+                  />
+                </>
               }
             />
-            <Route path="*" element={<Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>} />
+            <Route
+              path="*"
+              element={
+                <Placeholder
+                  text="Page Not Found"
+                  img={NotFoundImg}
+                  buttonText="Back To Home"
+                  buttonRoute="/"
+                />
+              }
+            />
           </Routes>
         </div>
 
-        {showHeaderAndFooter && 
-        <Footer />
-        }
+        {showHeaderAndFooter && <Footer />}
       </div>
     );
 }
