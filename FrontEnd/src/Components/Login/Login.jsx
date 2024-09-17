@@ -112,7 +112,7 @@ const Login = () => {
       <Button
         type="submit"
         variant="contained"
-        className="green-bg"
+        className="green-bg pascalCase-text"
         fullWidth
         sx={{ my: 2 }}
       >
