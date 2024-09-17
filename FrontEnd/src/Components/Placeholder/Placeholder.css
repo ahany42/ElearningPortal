@@ -4,6 +4,10 @@
 .TextContainer{
     margin: 0.5em;
 }
+.placeholder-button{
+    padding: 5px;
+    text-decoration: none;
+}
 @media (max-width:650px){
     .PlaceholderDiv{
         min-height: 72vh;

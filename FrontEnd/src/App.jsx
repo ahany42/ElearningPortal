@@ -11,7 +11,6 @@ import Header from "./Components/Header/Header.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from "@mui/material";
 import Footer from "./Components/Footer/Footer.jsx";
-import PageNotFound from "./Components/4O4/PageNotFound.jsx";
 import Coursescards from "./Components/Coursescards/Coursescards.jsx";
 
 const pathsWithNoHeaderAndFooter = [
@@ -78,9 +77,10 @@ function App() {
 
     return (
       <div className="body-container">
-        {/* {showHeaderAndFooter && 
-      } */}
+         {showHeaderAndFooter && 
+
       <Header />
+    } 
         <div className="body-content">
           <Routes>
             <Route
@@ -101,13 +101,13 @@ function App() {
                  addCourseHandler={addCourseHandler}/>
               }
             />
-            <Route path="*" element={<PageNotFound />} />
+            <Route path="*" element={<Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>} />
           </Routes>
         </div>
 
+        {showHeaderAndFooter && 
         <Footer />
-        {/* {showHeaderAndFooter && 
-        } */}
+        }
       </div>
     );
 }
