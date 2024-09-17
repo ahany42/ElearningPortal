@@ -72,12 +72,12 @@
 
 .form-container .form-group input:focus {
     outline: none;
-    border-color: #e81cff;
+    border-color:white;
 }
 
 .form-container .form-group textarea:focus {
     outline: none;
-    border-color: #e81cff;
+    border-color: white;
 }
 
 .form-container .form-submit-btn {
@@ -102,4 +102,10 @@
 .form-container .form-submit-btn:hover {
     background-color: #fff;
     border-color: #fff;
+}
+.AddCourseButton{
+    margin-bottom:20px;
+}
+.CancelButton{
+    border-width:2px !important;
 }

@@ -49,20 +49,20 @@ const AddForm = ({ addHandler, showFormHandler }) => {
             }
             <form className="form" onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title" className="light-text">Title</label>
                     <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="desc">Description</label>
+                    <label htmlFor="desc" className="light-text">Description</label>
                     <textarea onChange={handleChange} value={form.desc} name="desc" id="desc" rows="10" cols="50" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="hours">Hours</label>
+                    <label htmlFor="hours" className="light-text">Hours</label>
                     <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required />
                 </div>
-                <div className='d-flex justify-content-between mt-2 mb-2 ps-2 pe-2'>
-                    <button className="btn btn-danger" onClick={showFormHandler} type="button">Cancel</button>
-                    <button className="btn btn-primary" type="submit">Add</button>
+                <div className='d-flex flex-column justify-content-between mt-2 mb-2 ps-2 pe-2'>
+                    <button className="btn blue-bg light-text AddCourseButton" type="submit">Add</button>
+                    <button className="btn btn-outline-danger  CancelButton" onClick={showFormHandler} type="button">Cancel</button>
                 </div>
             </form>
         </div>
