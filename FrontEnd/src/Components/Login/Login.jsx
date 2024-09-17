@@ -13,7 +13,6 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
-
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,17 +42,57 @@ const Login = () => {
         value={formData.email}
         onChange={(e) => setFormData({...formData, email: e.target.value})}
         required
-        sx={{ my: 2 }}
+        sx={{
+          my: 2,
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'grey', 
+            },
+            '&:hover fieldset': {
+              borderColor: '#274546',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#274546', 
+            },
+          },
+          '& .MuiInputLabel-root': {
+            '&.Mui-focused': {
+              color: '#274546 !important', 
+            },
+          },
+        }}
       />
 
       {/* Password Field */}
-      <FormControl variant="outlined" fullWidth sx={{ my: 2 }}>
+      <FormControl
+        variant="outlined"
+        fullWidth
+        sx={{
+          my: 2,
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'grey',
+            },
+            '&:hover fieldset': {
+              borderColor: '#274546',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#274546',
+            },
+          },
+          '& .MuiInputLabel-root': {
+            '&.Mui-focused': {
+              color: '#274546 !important',
+            },
+          },
+        }}
+      >
         <InputLabel>Password</InputLabel>
         <OutlinedInput
           name="password"
           value={formData.password}
           onChange={(e) => setFormData({...formData, password: e.target.value})}
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -67,7 +106,7 @@ const Login = () => {
           }
           label="Password"
         />
-      </FormControl>
+      </FormControl> 
 
       {/* Sign In Button */}
       <Button
