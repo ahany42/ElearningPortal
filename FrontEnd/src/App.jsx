@@ -78,8 +78,9 @@ function App() {
 
     return (
       <div className="body-container">
-        {showHeaderAndFooter && <Header />}
-
+        {/* {showHeaderAndFooter && 
+      } */}
+      <Header />
         <div className="body-content">
           <Routes>
             <Route
@@ -104,7 +105,9 @@ function App() {
           </Routes>
         </div>
 
-        {showHeaderAndFooter && <Footer />}
+        <Footer />
+        {/* {showHeaderAndFooter && 
+        } */}
       </div>
     );
 }

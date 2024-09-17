@@ -9,7 +9,7 @@ const PageNotFound = () => {
     return (
         <div className='d-flex flex-column align-items-center gap-4'>
             <Placeholder img={NotFoundImg} text="Page Not Found"/>
-            <Button component={NavLink} to='/' variant='contained' color='error'>Go Back Home</Button>
+            {/* <Button component={NavLink} to='/' variant='contained' color='error'>Go Back Home</Button> */}
         </div>
     )
 }
