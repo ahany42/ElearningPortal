@@ -73,7 +73,7 @@ const Login = () => {
       <Button
         type="submit"
         variant="contained"
-        color="primary"
+        className="green-bg"
         fullWidth
         sx={{ my: 2 }}
       >
@@ -84,6 +84,7 @@ const Login = () => {
       <NavLink
         to="/ForgetPassword"
         variant="body2"
+        className="blue-text"
         style={{ display: "block", marginTop: "1rem" }}
       >
         Forgot password?
@@ -93,6 +94,7 @@ const Login = () => {
       <NavLink
         to="/signup"
         variant="body2"
+        className="blue-text"
         style={{ display: "block", marginTop: "1rem" }}
       >
         Don't have an account? Sign up

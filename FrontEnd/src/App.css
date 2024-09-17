@@ -45,56 +45,69 @@ h6{
   font-size:1em;
 }
 /* Font Weight */
-.noBold-text{
-  font-weight:200;
+.noBold-text {
+  font-weight: 200 !important;
 }
-.semiBold-text{
-  font-weight:400;
-  }
-.bold-text{
-  font-weight:600;
+
+.semiBold-text {
+  font-weight: 400 !important;
 }
-.extraBold-text{
-  font-weight:800;
+
+.bold-text {
+  font-weight: 600 !important;
 }
+
+.extraBold-text {
+  font-weight: 800 !important;
+}
+
 /* Font Color */
-.blue-text{
-  color:#1330BE;
+.blue-text {
+  color: #1330BE !important;
 }
-.green-text{
-  color:#274546;
+
+.green-text {
+  color: #274546 !important;
 }
-.light-text{
-  color:#f7f5ed;
+
+.light-text {
+  color: #f7f5ed !important;
 }
+
 /* Text Alignment */
-.alignRight-text{
-  text-align:right;
+.alignRight-text {
+  text-align: right !important;
 }
-.alignJustify-text{
-  text-align: justify;
+
+.alignJustify-text {
+  text-align: justify !important;
 }
-.alignCenter-text{
-  text-align: center;
+
+.alignCenter-text {
+  text-align: center !important;
 }
+
 /* Text Case */
-.lowerCase-text{
-  text-transform: lowercase;
+.lowerCase-text {
+  text-transform: lowercase !important;
 }
-.pascalCase-text{
-  text-transform: capitalize;
+
+.pascalCase-text {
+  text-transform: capitalize !important;
 }
-.upperCase-text{
-  text-transform: uppercase;
+
+.upperCase-text {
+  text-transform: uppercase !important;
 }
 /* Background Color */
 .blue-bg{
-  background-color: #1330BE;
+  background-color: #1330BE !important;
 }
 .green-bg{
-  background-color: #274546;
+  background-color: #274546 !important;
 }
 .dark-bg{
-  background-color: black;
+  background-color: black !important;
 }
+
 
