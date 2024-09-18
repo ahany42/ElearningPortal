@@ -22,7 +22,8 @@ const User = mongoose.model('User', new mongoose.Schema({
         type: String,
         enum: ['SuperAdmin', 'Admin', 'Instructor', 'Student'],
         required: true
-    }
+    },
+    Token:{type:String}
 }, { timestamps: true }));
 
 const Course = mongoose.model('Course', new mongoose.Schema({

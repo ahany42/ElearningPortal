@@ -1,6 +1,6 @@
 const { User, setIntervalAndExecute, Session } = require("../db/Database");
 const bcrypt = require("bcrypt");
-
+const {Secret_Key}=require('../../env')
 function emailAcceptance(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -48,17 +48,25 @@ function passwordAcceptance(password) {
 exports.login = async (req, res, next) => {
     try {
     const { email, password } = req.body;
-    let hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.findOne({ email, password: hashedPassword });
+    const user = await User.findOne({email});
     if (!user) {
-        return res.status(200).json({ error: "Invalid email or password" });
-    } else {
+        return res.status(200).json({ error: "Invalid email" });
+    }
+    else if(!await bcrypt.compare(password, user.password)) {
+
+        return res.status(200).json({ error: "Invalid password"});
+
+    }
+
+    else {
         await Session.insertMany([{
             userID: user._id,
             createDate: Date.now()
         }]);
         setIntervalAndExecute(); // Start Session Timer
-        res.status(200).json({ message: "Login successful" });
+
+    const token=await Jwt.sign({email:user.email,id:user._id,role:user.role},Secret_Key,{expiresIn:"1h"})
+        res.status(200).json({ message: "Login successful", data:{Token:token} });
     }} catch(error) {
         console.log(`ERROR IN: login function => ${error}`);
         next(error);
@@ -91,6 +99,7 @@ exports.register = async (req, res, next) => {
       password: hashedPassword,
       role,
     });
+
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
