@@ -1,5 +1,7 @@
 const { v4 } = require('uuid');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const { Secret_Key } = require('../../env');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/e-learning')
@@ -22,8 +24,7 @@ const User = mongoose.model('User', new mongoose.Schema({
         type: String,
         enum: ['SuperAdmin', 'Admin', 'Instructor', 'Student'],
         required: true
-    },
-    Token:{type:String}
+    }
 }, { timestamps: true }));
 
 const Course = mongoose.model('Course', new mongoose.Schema({
@@ -46,7 +47,7 @@ const Instructor_Course = mongoose.model('Instructor_Course', new mongoose.Schem
 }, { timestamps: true }));
 
 const Session = mongoose.model('Session', new mongoose.Schema({
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    token: { type: String,required: true },
     createDate: { type: Date, default: Date.now }
 }, { timestamps: true }));
 
@@ -89,25 +90,7 @@ const StudentExam = mongoose.model('StudentExam', new mongoose.Schema({
     studentID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     grade: { type: Number }
 }, { timestamps: true }));
-
-// SESSION TIME OUT CODE
-const SESSION_TIMEOUT_SECONDS = 60 * 60;  // Every hour
-let loginTimout;
-
-const deleteExpiredSessions = async () => {
-    try {
-        await Session.deleteOne();
-        clearInterval(loginTimout);
-    } catch (err) {
-        console.error('Error deleting expired sessions:', err);
-    }
-};
-
-function setIntervalAndExecute() {
-    clearInterval(loginTimout);
-    loginTimout = setInterval(deleteExpiredSessions, 1000 * SESSION_TIMEOUT_SECONDS);
-}
 //--------------------------------------------
 
-module.exports = { User, Course, Student_Course, Instructor_Course, Session, setIntervalAndExecute,
+module.exports = { User, Course, Student_Course, Instructor_Course, Session,
                    Exam, Assignment, StudentExam, AssignmentAnswer, Question };

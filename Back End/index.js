@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const ENV = require('../env');
 const port = ENV.Back_Port;
+const { Session } = require('./db/Database');
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -34,12 +35,11 @@ app.use(UserRouter); app.use(CourseRouter);
 app.use(AssignmentRouter); app.use(ExamRouter);
 
 // Middleware to catch any errors
-app.use((err, req, res, next) => {
+app.use((err, req, res, _) => {
     console.warn('------------------------------------------------------');
     console.error(err);
     console.warn('------------------------------------------------------');
     console.log();
-    res.status(200).json({ error: err });
     res.end();
 });
 
