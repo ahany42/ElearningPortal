@@ -2,8 +2,9 @@ import {useEffect, useRef, useState} from 'react'
 import Card from '../Card/Card'
 import './Coursescards.css'
 import AddCourseForm from '../AddCourseForm/Form';
+import SearchBar from '../Seach-MUI/Search-MUI';
 
-const Coursescards = ({ courses, addCourseHandler ,filterHandler}) => {
+const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
     const [showForm, setShowForm] = useState(false);
     const CardsContainer = useRef(null);
 
@@ -40,14 +41,22 @@ const Coursescards = ({ courses, addCourseHandler ,filterHandler}) => {
           />
         )}
         <span ref={CardsContainer}>
-          <div className="d-flex">
+          <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
+            <SearchBar setFilter={setFilter} />
             <i
-              title="Add Course"
-              className="fa-solid fa-plus w-auto me-5 ms-auto"
-              onClick={showFormHandler}
+                title="Add Course"
+                className="fa-solid fa-plus AddIcon"
+                onClick={showFormHandler}
             ></i>
           </div>
-          <div className="cards">{myCards}</div>
+          <div className="cards mb-3">
+              {
+                  !myCards.length && <h1 className="NoCourses">No Courses Found</h1>
+              }
+              {
+                  myCards
+              }
+          </div>
         </span>
       </>
     );

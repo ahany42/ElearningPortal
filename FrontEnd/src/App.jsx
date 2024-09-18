@@ -75,12 +75,12 @@ function App() {
             return [...prevState, newCourse]
         });
     };
-        const filterHandler = ( courses) => {
+        const filterHandler = ( courses ) => {
           if (!courses) {
-          return [];
+            return [];
           }
           if (!filter) {
-          return courses
+            return courses
           }
           return courses.filter((el) =>
             el.title.toLowerCase().includes(filter.toLowerCase())
@@ -105,27 +105,12 @@ function App() {
             <Route
               path="/courses"
               element={
-                <>
-                  <input
-                    style={{
-                      backgroundColor: "#616161",
-                      opacity: "0.7",
-                      border: "grey solid 3px",
-                      borderRadius: "10%",
-                      width: "fit-content",
-                      margin: "auto",
-                    }}
-                    type="text"
-                    placeholder="Search"
-                    id="filter"
-                    onChange={(e) => setFilter(e.target.value)}
-                  />
                   <Coursescards
                     courses={courses}
                     addCourseHandler={addCourseHandler}
                     filterHandler={filterHandler}
+                    setFilter={setFilter}
                   />
-                </>
               }
             />
             <Route

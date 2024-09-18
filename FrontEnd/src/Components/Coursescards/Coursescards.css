@@ -1,7 +1,24 @@
 .fa-solid {
-  font-size: 30px;
-  margin: 10px;
   color: #616161;
+}
+
+.AddIcon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+  width: auto;
+  margin-right: 3rem;
+  font-size: 30px;
+  color: #616161;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.NoCourses {
+  font-size: 35px;
+  color: #616161;
+  margin-top: 2rem;
 }
 
 .cards {

@@ -6,7 +6,7 @@ const Card = ({ id, title, desc, hours }) => {
     
   return (
       <div className="myCard" key={id}>
-          <i className="fa-solid fa-pen-to-square"></i>
+          <i title='Edit Course' className="fa-solid fa-pen-to-square"></i>
           <h4 className="pascalCase-text bold-text">{title}</h4>
           <ul>
               <li>{desc}</li>

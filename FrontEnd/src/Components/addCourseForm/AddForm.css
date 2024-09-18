@@ -103,8 +103,17 @@
     border-color: #fff;
 }
 .AddCourseButton{
-    margin-bottom:20px;
+    background-color: rgb(33 33 33);
+    margin-bottom: 20px;
+    border: 1px solid #1330BE;
+    color: #5c66ff;
 }
+
+.AddCourseButton:hover{
+    background-color: #1330BE;
+    color: white;
+}
+
 .CancelButton{
     border-width:2px !important;
 }
