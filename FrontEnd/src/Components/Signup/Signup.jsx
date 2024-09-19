@@ -6,6 +6,8 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
+  FormLabel,
+  FormControlLabel,
   TextField,
   InputAdornment,
   Box,
@@ -16,6 +18,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [genderValue, setGenderValue] = useState("Male");
   const [formData, setFormData] = useState({
       name:'',
       gender:'male',
@@ -27,7 +30,9 @@ const SignUp = () => {
  
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
-
+  const handleGenderChange = (event)=>{
+    setGenderValue(event.target.value);
+  }
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formData.name);
@@ -154,6 +159,13 @@ const SignUp = () => {
           },
         }}
       >
+         <FormControl>
+      <FormLabel>Select an Option</FormLabel>
+      <RadioGroup value={genderValue} onChange={handleGenderChange}>
+        <FormControlLabel value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="female" control={<Radio />} label="Female" />
+      </RadioGroup>
+    </FormControl>
         <InputLabel>Password</InputLabel>
         <OutlinedInput
           name="password"
