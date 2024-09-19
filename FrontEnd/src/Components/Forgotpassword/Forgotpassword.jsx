@@ -1,23 +1,39 @@
 import React, {useState} from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button,
   FormControl,
   TextField,
   Box,
 } from "@mui/material";
-// import axios from 'axios';
+import axios from 'axios';
 import { NavLink } from "react-router-dom";
 const ForgotPassword = () => {
   const [formData, setFormData] = useState({
       email: '',
   });
 
-   const handleSubmit = (event) => {
+   const handleSubmit = async(event) => {
     event.preventDefault();
     console.log(formData.email);
+    try{
+      const response = await axios.post('http://localhost:3008/forgotPassword', { formData });
+      if (response.status === 200) {
+        toast.success('Reset link sent successfully! Please check your email.');
+      } else {
+        toast.warn('Something went wrong. Please try again.');
+      }
+    }
+    catch(error){
+      toast.warn('Something went wrong. Please try again.');
+    }
+     
   };
 
   return (
+    <>
+      <ToastContainer/>
     <Box sx={{width: '80%', margin: '80px auto'}}>
       <h4>Reset Your Password</h4>
       <form onSubmit={handleSubmit} >
@@ -97,6 +113,7 @@ const ForgotPassword = () => {
       </NavLink>
       </form>
     </Box>
+    </>
   );
 };
 
