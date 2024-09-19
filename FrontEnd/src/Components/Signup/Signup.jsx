@@ -3,6 +3,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 import {
   Button,
   FormControl,
@@ -40,7 +41,7 @@ const SignUp = () => {
       gender:event.target.value ,
     }));
   }
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     if(!formData.name || !formData.email || !formData.gender 
     ||!formData.password ||!formData.username || !formData.confirmpassword )
@@ -48,16 +49,19 @@ const SignUp = () => {
     else if(formData.password !== formData.confirmpassword && formData.password && formData.confirmpassword)
     toast.warn("Password and Confirm Password are not matching")
     else{
-      console.log(formData.name);
-      console.log(formData.username);
-      console.log(formData.role);
-      console.log(formData.gender);
-      console.log(formData.email);
-      console.log(formData.password);
-      console.log(formData.confirmpassword);
+      try {
+        const response = await axios.post('http://localhost:3008/login', { formData });
+        if (response.status !== 200) {
+         toast.success(response.message);
+        } else {
+          toast.warn(response.message);
+        }
+      } catch (error) {
+        toast.warn('Something went wrong. Please try again.');
     }
      
   }
+}
  
 
   return (
