@@ -5,22 +5,22 @@ import {
   TextField,
   Box,
 } from "@mui/material";
+// import axios from 'axios';
 import { NavLink } from "react-router-dom";
 const ForgotPassword = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
       email: '',
   });
 
    const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get("email");
+    console.log(formData.email);
   };
 
   return (
-    <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
+    <Box sx={{width: '80%', margin: '80px auto'}}>
       <h4>Reset Your Password</h4>
+      <form onSubmit={handleSubmit} >
       {/* Email Field */}
       <TextField
         label="Email"
@@ -95,6 +95,7 @@ const ForgotPassword = () => {
       >
         Back to Login
       </NavLink>
+      </form>
     </Box>
   );
 };

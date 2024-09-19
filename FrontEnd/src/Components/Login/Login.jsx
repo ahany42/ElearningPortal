@@ -24,15 +24,14 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get("email");
-    const password = formData.get("password");
-    alert(`Signing in with Email: ${email}, Password: ${password}`);
+    console.log(formData.email);
+    console.log(formData.password);
   };
 
   return (
-    <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
+    <Box  sx={{width: '80%', margin: '80px auto'}}>
         <h4>Login to your account</h4>
+        <form onSubmit={handleSubmit}>
       {/* Email Field */}
       <TextField
         label="Email"
@@ -138,6 +137,7 @@ const Login = () => {
       >
         Don't have an account? Sign up
       </NavLink>
+      </form>
     </Box>
   );
 };

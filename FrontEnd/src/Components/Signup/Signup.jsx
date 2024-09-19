@@ -18,8 +18,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
       name:'',
-      gender:'',
-      userName:'',
+      gender:'male',
+      username:'',
       role:'User',
       email: '',
       password: '',
@@ -30,28 +30,20 @@ const SignUp = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setFormData({
-   
-      name : event.target.name.value,
-      gender :event.target.gender.value,
-      username : event.target.username.value,
-      role : "User",
-      email : event.target.email.value,
-      password : event.target.password.value,
-    });
+    console.log(formData.name);
+    console.log(formData.username);
+    console.log(formData.role);
+    console.log(formData.gender);
+    console.log(formData.email);
+    console.log(formData.password);
     
-    console.log(event.target.value)
-    console.log(event.target.name.value)
-    console.log(event.target.gender.value)
-    console.log(event.target.email.value)
-    console.log(event.target.password.value)
-    console.log(event.target.username.value)
   }
  
 
   return (
-    <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
+    <Box  sx={{width: '80%', margin: '80px auto'}}>
          <h4>Create New Account</h4>
+         <form onSubmit={handleSubmit}>
         <TextField
         label="Full Name"
         name="name"
@@ -204,6 +196,7 @@ const SignUp = () => {
       >
         Have an account? Sign in
       </NavLink>
+      </form>
     </Box>
   );
 }
