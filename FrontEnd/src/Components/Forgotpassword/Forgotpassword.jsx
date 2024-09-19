@@ -20,9 +20,9 @@ const ForgotPassword = () => {
     try{
       const response = await axios.post('http://localhost:3008/forgotPassword', { formData });
       if (response.status === 200) {
-        toast.success('Reset link sent successfully! Please check your email.');
+        toast.success(response.message);
       } else {
-        toast.warn('Something went wrong. Please try again.');
+        toast.warn(response.message);
       }
     }
     catch(error){

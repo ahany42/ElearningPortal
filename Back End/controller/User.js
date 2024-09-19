@@ -100,10 +100,10 @@ module.exports.forgotPassword = async (req, res, next) => {
     }
     // Send email with password reset link
 
-    res.status(201).json({message: "Password reset link sent successfully"});
+    res.status(200).json({message: "Password reset link sent successfully"});
   }
   catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occurred" });
+    res.status(201).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: forgotPassword function => ${error}`);
   }
 };
