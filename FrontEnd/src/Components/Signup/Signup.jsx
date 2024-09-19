@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button,
   FormControl,
@@ -18,35 +20,50 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [genderValue, setGenderValue] = useState("Male");
+  const [genderValue, setGenderValue] = useState("");
   const [formData, setFormData] = useState({
       name:'',
-      gender:'male',
+      gender:genderValue,
       username:'',
       role:'User',
       email: '',
       password: '',
+      confirmpassword:'',
   });
  
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
   const handleGenderChange = (event)=>{
     setGenderValue(event.target.value);
+    setFormData((prevData) => ({
+      ...prevData,
+      gender:event.target.value ,
+    }));
   }
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formData.name);
-    console.log(formData.username);
-    console.log(formData.role);
-    console.log(formData.gender);
-    console.log(formData.email);
-    console.log(formData.password);
-    
+    if(!formData.name || !formData.email || !formData.gender 
+    ||!formData.password ||!formData.username || !formData.confirmpassword )
+    toast.warn("Please Fill All Fields");
+    else if(formData.password !== formData.confirmpassword && formData.password && formData.confirmpassword)
+    toast.warn("Password and Confirm Password are not matching")
+    else{
+      console.log(formData.name);
+      console.log(formData.username);
+      console.log(formData.role);
+      console.log(formData.gender);
+      console.log(formData.email);
+      console.log(formData.password);
+      console.log(formData.confirmpassword);
+    }
+     
   }
  
 
   return (
-    <Box  sx={{width: '80%', margin: '80px auto'}}>
+    <>
+    <ToastContainer/>
+        <Box  sx={{width: '80%', margin: '80px auto'}}>
          <h4>Create New Account</h4>
          <form onSubmit={handleSubmit}>
         <TextField
@@ -134,7 +151,6 @@ const SignUp = () => {
           },
         }}
       />
-
       {/* Password Field */}
       <FormControl
         variant="outlined"
@@ -159,13 +175,6 @@ const SignUp = () => {
           },
         }}
       >
-         <FormControl>
-      <FormLabel>Select an Option</FormLabel>
-      <RadioGroup value={genderValue} onChange={handleGenderChange}>
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-      </RadioGroup>
-    </FormControl>
         <InputLabel>Password</InputLabel>
         <OutlinedInput
           name="password"
@@ -186,8 +195,62 @@ const SignUp = () => {
           }
           label="Password"
         />
+        
       </FormControl> 
-
+      <FormControl
+        variant="outlined"
+        fullWidth
+        sx={{
+          my: 2,
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'grey',
+            },
+            '&:hover fieldset': {
+              borderColor: '#274546',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#274546',
+            },
+          },
+          '& .MuiInputLabel-root': {
+            '&.Mui-focused': {
+              color: '#274546 !important',
+            },
+          },
+        }}
+      >
+        <InputLabel>Confirm Password</InputLabel>
+        <OutlinedInput
+          name="password"
+          required
+          value={formData.confirmpassword}
+          onChange={(e) => setFormData({...formData, confirmpassword: e.target.value})}
+          type={showPassword ? 'text' : 'password'}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Confirm Password"
+        />
+        
+      </FormControl> 
+      <FormControl>
+      <FormLabel>Gender</FormLabel>
+      <RadioGroup value={genderValue} onChange={handleGenderChange} >
+      <Box display="flex" flexDirection="row">
+          <FormControlLabel value="male" control={<Radio onClick={()=>handleGenderChange("male")}/>} label="Male"/>
+          <FormControlLabel value="female" control={<Radio onClick={()=>handleGenderChange("female")}/>} label="Female" />
+        </Box>
+      </RadioGroup>
+    </FormControl>
       {/* Sign In Button */}
       <Button
         type="submit"
@@ -210,6 +273,7 @@ const SignUp = () => {
       </NavLink>
       </form>
     </Box>
+    </>
   );
 }
 
