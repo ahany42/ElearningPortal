@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Button,
   FormControl,
@@ -22,13 +24,28 @@ const Login = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    console.log(formData.email);
-    console.log(formData.password);
+    if(formData.email && formData.password){
+      try {
+        const response = await axios.post('http://localhost:3008/login', { formData });
+        if (response.status !== 200) {
+         toast.success(response.message);
+        } else {
+          toast.warn(response.message);
+        }
+      } catch (error) {
+        toast.warn('Something went wrong. Please try again.');
+    }
+  }
+  else{
+    toast.warn("Please Fill All Fields");
+  }
   };
 
   return (
+    <>
+    <ToastContainer/>
     <Box  sx={{width: '80%', margin: '80px auto'}}>
         <h4>Login to your account</h4>
         <form onSubmit={handleSubmit}>
@@ -139,6 +156,7 @@ const Login = () => {
       </NavLink>
       </form>
     </Box>
+    </>
   );
 };
 
