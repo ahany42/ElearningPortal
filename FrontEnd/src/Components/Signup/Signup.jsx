@@ -11,7 +11,6 @@ import {
   Box,
   IconButton,
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
@@ -19,38 +18,47 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
       name:'',
-      gender:"male",
+      gender:'',
       userName:'',
-      role:'',
+      role:'User',
       email: '',
       password: '',
   });
-
+ 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const handleSubmit = (event) => 
+  const handleSubmit = (event) => {
     event.preventDefault();
     setFormData({
-      email : formData.get("email"),
-      password : formData.get("password"),
-      userName : formData.get("username"),
-      name : formData.get("name"),
-      gender : formData.get("gender"),
-      role : "User"
+   
+      name : event.target.name.value,
+      gender :event.target.gender.value,
+      username : event.target.username.value,
+      role : "User",
+      email : event.target.email.value,
+      password : event.target.password.value,
     });
-  ;
+    
+    console.log(event.target.value)
+    console.log(event.target.name.value)
+    console.log(event.target.gender.value)
+    console.log(event.target.email.value)
+    console.log(event.target.password.value)
+    console.log(event.target.username.value)
+  }
+ 
 
   return (
     <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
          <h4>Create New Account</h4>
         <TextField
         label="Full Name"
-        name="Name"
+        name="name"
         fullWidth
         type="text"
         value={formData.name}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
+        onChange={(e) => setFormData({...formData, name: e.target.value})}
         required
         sx={{
           my: 2,
@@ -77,8 +85,8 @@ const SignUp = () => {
         name="username"
         fullWidth
         type="text"
-        value={formData.userName}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
+        value={formData.username}
+        onChange={(e) => setFormData({...formData, username: e.target.value})}
         required
         sx={{
           my: 2,
