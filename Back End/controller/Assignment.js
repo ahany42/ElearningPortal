@@ -78,8 +78,9 @@ class AssignmentController {
 
             // Save to database
             const savedAssignment = await newAssignment.save();
-            return res.status(200).json({data: savedAssignment});
+            return res.status(201).json({data: savedAssignment});
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Create Assignment Function => ${err}`);
         }
     }
@@ -125,8 +126,9 @@ class AssignmentController {
 
             // Save the student's answer to the database
             const savedAnswer = await newAssignmentAnswer.save();
-            return res.status(200).json({ message: "Assignment submitted successfully", data: savedAnswer });
+            return res.status(201).json({ message: "Assignment submitted successfully", data: savedAnswer });
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Solve Assignment Function => ${err}`);
         }
     }
@@ -169,8 +171,9 @@ class AssignmentController {
             // Update the grade
             answer.grade = grade;
             const updatedAnswer = await answer.save();
-            return res.status(200).json({ message: "Assignment graded successfully", data: updatedAnswer });
+            return res.status(201).json({ message: "Assignment graded successfully", data: updatedAnswer });
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Grade Assignment Function => ${err}`);
         }
     }
@@ -185,8 +188,9 @@ class AssignmentController {
             }
 
             const assignments = await Assignment.find().populate('courseID', 'title');
-            return res.status(200).json({ data: assignments });
+            return res.status(201).json({ data: assignments });
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Get All Assignments Function => ${err}`);
         }
     }
@@ -207,8 +211,9 @@ class AssignmentController {
                 return res.status(200).json({ error: "Assignment not found" });
             }
 
-            return res.status(200).json(assignment);
+            return res.status(201).json({data: assignment});
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Get Assignment By ID Function => ${err}`);
         }
     }
@@ -246,8 +251,9 @@ class AssignmentController {
 
             // Save the updated assignment
             const updatedAssignment = await assignment.save();
-            return res.status(200).json(updatedAssignment);
+            return res.status(201).json({ message: "Assignment updated successfully", data: updatedAssignment });
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Update Assignment Function => ${err}`);
         }
     }
@@ -269,8 +275,9 @@ class AssignmentController {
                 return res.status(200).json({ error: "Assignment not found" });
             }
 
-            return res.status(200).json({ message: "Assignment deleted successfully" });
+            return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully` });
         } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
             next(`ERROR IN: Delete Assignment Function => ${err}`);
         }
     }
