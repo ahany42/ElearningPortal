@@ -39,7 +39,7 @@ module.exports.login = async (req, res, next) => {
       }
     }
     catch(error) {
-        res.status(200).json({ error: "Unexpected Error Occured" });
+        res.status(200).json({ error: "Unexpected Error Occurred" });
         next(`ERROR IN: login function => ${error}`);
     }
 };
@@ -119,7 +119,7 @@ module.exports.getUser = async (req, res, next) => {
     res.status(201).json({ data: user });
   }
   catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getUser function => ${error}`);
   }
 };
@@ -145,7 +145,7 @@ module.exports.logout = async (req, res, next) => {
     res.status(201).json({ message: "Logged out successfully" });
   }
   catch (err) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Logout Function => ${err}`);
   }
 };
@@ -167,7 +167,7 @@ module.exports.updateUser = async (req, res, next) => {
 
     res.status(201).json({ message: `User (${user.name}) updated successfully` });
   } catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
-    next(`ERROR IN: updateUser fuction => ${error}`);
+    res.status(200).json({ error: "Unexpected Error Occurred" });
+    next(`ERROR IN: updateUser function => ${error}`);
   }
 };

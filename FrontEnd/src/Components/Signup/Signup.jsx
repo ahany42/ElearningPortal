@@ -17,12 +17,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [genderValue, setGenderValue] = useState("Male");
   const [formData, setFormData] = useState({
       name:'',
-      gender:genderValue,
+      gender:"male",
       userName:'',
-      role:null,
+      role:'',
       email: '',
       password: '',
   });
@@ -30,15 +29,17 @@ const SignUp = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event) => 
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const userName = formData.get("username");
-    const name = formData.get("name");
-    const gender = formData.get("gender");
-  };
+    setFormData({
+      email : formData.get("email"),
+      password : formData.get("password"),
+      userName : formData.get("username"),
+      name : formData.get("name"),
+      gender : formData.get("gender"),
+      role : "User"
+    });
+  ;
 
   return (
     <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
@@ -197,6 +198,6 @@ const SignUp = () => {
       </NavLink>
     </Box>
   );
-};
+}
 
 export default SignUp;
