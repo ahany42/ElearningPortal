@@ -50,7 +50,7 @@ const SignUp = () => {
     toast.warn("Password and Confirm Password are not matching")
     else{
       try {
-        const response = await axios.post('http://localhost:3008/login', { formData });
+        const response = await axios.post('http://localhost:3008/register', { formData });
         if (response.status !== 200) {
          toast.success(response.message);
         } else {
