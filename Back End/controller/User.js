@@ -75,7 +75,7 @@ module.exports.register = async (req, res, next) => {
     res.status(201).json({ message: `User (${user.name}) registered successfully` });
   }
   catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Register function => ${error}`);
   }
 };
@@ -86,7 +86,7 @@ module.exports.getUsers = async (req, res, next) => {
     res.status(201).json({data: users});
   }
   catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getUsers function => ${error}`);
   }
 };
@@ -103,7 +103,7 @@ module.exports.forgotPassword = async (req, res, next) => {
     res.status(201).json({message: "Password reset link sent successfully"});
   }
   catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: forgotPassword function => ${error}`);
   }
 };
