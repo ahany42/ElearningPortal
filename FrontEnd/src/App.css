@@ -110,3 +110,7 @@ h6{
   background-color: black !important;
 }
 
+.Toastify__close-button {
+  margin: auto;
+}
+

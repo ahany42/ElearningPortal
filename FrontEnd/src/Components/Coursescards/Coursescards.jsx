@@ -3,10 +3,22 @@ import Card from '../Card/Card'
 import './Coursescards.css'
 import AddCourseForm from '../AddCourseForm/Form';
 import SearchBar from '../Seach-MUI/Search-MUI';
+import {useNavigate} from "react-router-dom";
 
 const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
     const [showForm, setShowForm] = useState(false);
     const CardsContainer = useRef(null);
+    const navigate = useNavigate();
+    const notify = () => toast("Wow so easy!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+    });
+
 
     useEffect(() => {
         if (showForm) {
@@ -40,9 +52,9 @@ const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
             showFormHandler={showFormHandler}
           />
         )}
-        <span ref={CardsContainer}>
+          <span ref={CardsContainer}>
           <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
-            <SearchBar setFilter={setFilter} />
+            <SearchBar setFilter={setFilter}/>
             <i
                 title="Add Course"
                 className="fa-solid fa-plus AddIcon"

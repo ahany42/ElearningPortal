@@ -20,6 +20,16 @@ function passwordAcceptance(password) {
 module.exports.login = async (req, res, next) => {
     try {
       const { username, password } = req.body;
+
+      // Validate the username
+      if (!username) {
+        return res.status(200).json({ error: "Username is required" });
+      }
+      // Validate the password
+      if (!password) {
+        return res.status(200).json({ error: "Password is required" });
+      }
+
       const user = await User.findOne({ username });
 
       if (!user) {
@@ -30,18 +40,35 @@ module.exports.login = async (req, res, next) => {
       }
 
       else {
-          const token = await jwt.sign({ username:user.username, id:user._id, role:user.role, un: uuidv4() },Secret_Key,{expiresIn:"1h"})
+          const token = await jwt.sign(
+              { username:user.username, id:user._id, role:user.role },
+              Secret_Key,
+              {expiresIn:"10s"}
+          )
+          await Session.deleteMany();
           await Session.insertMany([{
             token,
             createDate: Date.now()
           }]);
-          res.status(201).json({ message: "Login successful", data:{ Token : token } });
+
+          res.status(201).json({ message: "Login successful", data: token });
       }
     }
     catch(error) {
         res.status(200).json({ error: "Unexpected Error Occurred" });
         next(`ERROR IN: login function => ${error}`);
     }
+};
+
+module.exports.logout = async (req, res, next) => {
+  try {
+    await Session.deleteOne();
+    res.status(201).json({ message: "Logged out successfully" });
+  }
+  catch (err) {
+    res.status(200).json({ error: "Unexpected Error Occured" });
+    next(`ERROR IN: Logout Function => ${err}`);
+  }
 };
 
 async function idValidation(id) {
