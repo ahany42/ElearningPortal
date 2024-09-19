@@ -9,7 +9,6 @@ import {
   Box,
   IconButton,
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
@@ -33,6 +32,7 @@ const Login = () => {
 
   return (
     <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
+        <h4>Login to your account</h4>
       {/* Email Field */}
       <TextField
         label="Email"

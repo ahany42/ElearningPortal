@@ -42,6 +42,7 @@ const SignUp = () => {
 
   return (
     <Box onSubmit={handleSubmit} sx={{width: '80%', margin: '80px auto'}}>
+         <h4>Create New Account</h4>
         <TextField
         label="Full Name"
         name="Name"
