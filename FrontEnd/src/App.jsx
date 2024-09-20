@@ -170,39 +170,12 @@ function App() {
         <div className="body-content">
             <ToastContainer style={{width: 'fit-content'}} />
             <Routes>
-              <Route
-                path="/"
-                element={
-                    <Login setIsAuthenticated={setIsAuthenticated} />
-                }
-              />
+              <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} /> }/>
               <Route path="/ForgetPassword" element={<ForgotPassword />} />
               <Route path="/SignUp" element={<SignUp />} />
-              <Route
-                path="/courses"
-                element={
-                    <CoursesPage  courses={courses}
-                    addCourseHandler={addCourseHandler}
-                    filterHandler={filterHandler}
-                    setFilter={setFilter}
-                    isAuthenticated={isAuthenticated}/>
-                }
-              />
-                <Route
-                path="/deadlines"
-                element={
-                 <DeadlinesPage/>
-                }
-              />
-              <Route
-                path="*"
-                element={
-                  <Placeholder
-                    text="Page Not Found"
-                    img={NotFoundImg}
-                    buttonText="Back To Home"
-                    buttonRoute="/"
-                  />
+              <Route path="/courses" element={<CoursesPage  courses={courses} addCourseHandler={addCourseHandler} filterHandler={filterHandler} setFilter={setFilter} isAuthenticated={isAuthenticated}/> }/>
+              <Route path="/deadlines"element={ <DeadlinesPage/>} />
+              <Route path="*" element={<Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
                 }
               />
           

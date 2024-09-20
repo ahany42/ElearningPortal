@@ -1,11 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
+import {useNavigate} from "react-router-dom";
 import CourseCard from '../CourseCard/CourseCard';
-import './Coursescards.css'
 import AddCourseForm from '../addCourseForm/AddCourseForm';
 import Placeholder from '../Placeholder/Placeholder';
 import SearchBar from '../Seach-MUI/Search-MUI';
-import {useNavigate} from "react-router-dom";
 import NoCoursesImg from '../../assets/Student.svg';
+import './Coursescards.css'
+
 const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
     const [showForm, setShowForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);

@@ -70,14 +70,7 @@ const SignUp = () => {
         <Box  sx={{width: '80%', margin: '80px auto'}}>
          <h4>Create New Account</h4>
          <form onSubmit={handleSubmit}>
-        <TextField
-        label="Full Name"
-        name="name"
-        fullWidth
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({...formData, name: e.target.value})}
-        required
+        <TextField label="Full Name" name="name" fullWidth type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -98,14 +91,7 @@ const SignUp = () => {
           },
         }}
       />
-       <TextField
-        label="User Name"
-        name="username"
-        fullWidth
-        type="text"
-        value={formData.username}
-        onChange={(e) => setFormData({...formData, username: e.target.value})}
-        required
+       <TextField label="User Name" name="username" fullWidth type="text" value={formData.username} onChange={(e) => setFormData({...formData, username: e.target.value})} required
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -127,14 +113,7 @@ const SignUp = () => {
         }}
       />
       {/* Email Field */}
-      <TextField
-        label="Email"
-        name="email"
-        fullWidth
-        type="email"
-        value={formData.email}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
-        required
+      <TextField label="Email" name="email" fullWidth type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -156,9 +135,7 @@ const SignUp = () => {
         }}
       />
       {/* Password Field */}
-      <FormControl
-        variant="outlined"
-        fullWidth
+      <FormControl variant="outlined" fullWidth
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -180,19 +157,10 @@ const SignUp = () => {
         }}
       >
         <InputLabel>Password</InputLabel>
-        <OutlinedInput
-          name="password"
-          required
-          value={formData.password}
-          onChange={(e) => setFormData({...formData, password: e.target.value})}
-          type={showPassword ? 'text' : 'password'}
+        <OutlinedInput name="password" required value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} type={showPassword ? 'text' : 'password'}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
+              <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end" >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
@@ -202,8 +170,7 @@ const SignUp = () => {
         
       </FormControl> 
       <FormControl
-        variant="outlined"
-        fullWidth
+        variant="outlined"fullWidth
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -225,19 +192,11 @@ const SignUp = () => {
         }}
       >
         <InputLabel>Confirm Password</InputLabel>
-        <OutlinedInput
-          name="password"
-          required
-          value={formData.confirmpassword}
-          onChange={(e) => setFormData({...formData, confirmpassword: e.target.value})}
+        <OutlinedInput name="password" required value={formData.confirmpassword} onChange={(e) => setFormData({...formData, confirmpassword: e.target.value})}
           type={showPassword ? 'text' : 'password'}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
+              <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
@@ -256,23 +215,12 @@ const SignUp = () => {
       </RadioGroup>
     </FormControl>
       {/* Sign In Button */}
-      <Button
-        type="submit"
-        variant="contained"
-        className="green-bg pascalCase-text"
-        fullWidth
-        sx={{ my: 2 }}
-      >
+      <Button type="submit" variant="contained" className="green-bg pascalCase-text" fullWidth sx={{ my: 2 }}>
         Sign Up
       </Button>
 
       {/* Sign Up Link */}
-      <NavLink
-        to="/"
-        variant="body2"
-        className="blue-text"
-        style={{ display: "block", marginTop: "1rem" }}
-      >
+      <NavLink to="/" variant="body2" className="blue-text" style={{ display: "block", marginTop: "1rem" }}>
         Have an account? Sign in
       </NavLink>
       </form>

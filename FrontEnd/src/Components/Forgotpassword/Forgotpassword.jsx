@@ -38,16 +38,8 @@ const ForgotPassword = () => {
       <h4>Reset Your Password</h4>
       <form onSubmit={handleSubmit} >
       {/* Email Field */}
-      <TextField
-        label="Email"
-        name="email"
-        fullWidth
-        type="email"
-        value={formData.email}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
-        required
-        sx={{
-          my: 2,
+      <TextField label="Email" name="email" fullWidth type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required
+        sx={{ my: 2,
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
               borderColor: 'grey', 
@@ -68,9 +60,7 @@ const ForgotPassword = () => {
       />
 
       {/* Password Field */}
-      <FormControl
-        variant="outlined"
-        fullWidth
+      <FormControl variant="outlined" fullWidth
         sx={{
           my: 2,
           '& .MuiOutlinedInput-root': {
@@ -92,23 +82,12 @@ const ForgotPassword = () => {
         }}
       >
       </FormControl> 
-      <Button
-        type="submit"
-        variant="contained"
-        className="green-bg pascalCase-text"
-        fullWidth
-        sx={{ my: 2 }}
-      >
+      <Button type="submit" variant="contained" className="green-bg pascalCase-text" fullWidth sx={{ my: 2 }}>
         Reset Password
       </Button>
 
       {/* Forgot Password Link */}
-      <NavLink
-        to="/"
-        variant="body2"
-        className="blue-text"
-        style={{ display: "block", marginTop: "1rem" }}
-      >
+      <NavLink to="/" variant="body2" className="blue-text" style={{ display: "block", marginTop: "1rem" }}>
         Back to Login
       </NavLink>
       </form>
