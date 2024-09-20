@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import Login from "./Components/Login/Login.jsx";
+import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import SignUp from "./Components/SignUp/SignUp.jsx";
 import "./index.css";
@@ -10,7 +11,6 @@ import "./App.css";
 import Header from "./Components/Header/Header.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Footer from "./Components/Footer/Footer.jsx";
-import Coursescards from "./Components/Coursescards/Coursescards.jsx";
 import {checkCookieExpiry, getCookie} from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -173,6 +173,7 @@ function App() {
                 path="/"
                 element={
                     <Login setIsAuthenticated={setIsAuthenticated} />
+                    
                 }
               />
               <Route path="/ForgetPassword" element={<ForgotPassword />} />
@@ -180,13 +181,11 @@ function App() {
               <Route
                 path="/courses"
                 element={
-                    <Coursescards
-                        courses={courses}
-                        addCourseHandler={addCourseHandler}
-                        filterHandler={filterHandler}
-                        setFilter={setFilter}
-                        isAuthenticated={isAuthenticated}
-                    />
+                    <CoursesPage  courses={courses}
+                    addCourseHandler={addCourseHandler}
+                    filterHandler={filterHandler}
+                    setFilter={setFilter}
+                    isAuthenticated={isAuthenticated}/>
                 }
               />
               <Route

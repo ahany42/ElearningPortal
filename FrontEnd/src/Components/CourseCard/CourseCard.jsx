@@ -1,8 +1,7 @@
 import React from 'react'
-import './Card.css'
+import './CourseCard.css'
 
-
-const Card = ({ id, title, desc, hours }) => {
+const CourseCard = ({ id, title, desc, hours }) => {
     
   return (
       <div className="myCard" key={id}>
@@ -19,4 +18,4 @@ const Card = ({ id, title, desc, hours }) => {
   );
 };
 
-export default Card
+export default CourseCard

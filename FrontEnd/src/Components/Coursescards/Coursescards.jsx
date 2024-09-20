@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import Card from '../Card/Card'
+import Card from '../CourseCard/CourseCard';
 import './Coursescards.css'
 import AddCourseForm from '../AddCourseForm/Form';
 import SearchBar from '../Seach-MUI/Search-MUI';
