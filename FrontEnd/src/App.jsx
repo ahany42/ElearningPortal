@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
+import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import SignUp from "./Components/SignUp/SignUp.jsx";
 import "./index.css";
@@ -187,6 +188,12 @@ function App() {
                     isAuthenticated={isAuthenticated}/>
                 }
               />
+                <Route
+                path="/deadlines"
+                element={
+                 <DeadlinesPage/>
+                }
+              />
               <Route
                 path="*"
                 element={
@@ -198,6 +205,7 @@ function App() {
                   />
                 }
               />
+          
             </Routes>
         </div>
 
