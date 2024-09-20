@@ -1,12 +1,13 @@
 import {useEffect, useRef, useState} from 'react'
-import Card from '../CourseCard/CourseCard';
+import CourseCard from '../CourseCard/CourseCard';
 import './Coursescards.css'
-import AddCourseForm from '../AddCourseForm/Form';
+import AddCourseForm from '../addCourseForm/AddCourseForm';
 import SearchBar from '../Seach-MUI/Search-MUI';
 import {useNavigate} from "react-router-dom";
 
-const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
+const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
     const [showForm, setShowForm] = useState(false);
+    const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
     const navigate = useNavigate();
     const notify = () => toast("Wow so easy!", {
@@ -19,8 +20,9 @@ const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
         progress: undefined
     });
 
-
+    
     useEffect(() => {
+      setCoursesList(courses);
         if (showForm) {
             CardsContainer.current.style.opacity = 0.3;
             CardsContainer.current.style.pointerEvents = 'none';
@@ -35,15 +37,6 @@ const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
     const showFormHandler = () => {
       setShowForm(!showForm);
     };
-
-
-
-
-    const myCards = filterHandler(courses).map((course) => {
-      return <Card key={course.id} {...course} />;
-    });
-
-
     return (
       <>
         {showForm && (
@@ -63,15 +56,15 @@ const Coursescards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
           </div>
           <div className="cards mb-3">
               {
-                  !myCards.length && <h1 className="NoCourses">No Courses Found</h1>
+                  !coursesList.length && <h1 className="NoCourses">No Courses Found</h1>
               }
-              {
-                  myCards
-              }
+             {Array.isArray(coursesList) && coursesList.length && coursesList.map(course => (
+            <CourseCard key={course.id} course={course} />
+            ))}
           </div>
         </span>
       </>
     );
 };
 
-export default Coursescards
+export default CoursesCards

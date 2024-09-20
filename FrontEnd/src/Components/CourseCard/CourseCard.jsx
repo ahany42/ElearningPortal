@@ -14,6 +14,7 @@ const CourseCard = ({ id, title, desc, hours }) => {
           <i title='Exams' className="examIcon fa-solid fa-file-lines"></i>
           <i title='Solved Assignments' className="fa-solid fa-folder"></i>
           <i title='Assignments' className="fa-solid fa-list-check"></i>
+          <Button>Enroll</Button>
       </div>
   );
 };

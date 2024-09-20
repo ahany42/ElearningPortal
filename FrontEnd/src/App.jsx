@@ -71,7 +71,7 @@ const addCourse =
 function App() {
     const routes = useLocation();
     const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
-    const [courses,setCourses]=useState(data)
+    const [courses,setCourses]=useState(data);
     const [filter, setFilter] = useState("");
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const navigate = useNavigate();
@@ -173,7 +173,6 @@ function App() {
                 path="/"
                 element={
                     <Login setIsAuthenticated={setIsAuthenticated} />
-                    
                 }
               />
               <Route path="/ForgetPassword" element={<ForgotPassword />} />

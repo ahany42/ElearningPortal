@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import './AddForm.css';
+import './AddCourseForm.css';
 
-const AddForm = ({ addHandler, showFormHandler }) => {
+const AddCourseForm = ({ addHandler, showFormHandler }) => {
     const [error, setError] = useState('');
     const [form, setForm] = useState({ title: '', desc: '', hours: '' });
 
@@ -61,7 +61,7 @@ const AddForm = ({ addHandler, showFormHandler }) => {
                     <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required />
                 </div>
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2 ps-2 pe-2'>
-                    <button className="btn AddCourseButton" type="submit">Add</button>
+                    <button className="btn AddCourseButton blue-bg light-text" type="submit">Add</button>
                     <button className="btn btn-outline-danger  CancelButton" onClick={showFormHandler} type="button">Cancel</button>
                 </div>
             </form>
@@ -69,4 +69,4 @@ const AddForm = ({ addHandler, showFormHandler }) => {
     )
 }
 
-export default AddForm;
+export default AddCourseForm;
