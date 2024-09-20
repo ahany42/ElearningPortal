@@ -58,6 +58,7 @@ const Login = ({ setIsAuthenticated }) => {
               // Successful login, redirect to courses
               setCookie('token', data.data);
               setIsAuthenticated(true);
+              toast.success("Welcome Back!")
               navigate('/courses');
           } else {
               // Show error message
