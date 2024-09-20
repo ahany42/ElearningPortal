@@ -18,7 +18,12 @@ const ForgotPassword = () => {
     event.preventDefault();
     console.log(formData.email);
     try{
-      const response = await axios.post('http://localhost:3008/forgotPassword', { formData });
+      const response = await axios.post('http://localhost:3008/forgotpassword', 
+        JSON.stringify(formData), 
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
       if (response.status === 200) {
         toast.success(response.data.message);
       } else {

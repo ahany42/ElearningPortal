@@ -51,11 +51,12 @@ const SignUp = () => {
     else{
       try {
         console.log(formData);
-        const response = await fetch('http://localhost:3008/register', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(formData),
-          });
+        const response = await axios.post('http://localhost:3008/register', 
+          JSON.stringify(formData), 
+          {
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
         if (response.status !== 200) {
          toast.success(response.data.message);
         } else {
@@ -214,8 +215,8 @@ const SignUp = () => {
       <FormLabel>Gender</FormLabel>
       <RadioGroup value={genderValue} onChange={handleGenderChange} >
       <Box display="flex" flexDirection="row">
-          <FormControlLabel value="male" control={<Radio onClick={()=>handleGenderChange("male")}/>} label="Male"/>
-          <FormControlLabel value="female" control={<Radio onClick={()=>handleGenderChange("female")}/>} label="Female" />
+          <FormControlLabel value="Male" control={<Radio onClick={()=>handleGenderChange("male")}/>} label="Male"/>
+          <FormControlLabel value="Female" control={<Radio onClick={()=>handleGenderChange("female")}/>} label="Female" />
         </Box>
       </RadioGroup>
     </FormControl>

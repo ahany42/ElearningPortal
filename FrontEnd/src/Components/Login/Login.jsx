@@ -47,11 +47,12 @@ const Login = ({ setIsAuthenticated }) => {
       event.preventDefault();
       setError('');
       try {
-          const response = await fetch('http://localhost:3008/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(formData),
-          });
+        const response = await axios.post('http://localhost:3008/login', 
+          JSON.stringify(formData), 
+          {
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
 
           const data = await response.json();
           if (!data.error) {
