@@ -83,7 +83,7 @@ function App() {
                 if (!getCookie('token')) {
                     setIsAuthenticated(false);
                     clearInterval(interval);
-                    toast.error('Don\'t delete cookies please', {
+                    toast.error('Session Expired, please login again', {
                         autoClose: 3000, // Auto close after 3 seconds
                         position: 'top-center',
                         hideProgressBar: false,
