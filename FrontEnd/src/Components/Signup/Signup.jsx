@@ -52,9 +52,9 @@ const SignUp = () => {
       try {
         const response = await axios.post('http://localhost:3008/register', { formData });
         if (response.status !== 200) {
-         toast.success(response.message);
+         toast.success(response.data.message);
         } else {
-          toast.warn(response.message);
+          toast.warn(response.data.error);
         }
       } catch (error) {
         toast.warn('Something went wrong. Please try again.');
