@@ -12,17 +12,14 @@ const Header = () => {
   useEffect(()=>{
   setIsMenuOpen(false);
   },[location]);
-  const ComingSoon = ()=>{
-    alert("Coming Soon");
-  }
   return (
     <div className="Header">
       <div className="DesktopNav">
       <li className="NavBar">
-      <Link to="/Home" className={location.pathname === '/Home' ? 'active-link LinkStyle' : 'LinkStyle'}> Home </Link>
+      <Link to="/MyCourses" className={location.pathname === '/MyCourses' ? 'active-link LinkStyle' : 'LinkStyle'}> My Courses</Link>
       <Link to="/Courses" className={location.pathname === '/Courses' ? 'active-link LinkStyle' : 'LinkStyle'}> Courses </Link>
-      <Link to="/" className={location.pathname === '/' ? 'active-link LinkStyle' : 'LinkStyle'} > Login </Link>
       <Link to="/Deadline" className={location.pathname === '/Deadline' ? 'active-link LinkStyle' : 'LinkStyle'} > Deadline </Link>
+      <Link to="/" className={location.pathname === '/' ? 'active-link LinkStyle' : 'LinkStyle'} > Login </Link>
       </li>
       </div>
       <div className="MobileHeader">
@@ -31,10 +28,10 @@ const Header = () => {
 </div>
       {isMenuOpen && <div className="MobileNav">
       <li>
-      <Link to="/Home" className={location.pathname === '/Home' ? 'active-link LinkStyle' : 'LinkStyle'}> Home </Link>
+      <Link to="/MyCourses" className={location.pathname === '/My Courses' ? 'active-link LinkStyle' : 'LinkStyle'}> My Courses </Link>
       <Link to="/Courses" className={location.pathname === '/Courses' ? 'active-link LinkStyle' : 'LinkStyle'}> Courses </Link>
-      <Link to="/" className={location.pathname === '/' ? 'active-link LinkStyle' : 'LinkStyle'} > Login </Link>
       <Link to="/Deadline" className={location.pathname === '/Deadline' ? 'active-link LinkStyle' : 'LinkStyle'} > Deadline </Link>
+      <Link to="/" className={location.pathname === '/' ? 'active-link LinkStyle' : 'LinkStyle'} > Login </Link>
       </li>
       </div>}
     </div>

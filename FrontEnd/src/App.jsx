@@ -3,7 +3,8 @@ import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
-import SignUp from "./Components/SignUp/SignUp.jsx";
+import SignUp from "./Components/Signup/Signup.jsx";
+import MyCoursesPage from "./Components/MyCoursesPage/MyCoursesPage.jsx";
 import "./index.css";
 import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
 import  NotFoundImg from './assets/404.svg';
@@ -166,7 +167,7 @@ function App() {
 
     return (
       <div className="body-container">
-        {showHeaderAndFooter && <Header />}
+        {!isAuthenticated && <Header />}
         <div className="body-content">
             <ToastContainer style={{width: 'fit-content'}} />
             <Routes>
@@ -174,7 +175,8 @@ function App() {
               <Route path="/ForgetPassword" element={<ForgotPassword />} />
               <Route path="/SignUp" element={<SignUp />} />
               <Route path="/courses" element={<CoursesPage  courses={courses} addCourseHandler={addCourseHandler} filterHandler={filterHandler} setFilter={setFilter} isAuthenticated={isAuthenticated}/> }/>
-              <Route path="/deadlines"element={ <DeadlinesPage/>} />
+              <Route path="/deadline"element={ <DeadlinesPage/>} />
+              <Route path="/MyCourses"element={ <MyCoursesPage/>} />
               <Route path="*" element={<Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
                 }
               />
