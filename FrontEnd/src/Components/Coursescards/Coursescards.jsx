@@ -2,9 +2,10 @@ import {useEffect, useRef, useState} from 'react'
 import CourseCard from '../CourseCard/CourseCard';
 import './Coursescards.css'
 import AddCourseForm from '../addCourseForm/AddCourseForm';
+import Placeholder from '../Placeholder/Placeholder';
 import SearchBar from '../Seach-MUI/Search-MUI';
 import {useNavigate} from "react-router-dom";
-
+import NoCoursesImg from '../../assets/Student.svg';
 const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
     const [showForm, setShowForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
@@ -56,7 +57,7 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
           </div>
           <div className="cards mb-3">
               {
-                  !coursesList.length && <h1 className="NoCourses">No Courses Found</h1>
+                  !coursesList.length && <Placeholder text="No Courses Exists" img={NoCoursesImg}/>
               }
              {Array.isArray(coursesList) && coursesList.length && coursesList.map(course => (
             <CourseCard key={course.id} course={course} />
