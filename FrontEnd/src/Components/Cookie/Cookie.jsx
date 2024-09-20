@@ -42,9 +42,12 @@ function checkCookieExpiry(name) {
         if (decoded.exp < currentTime) {
             deleteCookie(name);
             return true;
+        } else {
+            return false
         }
+    } else {
+        return null;
     }
-    return false;
 }
 
 export { setCookie, getCookie, deleteCookie, checkCookieExpiry };

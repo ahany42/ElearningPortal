@@ -14,6 +14,7 @@ import Coursescards from "./Components/Coursescards/Coursescards.jsx";
 import {checkCookieExpiry, getCookie} from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
@@ -78,9 +79,29 @@ function App() {
     useEffect(() => {
         let interval = null;
         if ( isAuthenticated ) {
-            interval = setInterval(() => {
+            interval = setInterval(async () => {
+                if (!getCookie('token')) {
+                    setIsAuthenticated(false);
+                    clearInterval(interval);
+                    toast.error('Don\'t delete cookies please', {
+                        autoClose: 3000, // Auto close after 3 seconds
+                        position: 'top-center',
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        style: {
+                            userSelect: 'none',
+                            gap: '10px',
+                            padding: '20px',
+                        }
+                    });
+                    navigate(routes.pathname, { replace: true })
+                    return;
+                }
                 if (checkCookieExpiry('token')) {
                     setIsAuthenticated(false);
+                    await axios.post('http://localhost:3008/logout');
                     toast.error('Session Expired, please login again', {
                         autoClose: 3000, // Auto close after 3 seconds
                         position: 'top-center',
@@ -98,6 +119,7 @@ function App() {
                 }
             }, 1000);
         } else {
+            axios.post('http://localhost:3008/logout');
             clearInterval(interval);
         }
         return () => clearInterval(interval);

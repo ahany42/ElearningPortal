@@ -43,7 +43,7 @@ module.exports.login = async (req, res, next) => {
           const token = await jwt.sign(
               { username:user.username, id:user._id, role:user.role },
               Secret_Key,
-              {expiresIn:"10s"}
+              {expiresIn:"1h"}
           )
           await Session.deleteMany();
           await Session.insertMany([{

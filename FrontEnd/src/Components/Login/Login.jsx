@@ -2,14 +2,14 @@ import React, {useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  Button,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  TextField,
-  InputAdornment,
-  Box,
-  IconButton,
+    Button,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    TextField,
+    InputAdornment,
+    Box,
+    IconButton, Alert,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -73,6 +73,12 @@ const Login = ({ setIsAuthenticated }) => {
   return (
     <Box sx={{width: '80%', margin: '80px auto'}}>
         <h4>Login to your account</h4>
+        {
+            error &&
+            <Alert severity="error" sx={{margin: '1rem 0'}} onClose={() => {setError("")}}>
+                This Alert displays the default close icon.
+            </Alert>
+        }
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
           <TextField
