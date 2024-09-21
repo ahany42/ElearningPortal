@@ -24,13 +24,13 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [genderValue, setGenderValue] = useState("");
   const [formData, setFormData] = useState({
-      name:'',
-      gender:genderValue,
-      username:'',
-      role:'User',
-      email: '',
-      password: '',
-      confirmpassword:'',
+    name: "",
+    gender: genderValue,
+    username: "",
+    role: "Student",
+    email: "",
+    password: "",
+    confirmpassword: "",
   });
     const navigate = useNavigate();
  

@@ -77,7 +77,7 @@ async function idValidation(id) {
 
 module.exports.register = async (req, res, next) => {
   try {
-    const { name, gender, email, username, password, role } = req.body;
+    const { name, gender, email, username, password, role } = req.body
     const id = uuidv4();
     const validEmail = emailAcceptance(email);
     const validPassword = passwordAcceptance(password);
@@ -98,7 +98,6 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-
     res.status(201).json({ message: `User (${user.name}) registered successfully` });
   }
   catch (error) {
