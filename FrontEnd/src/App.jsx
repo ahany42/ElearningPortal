@@ -26,7 +26,8 @@ const pathsWithNoHeaderAndFooter = [
 const pathsRequireAuthentication = [
     '/MyCourses',
     '/logout',
-    '/Deadline'
+    '/Deadline',
+    '/Courses'
 ];
 
 const pathsNotRequireAuthentication = [

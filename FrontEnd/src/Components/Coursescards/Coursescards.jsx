@@ -17,13 +17,13 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
     useEffect(() => {
       setCoursesList(courses);
         if (showForm) {
-            CardsContainer.current.style.opacity = 0.3;
-            CardsContainer.current.style.pointerEvents = 'none';
-            CardsContainer.current.style.userSelect = 'none';
+          CardsContainer.current.style.display = 'none';
+          CardsContainer.current.style.pointerEvents = 'none';
+          CardsContainer.current.style.userSelect = 'none';
         } else {
-            CardsContainer.current.style.opacity = 1;
-            CardsContainer.current.style.pointerEvents = '';
-            CardsContainer.current.style.userSelect = '';
+          CardsContainer.current.style.display = 'block';
+          CardsContainer.current.style.pointerEvents = '';
+          CardsContainer.current.style.userSelect = '';
         }
     }, [showForm]);
 
