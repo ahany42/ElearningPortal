@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import CourseCard from '../CourseCard/CourseCard';
 import AddCourseForm from '../addCourseForm/AddCourseForm';
 import Placeholder from '../Placeholder/Placeholder';
-import SearchBar from '../Seach-MUI/Search-MUI';
+import SearchBar from '../Search-MUI/Search-MUI';
 import NoCoursesImg from '../../assets/Student.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

@@ -27,7 +27,7 @@ const pathsRequireAuthentication = [
     '/MyCourses',
     '/logout',
     '/Deadline',
-    '/Courses'
+    // '/Courses'
 ];
 
 const pathsNotRequireAuthentication = [

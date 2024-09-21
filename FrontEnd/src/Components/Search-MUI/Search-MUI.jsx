@@ -16,10 +16,25 @@ const SearchBar = ({ setFilter }) => {
                     <TextField
                         {...params}
                         label="Search input"
-                        sx={{ backgroundColor: '#f9f9f9' }}
-                        InputLabelProps={{
-                            sx: { userSelect: 'none' },
-                        }}
+                        sx={{
+                            my: 2,
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'grey',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: '#274546',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: '#274546',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              '&.Mui-focused': {
+                                color: '#274546 !important',
+                              },
+                            },
+                          }}
                         slotProps={{
                             input: {
                                 ...params.InputProps,
