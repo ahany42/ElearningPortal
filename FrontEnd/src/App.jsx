@@ -17,10 +17,12 @@ import {checkCookieExpiry, getCookie} from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import HomePage from "./Components/HomePage/HomePage.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
-    '/SignUp'
+    '/SignUp', 
+    
 ];
 
 const pathsRequireAuthentication = [
@@ -218,10 +220,11 @@ function App() {
 
     return (
       <div className="body-container">
-        {showHeaderAndFooter && <Header />}
+        {showHeaderAndFooter && <HomePage />}
         <div className="body-content">
             <ToastContainer style={{width: 'fit-content'}} />
             <Routes>
+              <Route path="/guest" element={<HomePage/>}/>
               <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} /> }/>
               <Route path="/ForgetPassword" element={<ForgotPassword />} />
               <Route path="/SignUp" element={<SignUp />} />
