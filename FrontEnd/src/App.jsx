@@ -24,8 +24,9 @@ const pathsWithNoHeaderAndFooter = [
 ];
 
 const pathsRequireAuthentication = [
-    '/courses',
-    '/logout'
+    '/MyCourses',
+    '/logout',
+    '/Deadline'
 ];
 
 const pathsNotRequireAuthentication = [
@@ -76,6 +77,7 @@ function App() {
     const [courses,setCourses]=useState(data);
     const [filter, setFilter] = useState("");
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
+    const [ activeErrors, setActiveErrors ] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -85,38 +87,50 @@ function App() {
                 if (!getCookie('token')) {
                     setIsAuthenticated(false);
                     clearInterval(interval);
-                    toast.error('Session Expired, please login again', {
-                        autoClose: 3000, // Auto close after 3 seconds
-                        position: 'top-center',
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        style: {
-                            userSelect: 'none',
-                            gap: '10px',
-                            padding: '20px',
-                        }
-                    });
-                    navigate(routes.pathname, { replace: true })
+                    if (!activeErrors.includes('Session Expired, please login again')) {
+                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
+                        toast.error('Session Expired, please login again', {
+                            autoClose: 3000, // Auto close after 3 seconds
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            style: {
+                                userSelect: 'none',
+                                gap: '10px',
+                                padding: '20px',
+                            },
+                            onClose: () => {
+                                setActiveErrors(prevState =>
+                                    prevState.filter(e => e !== 'Session Expired, please login again'))
+                            }
+                        });
+                    }
+                    navigate('/');
                     return;
                 }
                 if (checkCookieExpiry('token')) {
                     setIsAuthenticated(false);
                     await axios.post('http://localhost:3008/logout');
-                    toast.error('Session Expired, please login again', {
-                        autoClose: 3000, // Auto close after 3 seconds
-                        position: 'top-center',
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        style: {
-                            userSelect: 'none',
-                            gap: '10px',
-                            padding: '20px',
-                        }
-                    });
+                    if (!activeErrors.includes('Session Expired, please login again')) {
+                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
+                        toast.error('Session Expired, please login again', {
+                            autoClose: 3000, // Auto close after 3 seconds
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            style: {
+                                userSelect: 'none',
+                                gap: '10px',
+                                padding: '20px',
+                            },
+                            onClose: () => {
+                                setActiveErrors(prevState =>
+                                    prevState.filter(e => e !== 'Session Expired, please login again'))
+                            }
+                        });
+                    }
                     navigate('/');
                 }
             }, 1000);
@@ -131,11 +145,47 @@ function App() {
 
         // Redirect to previous route if the user is already authenticated
         if (pathsNotRequireAuthentication.includes(routes.pathname) && isAuthenticated) {
+            if (!activeErrors.includes('You are already logged in')) {
+                setActiveErrors([...activeErrors, 'You are already logged in']);
+                toast.error('You are already logged in', {
+                    autoClose: 3000, // Auto close after 3 seconds
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: 'none',
+                        gap: '10px',
+                        padding: '20px',
+                    },
+                    onClose: () => {
+                        setActiveErrors(prevState => prevState.filter(e => e !== 'You are already logged in'))
+                    }
+                });
+            }
             navigate(-1);
         }
 
         // Redirect to login page if the user is not authenticated
         if (pathsRequireAuthentication.includes(routes.pathname) && !isAuthenticated) {
+            if (!activeErrors.includes('You must login first')) {
+                setActiveErrors([...activeErrors, 'You must login first']);
+                toast.error('You must login first', {
+                    autoClose: 3000, // Auto close after 3 seconds
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: 'none',
+                        gap: '10px',
+                        padding: '20px',
+                    },
+                    onClose: () => {
+                        setActiveErrors(prevState => prevState.filter(e => e !== 'You must login first'))
+                    }
+                });
+            }
             navigate('/');
         }
 
@@ -167,17 +217,18 @@ function App() {
 
     return (
       <div className="body-container">
-        {!isAuthenticated && <Header />}
+        {showHeaderAndFooter && <Header />}
         <div className="body-content">
             <ToastContainer style={{width: 'fit-content'}} />
             <Routes>
               <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} /> }/>
               <Route path="/ForgetPassword" element={<ForgotPassword />} />
               <Route path="/SignUp" element={<SignUp />} />
-              <Route path="/courses" element={<CoursesPage  courses={courses} addCourseHandler={addCourseHandler} filterHandler={filterHandler} setFilter={setFilter} isAuthenticated={isAuthenticated}/> }/>
-              <Route path="/deadline"element={ <DeadlinesPage/>} />
-              <Route path="/MyCourses"element={ <MyCoursesPage/>} />
-              <Route path="*" element={<Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
+              <Route path="/courses" element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler} filterHandler={filterHandler} setFilter={setFilter} isAuthenticated={isAuthenticated}/> }/>
+              <Route path="/deadline" element={ <DeadlinesPage/>} />
+              <Route path="/MyCourses" element={ <MyCoursesPage/>} />
+              <Route path="*" element={
+                  <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
                 }
               />
           

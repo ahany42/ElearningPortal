@@ -12,15 +12,6 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
     const navigate = useNavigate();
-    const notify = () => toast("Wow so easy!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-    });
 
     
     useEffect(() => {
