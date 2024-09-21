@@ -3,10 +3,11 @@
 }
 .ButtonContainer{
   display: flex;
-  justify-content: right;
+  justify-content: space-around;
+  margin: auto;
+  align-items: center;
 }
 .AddButton {
-  margin-right:1em;
   font-size: 24px;
   cursor: pointer;
   transition: color 0.3s ease;

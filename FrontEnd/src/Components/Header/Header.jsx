@@ -22,9 +22,9 @@ const Header = () => {
       <Link to="/" className={location.pathname === '/' ? 'active-link LinkStyle' : 'LinkStyle'} > Login </Link>
       </li>
       </div>
-      <div className="MobileHeader">
+      <div className="MobileHeader ">
       <div className="MobileNavBar">
-     <FontAwesomeIcon icon={isMenuOpen ? faTimes : faBars} color='white'style={{ color: 'white', fontSize: '30px'}} onClick={MobileNavBarHandler}/>
+     <FontAwesomeIcon icon={isMenuOpen ? faTimes : faBars} color='black'style={{ color: 'black', fontSize: '30px'}} onClick={MobileNavBarHandler}/>
 </div>
       {isMenuOpen && <div className="MobileNav">
       <li>

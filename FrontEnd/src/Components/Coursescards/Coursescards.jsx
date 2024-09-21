@@ -41,15 +41,15 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
           />
         )}
           <span ref={CardsContainer}>
+          <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
+          <SearchBar setFilter={setFilter}/>
+           </div>
           <div className="ButtonContainer">
        <button className="AddButton green-bg light-text" onClick={showFormHandler}>
             <FontAwesomeIcon icon={faPlus} title="Add Course"/>
               Add Course
                 </button>
                 </div>
-          <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
-            <SearchBar setFilter={setFilter}/>
-          </div>
           <div className="cards mb-3">
               {
                   !coursesList.length && <Placeholder text="No Courses Exists" img={NoCoursesImg}/>
