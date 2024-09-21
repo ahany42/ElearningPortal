@@ -5,6 +5,8 @@ import AddCourseForm from '../addCourseForm/AddCourseForm';
 import Placeholder from '../Placeholder/Placeholder';
 import SearchBar from '../Seach-MUI/Search-MUI';
 import NoCoursesImg from '../../assets/Student.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import './Coursescards.css'
 
 const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
@@ -39,13 +41,14 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
           />
         )}
           <span ref={CardsContainer}>
+          <div className="ButtonContainer">
+       <button className="AddButton green-bg light-text" onClick={showFormHandler}>
+            <FontAwesomeIcon icon={faPlus} title="Add Course"/>
+              Add Course
+                </button>
+                </div>
           <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
             <SearchBar setFilter={setFilter}/>
-            <i
-                title="Add Course"
-                className="fa-solid fa-plus AddIcon"
-                onClick={showFormHandler}
-            ></i>
           </div>
           <div className="cards mb-3">
               {
