@@ -1,6 +1,7 @@
 import React from 'react'
 import './CourseCard.css'
 import ReactImg from '../../assets/React.png';
+import CoursePlaceholder from '../../assets/Student.svg';
 import { faEdit,faTrash,faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
@@ -30,7 +31,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             return (
                 <div className="card" key={id}>
                 <div className="card-header">
-                <img src={ReactImg} alt="Course"/>
+                <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 <div className="course-icons">
                 <button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>{isEnrolled? "Enrolled" : "Enroll"}</button>
                </div>
@@ -61,7 +62,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             return(
             <div className="card" key={id}>
             <div className="card-header">
-            <img src={ReactImg} alt="Course"/>
+            <img src={ReactImg || CoursePlaceholder} alt="Course"/>
             <div className="cardButton-container">
                 <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
             </div>
@@ -87,7 +88,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
         else return(
             <div className="card" key={id}>
             <div className="card-header">
-            <img src={ReactImg} alt="Course"/>
+            <img src={ReactImg || CoursePlaceholder} alt="Course"/>
             <div className="course-icons">
              <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={EditCourse}/>
              <FontAwesomeIcon icon={faTrash} style={{ color: 'red' }} onClick={DeleteCourse}/>
