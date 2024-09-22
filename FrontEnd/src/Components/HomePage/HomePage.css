@@ -1,9 +1,74 @@
 .home-container {
-    background-image:url("../../assets/home2.webp");
+    background-image: url("../../../src/assets/background.webp");
     background-attachment: fixed;
-    height:100vh;
+    height: 100vh;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.leftPart {
+    width: 40%;
+    max-height: 580px;
+    max-width: fit-content;
+}
+
+.CarouselContainer {
+    width: 40%;
+    max-width: 355px;
+    max-height: fit-content;
+    padding: 15px;
+    border-radius: 30px;
+    background: #cfcfcf82;
+    box-shadow: 0 0 16px 1px #a4a4a4a1;
+}
+
+@media (max-width: 1024px) {
+    .CarouselContainer {
+        /*width: 70%;*/
+    }
+}
+
+@media (max-width: 768px) {
+    .CarouselContainer {
+        /*width: 90%;*/
+    }
+}
+h3,p{
+    color:black;
+}
+.CarouselText{
+    text-align: center;
+}
+/* Carousel Arrows*/
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: black;
+    border-radius: 50%;
+}
+
+.carousel-control-next {
+    justify-content: right;
+}
+
+.carousel-control-prev {
+    justify-content: left;
+}
+
+/* Carousel indicator at the bottom*/
+.carousel-indicators li {
+    border: 2px solid black !important;
+    border-radius: 50%;
+}
+
+.carousel-indicators .active {
+    background-color: black !important;
+}
+.carousel-indicators {
+    bottom: -1em;
+    margin-bottom: 0.5rem;
 }

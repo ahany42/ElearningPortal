@@ -92,7 +92,7 @@ const ForgotPassword = () => {
       </Button>
 
       {/* Forgot Password Link */}
-      <NavLink to="/" variant="body2" className="blue-text" style={{ display: "block", marginTop: "1rem" }}>
+      <NavLink to="/login" variant="body2" className="blue-text" style={{ display: "block", marginTop: "1rem" }}>
         Back to Login
       </NavLink>
       </form>

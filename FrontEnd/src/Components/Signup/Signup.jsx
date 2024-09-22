@@ -293,7 +293,7 @@ const SignUp = () => {
 
           {/* Sign Up Link */}
           <NavLink
-            to="/"
+            to="/login"
             variant="body2"
             className="blue-text"
             style={{ display: "block", marginTop: "1rem" }}
