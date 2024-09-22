@@ -1,8 +1,7 @@
-
 .header {
   width: 100%;
   padding: 20px 40px;
-  position: fixed;
+  position: absolute;
   top: 0;
   z-index: 100;
 }
@@ -18,9 +17,12 @@
 
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #b7b5b582;
+    padding: 20px 40px !important;
+    border-radius: 30px;
 }
 
 
@@ -30,24 +32,23 @@
 }
 
 .icon-button {
-  background-color: rgba(255, 255, 255, 0.2); 
- color: #ff7500;
-  padding: 10px 20px;
-  border-radius: 25px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-  font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .icon-button:hover {
-  background-color: rgba(255, 255, 255, 0.4); 
+  background-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .icon-group {
-    display: none; 
+    display: none;
   }
 }
