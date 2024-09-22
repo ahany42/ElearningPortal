@@ -24,9 +24,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     const role ="Student";
     //for testing
     const isEnrolled = true;
-    // if (isAuthenticated) {
-    //for testing
-    if(true){
+    if (isAuthenticated) {
         if(role === "Student"){
             return (
                 <div className="card" key={id}>
@@ -119,18 +117,29 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     //Guest User View
     else {
       return (
-        <div className="myCard" key={id}>
-        <h4 className="pascalCase-text bold-text">{title}</h4>
-        <FontAwesomeIcon icon={faEdit} onClick={EditCourse}/>          
-        <FontAwesomeIcon icon={faTrash} onClick={DeleteCourse} style={{ color: 'red' }}/> 
-            <ul>
-                <li>{desc}</li>
-                <li>{hours} Hours</li>
-            </ul>
-            <i title='Exams' className="examIcon fa-solid fa-file-lines"></i>
-            <i title='Solved Assignments' className="fa-solid fa-folder"></i>
-            <i title='Assignments' className="fa-solid fa-list-check"></i>
-        </div>
+        <div className="card" key={id}>
+                <div className="card-header">
+                <img src={ReactImg || CoursePlaceholder} alt="Course"/>
+                <div className="cardButton-container">
+                    <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
+                </div>
+                </div>
+                <div className="card-body">
+                <h5 className="pascalCase-text bold-text">{title}</h5>
+                <p>
+                 {desc}
+                </p>
+                <div className="card-bottom">
+                <div>
+                {hours} Hours
+                </div> 
+                <div className="alignCenter-text">
+                20 <FontAwesomeIcon icon={faUser} />
+                </div>
+                </div>
+                </div>
+            
+            </div>
        )
     }
 };
