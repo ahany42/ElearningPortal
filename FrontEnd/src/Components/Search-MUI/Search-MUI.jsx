@@ -5,7 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 const SearchBar = ({ setFilter }) => {
     return (
-        <Stack spacing={2} sx={{ width: 300 }}>
+        <Stack spacing={2} sx={{ width: 300, cursor: 'text' }}>
             <Autocomplete
                 freeSolo
                 id="free-solo-2-demo"
@@ -20,18 +20,19 @@ const SearchBar = ({ setFilter }) => {
                             my: 2,
                             '& .MuiOutlinedInput-root': {
                               '& fieldset': {
-                                borderColor: 'grey',
+                                borderColor: '#1d96a7',
                               },
                               '&:hover fieldset': {
-                                borderColor: '#274546',
+                                borderColor: '#202e61',
                               },
                               '&.Mui-focused fieldset': {
-                                borderColor: '#274546',
+                                borderColor: '#202e61',
                               },
                             },
                             '& .MuiInputLabel-root': {
                               '&.Mui-focused': {
-                                color: '#274546 !important',
+                                  color: '#000 !important',
+                                  fontWeight: '700'
                               },
                             },
                           }}

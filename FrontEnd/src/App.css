@@ -8,6 +8,7 @@
   /*background-color:#f7f5ed;*/ /* ELL BACKGROUND DAH 3AMEL HIDE 3ALA KOLL ELL TAGS */
 }
 .body-container{
+  background-color: #bebebe;
   display: flex;
   flex-direction: column;
   min-height: 100vh;

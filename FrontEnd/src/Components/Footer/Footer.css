@@ -3,10 +3,10 @@
     justify-content: center;
     align-items: center;
     height: 70px;
- padding: 10px 20px;
-  background-color:  #dbdbb2;
-  border: none;
-  border-radius: 25px;
-  font-size: 16px;
-  cursor: pointer;
+    padding: 10px 20px;
+    background-color: #d76b5a;
+    color: white;
+    font-weight: 600;
+    border: none;
+    font-size: 16px;
 }

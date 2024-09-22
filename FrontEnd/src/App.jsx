@@ -4,16 +4,15 @@ import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import SignUp from "./Components/Signup/Signup.jsx";
-import MyCoursesPage from "./Components/MyCoursesPage/MyCoursesPage.jsx";
 import "./index.css";
-import {Routes, Route, useLocation, useNavigate} from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import  NotFoundImg from './assets/404.svg';
 import Placeholder from "./Components/Placeholder/Placeholder.jsx";
 import "./App.css";
 import Header from "./Components/Header/Header.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Footer from "./Components/Footer/Footer.jsx";
-import {checkCookieExpiry, getCookie} from "./Components/Cookie/Cookie.jsx";
+import { checkCookieExpiry, getCookie } from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
@@ -21,8 +20,7 @@ import HomePage from "./Components/HomePage/HomePage.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
-    '/SignUp', 
-    
+    '/SignUp',
 ];
 
 const pathsRequireAuthentication = [
@@ -33,7 +31,7 @@ const pathsRequireAuthentication = [
 ];
 
 const pathsNotRequireAuthentication = [
-    '/',
+    '/login',
     '/ForgetPassword',
     '/SignUp',
 ];
@@ -65,20 +63,10 @@ let data = [
   },
 ];
 
-
-const addCourse = 
-  {
-    id: Math.random(Math.floor() * 100),
-    title: "php",
-    desc: "basics of php",
-    hours: 4,
-  }
-
 function App() {
     const routes = useLocation();
-    const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
-    const [courses,setCourses]=useState(data);
-    const [filter, setFilter] = useState("");
+    const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
+    const [ courses, setCourses ]=useState(data);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ activeErrors, setActiveErrors ] = useState([]);
     const navigate = useNavigate();
@@ -109,7 +97,7 @@ function App() {
                             }
                         });
                     }
-                    navigate('/');
+                    navigate('/login');
                     return;
                 }
                 if (checkCookieExpiry('token')) {
@@ -134,7 +122,7 @@ function App() {
                             }
                         });
                     }
-                    navigate('/');
+                    navigate('/login');
                 }
             }, 1000);
         } else {
@@ -189,7 +177,7 @@ function App() {
                     }
                 });
             }
-            navigate('/');
+            navigate('/login');
         }
 
         // Hide header and footer for specific pages
@@ -206,40 +194,29 @@ function App() {
             return [...prevState, newCourse]
         });
     };
-        const filterHandler = ( courses ) => {
-          if (!courses) {
-            return [];
-          }
-          if (!filter) {
-            return courses
-          }
-          return courses.filter((el) =>
-            el.title.toLowerCase().includes(filter.toLowerCase())
-          );
-        };
 
     return (
       <div className="body-container">
-        {showHeaderAndFooter && <HomePage />}
-        <div className="body-content">
-            <ToastContainer style={{width: 'fit-content'}} />
-            <Routes>
-              <Route path="/guest" element={<HomePage/>}/>
-              <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} /> }/>
-              <Route path="/ForgetPassword" element={<ForgotPassword />} />
-              <Route path="/SignUp" element={<SignUp />} />
-              <Route path="/courses" element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler} filterHandler={filterHandler} setFilter={setFilter} isAuthenticated={isAuthenticated}/> }/>
-              <Route path="/deadline" element={ <DeadlinesPage/>} />
-              <Route path="/MyCourses" element={ <MyCoursesPage/>} />
-              <Route path="*" element={
-                  <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
-                }
-              />
-          
-            </Routes>
-        </div>
+          { showHeaderAndFooter && <Header/> }
+          <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>
+              <ToastContainer style={{width: 'fit-content'}}/>
+              <Routes>
+                  <Route path="/" element={<HomePage/>}/>
+                  <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
+                  <Route path="/ForgetPassword" element={<ForgotPassword/>}/>
+                  <Route path="/SignUp" element={<SignUp/>}/>
+                  <Route path="/courses"
+                         element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler}
+                                               isAuthenticated={isAuthenticated}/>}/>
+                  <Route path="/deadline" element={<DeadlinesPage/>}/>
+                  <Route path="*" element={
+                      <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
+                  }
+                  />
+              </Routes>
+          </div>
 
-        {showHeaderAndFooter && <Footer />}
+          {showHeaderAndFooter && <Footer/>}
       </div>
     );
 }

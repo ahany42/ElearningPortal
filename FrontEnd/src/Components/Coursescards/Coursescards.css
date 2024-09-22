@@ -8,9 +8,22 @@
   align-items: center;
 }
 .AddButton {
-  font-size: 24px;
+  position: absolute;
+  color: black;
+  border: solid #ededed;
+  border-radius: 20px;
+  right: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  font-size: 18px;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.AddButton:hover {
+  color: #3f51b5;
 }
 
 .NoCourses {
@@ -20,6 +33,7 @@
 }
 
 .cards {
+  /*background: #dbdbb2;*/
   min-height: 450px;
   display: flex;
   flex-wrap: wrap;

@@ -1,6 +1,9 @@
 .icon-button {
   padding: 10px 20px;
-  background-color:  #dbdbb2;
+  background-color: #1d96a7;
+  user-select: none;
+  color: white;
+  font-weight: 500;
   border: none;
   border-radius: 25px;
   font-size: 16px;
@@ -9,5 +12,5 @@
 }
 
 .icon-button:hover {
-  background-color: #8c953d;
+  background-color: #202e61;
 }

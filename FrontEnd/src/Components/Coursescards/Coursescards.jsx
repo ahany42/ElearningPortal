@@ -7,31 +7,45 @@ import SearchBar from '../Search-MUI/Search-MUI';
 import NoCoursesImg from '../../assets/Student.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { v4 } from 'uuid';
 import './Coursescards.css'
 
-const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) => {
+const CoursesCards = ({ courses, addCourseHandler , isAuthenticated}) => {
     const [showForm, setShowForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
-    const navigate = useNavigate();
+    const [filter, setFilter] = useState("");
 
-    
+    const filterHandler = (filter) => {
+        const filteredCourses = courses.filter(course => course.title.toLowerCase().includes(filter.toLowerCase()));
+        setCoursesList(filteredCourses);
+    }
+
     useEffect(() => {
       setCoursesList(courses);
         if (showForm) {
-          CardsContainer.current.style.display = 'none';
-          CardsContainer.current.style.pointerEvents = 'none';
-          CardsContainer.current.style.userSelect = 'none';
+            CardsContainer.current.style.opacity = '0.3';
+            CardsContainer.current.style.pointerEvents = 'none';
+            CardsContainer.current.style.userSelect = 'none';
         } else {
-          CardsContainer.current.style.display = 'block';
-          CardsContainer.current.style.pointerEvents = '';
-          CardsContainer.current.style.userSelect = '';
+            CardsContainer.current.style.opacity = '1';
+            CardsContainer.current.style.pointerEvents = '';
+            CardsContainer.current.style.userSelect = '';
         }
     }, [showForm]);
+
+    useEffect(() => {
+        if (filter) {
+            filterHandler(filter);
+        } else {
+            setCoursesList(courses);
+        }
+    }, [filter]);
 
     const showFormHandler = () => {
       setShowForm(!showForm);
     };
+
     return (
       <>
         {showForm && (
@@ -40,25 +54,25 @@ const CoursesCards = ({ courses, addCourseHandler ,filterHandler, setFilter}) =>
             showFormHandler={showFormHandler}
           />
         )}
-          <span ref={CardsContainer}>
-          <div className="d-flex position-relative mt-5 mb-5 justify-content-center">
-          <SearchBar setFilter={setFilter}/>
-           </div>
-          <div className="ButtonContainer">
-       <button className="AddButton green-bg light-text" onClick={showFormHandler}>
-            <FontAwesomeIcon icon={faPlus} title="Add Course"/>
-              Add Course
+          <span ref={CardsContainer} className='mt-5'>
+              <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
+                 <SearchBar setFilter={setFilter}/>
+                  <button className="AddButton" onClick={showFormHandler}>
+                    <FontAwesomeIcon icon={faPlus} title="Add Course"/>
+                    Add Course
                 </button>
-                </div>
-          <div className="cards mb-3">
-              {
-                  !coursesList.length && <Placeholder text="No Courses Exists" img={NoCoursesImg}/>
-              }
-             {Array.isArray(coursesList) && coursesList.length && coursesList.map(course => (
-            <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        </span>
+              </div>
+              <div className="cards pb-5 pt-3">
+                  {
+                      !coursesList.length && <Placeholder text="No Courses Exists" img={NoCoursesImg}/>
+                  }
+                  {
+                      coursesList.map(course => (
+                        <CourseCard key={v4()} {...course} isAuthenticated={isAuthenticated} />
+                      ))
+                  }
+              </div>
+          </span>
       </>
     );
 };

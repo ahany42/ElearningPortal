@@ -64,4 +64,10 @@
   bottom: 10px;
   right: 10px;
 }
+
+.enroll {
+    position: absolute !important;
+    bottom: 15px;
+    right: 15px;
+}
  
