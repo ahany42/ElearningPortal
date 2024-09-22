@@ -1,8 +1,13 @@
-const { User, Session, Assignment, AssignmentAnswer} = require("../db/Database");
+const {
+  User,
+  Session,
+  Assignment,
+  AssignmentAnswer,
+} = require("../db/Database");
 const bcrypt = require("bcrypt");
-const {Secret_Key}=require('../../env')
-const {v4: uuidv4} = require("uuid");
-const jwt = require('jsonwebtoken');
+const { Secret_Key } = require("../../env");
+const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 
 function emailAcceptance(email) {
   const re =
@@ -18,66 +23,62 @@ function passwordAcceptance(password) {
 }
 
 module.exports.login = async (req, res, next) => {
-    try {
-      const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-      // Validate the username
-      if (!username) {
-        return res.status(200).json({ error: "Username is required" });
-      }
-      // Validate the password
-      if (!password) {
-        return res.status(200).json({ error: "Password is required" });
-      }
-
-      const user = await User.findOne({ username });
-
-      if (!user) {
-          return res.status(200).json({ error: "Invalid username" });
-      }
-      else if (!await bcrypt.compare(password, user.password)) {
-          return res.status(200).json({ error: "Invalid password"});
-      }
-
-      else {
-          const token = await jwt.sign(
-              { username:user.username, id:user._id, role:user.role },
-              Secret_Key,
-              {expiresIn:"1h"}
-          )
-          await Session.deleteMany();
-          await Session.insertMany([{
-            token,
-            createDate: Date.now()
-          }]);
-
-          res.status(201).json({ message: "Login successful", data: token });
-      }
+    // Validate the username
+    if (!username) {
+      return res.status(200).json({ error: "Username is required" });
     }
-    catch(error) {
-        res.status(200).json({ error: "Unexpected Error Occurred" });
-        next(`ERROR IN: login function => ${error}`);
+    // Validate the password
+    if (!password) {
+      return res.status(200).json({ error: "Password is required" });
     }
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(200).json({ error: "Invalid username" });
+    } else if (!(await bcrypt.compare(password, user.password))) {
+      return res.status(200).json({ error: "Invalid password" });
+    } else {
+      const token = await jwt.sign(
+        { username: user.username, id: user._id, role: user.role },
+        Secret_Key,
+        { expiresIn: "1h" }
+      );
+      await Session.deleteMany();
+      await Session.insertMany([
+        {
+          token,
+          createDate: Date.now(),
+        },
+      ]);
+
+      res.status(201).json({ message: "Login successful", data: token });
+    }
+  } catch (error) {
+    res.status(200).json({ error: "Unexpected Error Occurred" });
+    next(`ERROR IN: login function => ${error}`);
+  }
 };
 
 module.exports.logout = async (req, res, next) => {
   try {
     await Session.deleteOne();
     res.status(201).json({ message: "Logged out successfully" });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(200).json({ error: "Unexpected Error Occured" });
     next(`ERROR IN: Logout Function => ${err}`);
   }
 };
 
 async function idValidation(id) {
-  return !!(await User.findOne({id}));
+  return !!(await User.findOne({ id }));
 }
 
 module.exports.register = async (req, res, next) => {
   try {
-    const { name, gender, email, username, password, role } = req.body
+    const { name, gender, email, username, password, role } = req.body;
     const id = uuidv4();
     const validEmail = emailAcceptance(email);
     const validPassword = passwordAcceptance(password);
@@ -98,9 +99,10 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-    res.status(201).json({ message: `User (${user.name}) registered successfully` });
-  }
-  catch (error) {
+    res
+      .status(201)
+      .json({ message: `User (${user.name}) registered successfully` });
+  } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Register function => ${error}`);
   }
@@ -109,9 +111,8 @@ module.exports.register = async (req, res, next) => {
 module.exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
-    res.status(201).json({data: users});
-  }
-  catch (error) {
+    res.status(201).json({ data: users });
+  } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getUsers function => ${error}`);
   }
@@ -122,13 +123,12 @@ module.exports.forgotPassword = async (req, res, next) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(201).json({message: "User not found"});
+      return res.status(201).json({ message: "User not found" });
     }
     // Send email with password reset link
 
-    res.status(200).json({message: "Password reset link sent successfully"});
-  }
-  catch (error) {
+    res.status(200).json({ message: "Password reset link sent successfully" });
+  } catch (error) {
     res.status(201).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: forgotPassword function => ${error}`);
   }
@@ -143,8 +143,7 @@ module.exports.getUser = async (req, res, next) => {
       return res.status(200).json({ error: "User not found" });
     }
     res.status(201).json({ data: user });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getUser function => ${error}`);
   }
@@ -157,9 +156,10 @@ module.exports.deleteUser = async (req, res, next) => {
     if (!user) {
       return res.status(200).json({ message: "User not found" });
     }
-    res.status(201).json({ message: `User (${user.name}) deleted successfully` });
-  }
-  catch (error) {
+    res
+      .status(201)
+      .json({ message: `User (${user.name}) deleted successfully` });
+  } catch (error) {
     console.log(`ERROR IN: deleteUser function => ${error}`);
     next(error);
   }
@@ -169,8 +169,7 @@ module.exports.logout = async (req, res, next) => {
   try {
     await Session.deleteOne();
     res.status(201).json({ message: "Logged out successfully" });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Logout Function => ${err}`);
   }
@@ -191,7 +190,9 @@ module.exports.updateUser = async (req, res, next) => {
 
     await user.save();
 
-    res.status(201).json({ message: `User (${user.name}) updated successfully` });
+    res
+      .status(201)
+      .json({ message: `User (${user.name}) updated successfully` });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: updateUser function => ${error}`);
