@@ -16,27 +16,50 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     const CourseDetails = ()=>{
         toast("Course Details Coming Soon");
     }
+    const EnrollCourse = ()=>{
+        toast("Enroll Coming Soon");
+    }
 //    for testing only
-    const role ="Instructor";
+    const role ="Student";
+    //for testing
+    const isEnrolled = true;
     // if (isAuthenticated) {
     //for testing
     if(true){
         if(role === "Student"){
             return (
                 <div className="card" key={id}>
-                    <div className="card-header">
-                    <img src={ReactImg} alt="Course"/>
-                    </div>
-                    <div className="card-body">
-                    hello
-                    </div>
+                <div className="card-header">
+                <img src={ReactImg} alt="Course"/>
+                <div className="course-icons">
+                <button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>{isEnrolled? "Enrolled" : "Enroll"}</button>
+               </div>
+                <div className="cardButton-container">
+                    <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
                 </div>
+                </div>
+                <div className="card-body">
+                <h5 className="pascalCase-text bold-text">{title}</h5>
+                <p>
+                 {desc}
+                </p>
+                <div className="card-bottom">
+                <div>
+                {hours} Hours
+                </div> 
+                <div className="alignCenter-text">
+                20 <FontAwesomeIcon icon={faUser} />
+                </div>
+                </div>
+                </div>
+            
+            </div>
             )
             
         }
         else if (role === "Instructor"){
             return(
-                <div className="card" key={id}>
+            <div className="card" key={id}>
             <div className="card-header">
             <img src={ReactImg} alt="Course"/>
             <div className="cardButton-container">
@@ -57,8 +80,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             </div>
             </div>
             </div>
-        
-        </div>
+            </div>
             )
         }
         //SuperAdmin and Admin
