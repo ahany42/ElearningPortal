@@ -17,7 +17,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
         toast("Course Details Coming Soon");
     }
 //    for testing only
-    const role ="Admin";
+    const role ="Instructor";
     // if (isAuthenticated) {
     //for testing
     if(true){
@@ -36,7 +36,29 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
         }
         else if (role === "Instructor"){
             return(
-            <h3>instructor</h3>
+                <div className="card" key={id}>
+            <div className="card-header">
+            <img src={ReactImg} alt="Course"/>
+            <div className="cardButton-container">
+                <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
+            </div>
+            </div>
+            <div className="card-body">
+            <h5 className="pascalCase-text bold-text">{title}</h5>
+            <p>
+             {desc}
+            </p>
+            <div className="card-bottom">
+            <div>
+            {hours} Hours
+            </div> 
+            <div className="alignCenter-text">
+            20 <FontAwesomeIcon icon={faUser} />
+            </div>
+            </div>
+            </div>
+        
+        </div>
             )
         }
         //SuperAdmin and Admin
