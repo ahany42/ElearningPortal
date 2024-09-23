@@ -19,8 +19,14 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     const CourseDetails = ()=>{
         navigate(`/CourseDetails/${id}`)
     }
-    const EnrollCourse = ()=>{
-       console.log("Enroll Coming Soon");
+    const EnrollCourse = (role)=>{
+       if(role){
+           //Logic for all users
+       }
+       else{
+        //logic for guest user
+       }
+        
     }
 //    for testing only
     const role ="Student";
@@ -122,6 +128,9 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
         <div className="card" key={id}>
                 <div className="card-header">
                 <img src={ReactImg || CoursePlaceholder} alt="Course"/>
+                <div className="course-icons">
+                <button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>Enroll</button>
+                </div>
                 <div className="cardButton-container">
                     <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
                 </div>
