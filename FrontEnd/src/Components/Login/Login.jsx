@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import {useEffect, useState, useContext} from "react";
+import { CurrentUserContext } from "../../App";
+import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
 import 'react-toastify/dist/ReactToastify.css';
 import {
     Button,
@@ -15,9 +17,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink, useNavigate } from "react-router-dom";
 import { setCookie } from "../Cookie/Cookie.jsx";
-import axios from "axios";
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [activeErrors, setActiveErrors] = useState([]);
@@ -25,6 +26,7 @@ const Login = ({ setIsAuthenticated }) => {
       username: '',
       password: ''
   });
+  const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
     useEffect(() => {
@@ -82,6 +84,7 @@ const Login = ({ setIsAuthenticated }) => {
               // Successful login, redirect to courses
               setCookie('token', data.data);
               setIsAuthenticated(true);
+              setCurrentUser(jwtDecode(data.data));
               navigate('/courses');
           } else {
               // Show error message

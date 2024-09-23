@@ -8,11 +8,13 @@
 
 
 .logo {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  font-weight: bold;
- color: #fb8928;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+    user-select: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fb8928;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 
@@ -27,8 +29,9 @@
 
 
 .icon-group {
-  display: flex;
-  gap: 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
 }
 
 .icon-button {

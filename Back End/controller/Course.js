@@ -12,4 +12,6 @@ const {Course, Student_Course, Instructor_Course, Exam,
     - getCourseAssignments
     - getCourseStudents
     - getCourseInstructors
+    - number of enrolled students in each course
+    - is student enrolled in course
  */

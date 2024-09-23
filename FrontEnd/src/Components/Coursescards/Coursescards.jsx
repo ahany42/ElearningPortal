@@ -10,7 +10,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { v4 } from 'uuid';
 import './Coursescards.css'
 
-const CoursesCards = ({ courses, addCourseHandler , isAuthenticated}) => {
+const CoursesCards = ({ courses, addCourseHandler}) => {
     const [showForm, setShowForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
@@ -69,7 +69,7 @@ const CoursesCards = ({ courses, addCourseHandler , isAuthenticated}) => {
                   }
                   {
                       coursesList.map(course => (
-                        <CourseCard key={v4()} {...course} isAuthenticated={isAuthenticated} />
+                        <CourseCard key={v4()} {...course} />
                       ))
                   }
               </div>

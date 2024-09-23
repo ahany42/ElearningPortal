@@ -1,49 +1,76 @@
-.card{
-  width:250px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
-  margin: 20px;
+.card {
+    width: 250px;
 }
-.card-header{
+
+.card-header {
   height:150px;
   display: flex;
   justify-content: center;
   overflow: hidden;
-  background-color:#d4edda !important;
 }
-.card-header>img{
-width:200px;
-margin:auto;
+
+.card-header > img {
+  width:200px;
+  margin:auto;
 }
-.course-icons{
+
+.card-header-container {
   display: flex;
-  justify-content: right;
-  width:100%;
-  z-index: 9;
-  padding-right: 10px;
-  position:absolute;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 0.5rem;
 }
-.edit-icon{
+
+.edit-icon {
   margin-right: 15px;
 }
-.card-bottom{
+
+.card-bottom {
   display: flex;
   justify-content: space-between;
   padding-right:10px;
 }
-.course-details{
+
+.course-details {
   background-color: transparent;
   border:none;
   text-decoration: underline;
 }
-.enroll-button{
-  background-color: transparent;
-  border:none;
+
+.enroll-button {
+  background: transparent;
+  padding: 0 5px;
+  border: none;
 }
-.cardButton-container{
-  display: flex;
-  justify-content: left;
-  width:100%;
-  z-index: 9;
-  padding-left: 10px;
-  position:absolute;
+
+.enroll-button:hover {
+  text-decoration: underline;
+}
+
+.enroll-text {
+  background: #b4b4b4;
+  padding: 0 5px;
+  border-radius: 10px;
+}
+
+.card-body {
+  position: relative;
+}
+
+.course-icons {
+  user-select: none;
+  width: fit-content;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 0.5rem;
+  height: fit-content;
+}
+
+.admin-icons {
+  position: absolute;
+  top: 5px;
+  right: 10px;
 }

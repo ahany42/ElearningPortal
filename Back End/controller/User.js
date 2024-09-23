@@ -42,7 +42,8 @@ module.exports.login = async (req, res, next) => {
       return res.status(200).json({ error: "Invalid password" });
     } else {
       const token = await jwt.sign(
-        { username: user.username, id: user._id, role: user.role },
+        { name: user.name, username: user.username, id: user.id,
+                  role: user.role, gender: user.gender, email: user.email },
         Secret_Key,
         { expiresIn: "1h" }
       );

@@ -1,8 +1,9 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, createContext} from "react";
 import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
+import { v4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
 import "./index.css";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
@@ -12,23 +13,23 @@ import "./App.css";
 import Header from "./Components/Header/Header.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Footer from "./Components/Footer/Footer.jsx";
-import { checkCookieExpiry, getCookie } from "./Components/Cookie/Cookie.jsx";
+import {checkCookieExpiry, deleteCookie, getCookie} from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import HomePage from "./Components/HomePage/HomePage.jsx";
 import CourseDetails from "./Components/CourseDetails/CourseDetails.jsx";
+import Logout from "./Components/Logout/Logout.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
-    '/SignUp',
 ];
 
 const pathsRequireAuthentication = [
     '/MyCourses',
     '/logout',
     '/Deadline',
-    //for testing only
     // '/Courses'
 ];
 
@@ -40,45 +41,50 @@ const pathsNotRequireAuthentication = [
 
 let data = [
   {
-    id: Math.random(Math.floor() * 100),
+    id: v4(),
     title: "html&css",
     desc: "basics of frontend",
     hours: 2,
   },
   {
-    id: Math.random(Math.floor() * 100),
+    id: v4(),
     title: "js",
     desc: "javascript content",
     hours: 3,
   },
   {
-    id: Math.random(Math.floor() * 100),
+    id: v4(),
     title: "react",
     desc: "important of react",
     hours: 4,
   },
   {
-    id: Math.random(Math.floor() * 100),
+    id: v4(),
     title: "node.js",
     desc: "basics of backend",
     hours: 5,
   },
 ];
 
+export const CurrentUserContext = createContext();
+
 function App() {
-    const routes = useLocation();
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
-    const [ courses, setCourses ]=useState(data);
+    const [ courses, setCourses ] = useState(data);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
+    const [ currentUser, setCurrentUser ] = useState({});
     const [ activeErrors, setActiveErrors ] = useState([]);
     const navigate = useNavigate();
+    const routes = useLocation();
 
     useEffect(() => {
         let interval = null;
         if ( isAuthenticated ) {
+            setCurrentUser(jwtDecode(getCookie('token')));
             interval = setInterval(async () => {
                 if (!getCookie('token')) {
                     setIsAuthenticated(false);
+                    setCurrentUser({});
                     clearInterval(interval);
                     if (!activeErrors.includes('Session Expired, please login again')) {
                         setActiveErrors([...activeErrors, 'Session Expired, please login again']);
@@ -104,6 +110,7 @@ function App() {
                 }
                 if (checkCookieExpiry('token')) {
                     setIsAuthenticated(false);
+                    setCurrentUser({});
                     await axios.post('http://localhost:3008/logout');
                     if (!activeErrors.includes('Session Expired, please login again')) {
                         setActiveErrors([...activeErrors, 'Session Expired, please login again']);
@@ -128,6 +135,7 @@ function App() {
                 }
             }, 1000);
         } else {
+            setCurrentUser({})
             axios.post('http://localhost:3008/logout');
             clearInterval(interval);
         }
@@ -198,30 +206,31 @@ function App() {
     };
 
     return (
-      <div className="body-container">
-          { showHeaderAndFooter && <Header/> }
-          <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>
-              <ToastContainer style={{width: 'fit-content'}}/>
-              <Routes>
-                  <Route path="/" element={<HomePage/>}/>
-                  <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
-                  <Route path="/ForgetPassword" element={<ForgotPassword/>}/>
-                  <Route path="/SignUp" element={<SignUp/>}/>
-                  <Route path="/courses"
-                         element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler}
-                                               isAuthenticated={isAuthenticated}/>}/>
-                  <Route path="/deadline" element={<DeadlinesPage/>}/>
-                  <Route path="/CourseDetails/:id" element={<CourseDetails/>}/>
-                  <Route path="*" element={
-                      <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
-                  }
-                  />
-              </Routes>
-          </div>
+        <CurrentUserContext.Provider value={{currentUser, setCurrentUser, isAuthenticated, setIsAuthenticated, courses}}>
+            <div className="body-container">
+                { showHeaderAndFooter && <Header/> }
+                <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>
+                    <ToastContainer style={{width: 'fit-content'}}/>
+                    <Routes>
+                        <Route path="/" element={<HomePage/>}/>
+                        <Route path="/login" element={<Login />}/>
+                        <Route path="/ForgetPassword" element={<ForgotPassword/>}/>
+                        <Route path="/SignUp" element={<SignUp/>}/>
+                        <Route path="/courses"
+                               element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler} />}/>
+                        <Route path="/deadline" element={<DeadlinesPage/>}/>
+                        <Route path="/CourseDetails/:id" element={<CourseDetails />}/>
+                        <Route path="/logout" element={<Logout />}/>
+                        <Route path="*" element={
+                            <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
+                        }/>
+                    </Routes>
+                </div>
 
-          {showHeaderAndFooter && <Footer/>}
-      </div>
-    );
+                {showHeaderAndFooter && <Footer/>}
+            </div>
+        </CurrentUserContext.Provider>
+);
 }
 
 export default App;

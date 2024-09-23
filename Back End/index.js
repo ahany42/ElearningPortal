@@ -43,6 +43,11 @@ app.use((err, req, res, _) => {
     res.end();
 });
 
+// Middleware to catch any requests to non-existing routes
+app.all('*', (req, res)=>{
+    return res.status(200).json({error: "Wrong Path"});
+})
+
 // Starting the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

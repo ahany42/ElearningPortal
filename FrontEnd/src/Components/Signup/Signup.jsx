@@ -78,7 +78,7 @@ const SignUp = () => {
   return (
     <>
       <ToastContainer />
-      <Box sx={{ width: "80%", margin: "80px auto" }}>
+      <Box sx={{ width: "80%", margin: "100px auto" }}>
         <h4>Create New Account</h4>
         <form onSubmit={handleSubmit}>
           <TextField
