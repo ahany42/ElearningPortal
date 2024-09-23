@@ -8,5 +8,6 @@ const router = Router();
  */
 
 router.post("/createExam", VerifyTokenForInstructor, Controller.createExam); //verified
+router.post("/addQuestions", VerifyTokenForInstructor, Controller.addQuestions); //verified
 
 module.exports = router;
