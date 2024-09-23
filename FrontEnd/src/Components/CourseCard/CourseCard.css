@@ -1,11 +1,13 @@
 .card{
   width:250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
 }
 .card-header{
   height:150px;
   display: flex;
   justify-content: center;
   overflow: hidden;
+  background-color:#d4edda !important;
 }
 .card-header>img{
 width:200px;

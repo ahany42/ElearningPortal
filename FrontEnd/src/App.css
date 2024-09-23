@@ -74,7 +74,9 @@ h6{
 .light-text {
   color: #f7f5ed !important;
 }
-
+.orange-text{
+  color:#fb8928 !important;
+}
 /* Text Alignment */
 .alignRight-text {
   text-align: right !important;
@@ -101,6 +103,9 @@ h6{
   text-transform: uppercase !important;
 }
 /* Background Color */
+.orange-bg{
+  background-color: #fb8928  !important;
+}
 .blue-bg{
   background-color: #1330BE !important;
 }
