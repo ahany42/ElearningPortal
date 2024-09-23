@@ -1,6 +1,7 @@
 .card{
   width:250px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+  margin: 20px;
 }
 .card-header{
   height:150px;

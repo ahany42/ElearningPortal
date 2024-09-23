@@ -15,7 +15,8 @@ const CoursesCards = ({ courses, addCourseHandler , isAuthenticated}) => {
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
     const [filter, setFilter] = useState("");
-
+     //for testing
+     const role = "Admin";
     const filterHandler = (filter) => {
         const filteredCourses = courses.filter(course => course.title.toLowerCase().includes(filter.toLowerCase()));
         setCoursesList(filteredCourses);
@@ -57,10 +58,10 @@ const CoursesCards = ({ courses, addCourseHandler , isAuthenticated}) => {
           <span ref={CardsContainer} className='mt-5'>
               <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
                  <SearchBar setFilter={setFilter}/>
-                  <button className="AddButton" onClick={showFormHandler}>
+                 {(role==="Admin") || (role==="SuperAdmin") && <button className="AddButton" onClick={showFormHandler}>
                     <FontAwesomeIcon icon={faPlus} title="Add Course"/>
                     Add Course
-                </button>
+                </button>}
               </div>
               <div className="cards pb-5 pt-3">
                   {

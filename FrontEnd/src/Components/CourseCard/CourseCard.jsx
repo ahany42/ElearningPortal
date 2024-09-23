@@ -22,9 +22,10 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     const EnrollCourse = (role)=>{
        if(role){
            //Logic for all users
+           toast ("Enroll Coming Soon");
        }
        else{
-        //logic for guest user
+        navigate('/login');
        }
         
     }
@@ -32,14 +33,16 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
     const role ="Student";
     //for testing
     const isEnrolled = false;
-    if (isAuthenticated) {
+    try{
+    // if (isAuthenticated) {
+    if (true) {
         if(role === "Student"){
             return (
                 <div className="card" key={id}>
                 <div className="card-header">
                 <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 <div className="course-icons">
-                {!isEnrolled? (<button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>Enroll</button>):(<p className="blue-text bold-text">Enrolled</p>)}
+                {!isEnrolled? (<button className="enroll-button bold-text blue-text" onClick={()=>EnrollCourse(role)}>Enroll</button>):(<p className="blue-text bold-text">Enrolled</p>)}
                </div>
                 <div className="cardButton-container">
                     <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
@@ -91,7 +94,8 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             )
         }
         //SuperAdmin and Admin
-        else return(
+        else if ((role === "SuperAdmin")|| role==="Admin"){
+            return(
             <div className="card" key={id}>
             <div className="card-header">
             <img src={ReactImg || CoursePlaceholder} alt="Course"/>
@@ -117,10 +121,12 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             </div>
             </div>
             </div>
-        
         </div>
         )
-       
+    }
+    else{
+        throw new Error("Invalid User Type");
+    }
     } 
     //Guest User View
     else {
@@ -129,7 +135,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
                 <div className="card-header">
                 <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 <div className="course-icons">
-                <button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>Enroll</button>
+                <button className="enroll-button bold-text blue-text" onClick={()=>EnrollCourse(role)}>Enroll</button>
                 </div>
                 <div className="cardButton-container">
                     <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
@@ -152,6 +158,21 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
             
             </div>
        )
+    }
+    } catch(error){
+        toast.error(error.message, {
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            onClose: () => {
+                setError('') 
+                setActiveErrors(prevState => prevState.filter(e => e !== error))
+            }
+        });
+       
     }
 };
 
