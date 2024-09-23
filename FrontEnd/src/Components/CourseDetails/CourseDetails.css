@@ -2,7 +2,7 @@
     width:90%;
     margin:100px auto auto auto;
 }
-.course-title,.course-enrolled-number,.course-hours-description{
+.course-title,.course-stats,.course-hours-description{
     position: absolute; 
     padding: 5px; 
     font-size: 1.5em;
@@ -12,9 +12,11 @@
     left: 10px; 
     top: 10px; 
 }
-.course-enrolled-number{
+.course-stats{
     right:10px;
     bottom:10px;
+    display: flex;
+    gap:20px;
 }
 .course-cover {
     position: relative; 
