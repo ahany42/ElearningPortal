@@ -17,6 +17,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import HomePage from "./Components/HomePage/HomePage.jsx";
+import CourseDetails from "./Components/CourseDetails/CourseDetails.jsx";
 
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
@@ -27,6 +28,7 @@ const pathsRequireAuthentication = [
     '/MyCourses',
     '/logout',
     '/Deadline',
+    //for testing only
     // '/Courses'
 ];
 
@@ -209,6 +211,7 @@ function App() {
                          element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler}
                                                isAuthenticated={isAuthenticated}/>}/>
                   <Route path="/deadline" element={<DeadlinesPage/>}/>
+                  <Route path="/CourseDetails/:id" element={<CourseDetails/>}/>
                   <Route path="*" element={
                       <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
                   }

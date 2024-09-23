@@ -4,10 +4,12 @@ import ReactImg from '../../assets/React.png';
 import CoursePlaceholder from '../../assets/Student.svg';
 import { faEdit,faTrash,faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
+    const navigate = useNavigate();
     const EditCourse = ()=>{
     toast("Edit Coming Soon");
     }
@@ -15,15 +17,15 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
         toast ("Delete Coming Soon");
     }
     const CourseDetails = ()=>{
-        toast("Course Details Coming Soon");
+        navigate(`/CourseDetails/${id}`)
     }
     const EnrollCourse = ()=>{
-        toast("Enroll Coming Soon");
+       console.log("Enroll Coming Soon");
     }
 //    for testing only
     const role ="Student";
     //for testing
-    const isEnrolled = true;
+    const isEnrolled = false;
     if (isAuthenticated) {
         if(role === "Student"){
             return (
@@ -31,7 +33,7 @@ const CourseCard = ({ id, title, desc, hours, isAuthenticated}) => {
                 <div className="card-header">
                 <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 <div className="course-icons">
-                <button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>{isEnrolled? "Enrolled" : "Enroll"}</button>
+                {!isEnrolled? (<button className="enroll-button bold-text blue-text" onClick={EnrollCourse}>Enroll</button>):(<p className="blue-text bold-text">Enrolled</p>)}
                </div>
                 <div className="cardButton-container">
                     <button className="course-details bold-text" onClick={CourseDetails}>Course Details</button>
