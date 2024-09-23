@@ -27,6 +27,7 @@ const HomePage = () => {
           alt="Office"
         />
         <div className="CarouselContainer">
+          <h4 className="alignCenter-text extraBold-text">Top Courses</h4>
           <Carousel>
             <Carousel.Item>
               <img

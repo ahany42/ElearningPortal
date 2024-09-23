@@ -28,22 +28,22 @@ background-color: #fAFAEE;
 }
 /* Font Size */
 h1{
-  font-size:2.5em;
+  font-size:2.5em !important;
 }
 h2{
-  font-size:2em;
+  font-size:2em !important;
 }
 h3{
-  font-size:1.75em;
+  font-size:1.75em !important;
 }
 h4{
-  font-size:1.5em;
+  font-size:1.5em !important;
 }
 h5{
-  font-size:1.25em;
+  font-size:1.25em !important;
 }
 h6{
-  font-size:1em;
+  font-size:1em !important;
 }
 /* Font Weight */
 .noBold-text {
