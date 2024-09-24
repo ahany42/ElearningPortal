@@ -1,4 +1,4 @@
-import {useEffect, useState, createContext} from "react";
+import { useEffect, useState, createContext } from "react";
 import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
@@ -6,8 +6,8 @@ import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import { v4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
 import "./index.css";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import  NotFoundImg from './assets/404.svg';
+import { Routes, Route, useLocation, useNavigate, useParams } from "react-router-dom";
+import NotFoundImg from './assets/404.svg';
 import Placeholder from "./Components/Placeholder/Placeholder.jsx";
 import "./App.css";
 import Header from "./Components/Header/Header.jsx";
@@ -41,25 +41,25 @@ const pathsNotRequireAuthentication = [
 
 let data = [
   {
-    id: v4(),
+    id: "e55d8be9-d517-4fdb-a813-7314410d920f",
     title: "html&css",
     desc: "basics of frontend",
     hours: 2,
   },
   {
-    id: v4(),
+    id: "6ad77ebe-1397-4903-8360-ad58a9d18679",
     title: "js",
     desc: "javascript content",
     hours: 3,
   },
   {
-    id: v4(),
+    id: "ae1ebe8c-143d-460a-9452-50597ff2a790",
     title: "react",
     desc: "important of react",
     hours: 4,
   },
   {
-    id: v4(),
+    id: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
     title: "node.js",
     desc: "basics of backend",
     hours: 5,

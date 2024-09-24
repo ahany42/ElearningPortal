@@ -11,12 +11,11 @@ import { CurrentUserContext } from '../../App';
 const CourseDetails = () => {
     const {id} = useParams();
     const { courses } = useContext(CurrentUserContext);
-    
+
     //for testing
     const isEnrolled = true;
 
     const course = courses.find(course => course.id === id);
-
 
     return (
       <>

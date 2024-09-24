@@ -1,6 +1,7 @@
 import CoursesCards from '../Coursescards/Coursescards';
 import { CurrentUserContext } from "../../App";
-import {useEffect, useState, useContext} from "react";
+import { useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import {toast} from "react-toastify";
 
 const CoursesPage = ({ courses, addCourseHandler, filterHandler, setFilter }) => {

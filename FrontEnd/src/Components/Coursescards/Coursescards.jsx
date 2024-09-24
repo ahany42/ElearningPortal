@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { v4 } from 'uuid';
 import './Coursescards.css'
+import {ToastContainer} from "react-toastify";
 
 const CoursesCards = ({ courses, addCourseHandler}) => {
     const [showForm, setShowForm] = useState(false);

@@ -8,6 +8,17 @@ const bcrypt = require("bcrypt");
 const { Secret_Key } = require("../../env");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
+// Email configuration (you might want to use environment variables for this)
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Or any other email provider
+  auth: {
+    user: 'merackosj.40@gmail.com', // Replace with your email
+    pass: 'kejoqypehonpusgc' // Replace with your email password or app-specific password
+  }
+});
 
 function emailAcceptance(email) {
   const re =
@@ -16,7 +27,6 @@ function emailAcceptance(email) {
 }
 
 function passwordAcceptance(password) {
-  console.log(password);
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(String(password));
@@ -55,7 +65,7 @@ module.exports.login = async (req, res, next) => {
         },
       ]);
 
-      res.status(201).json({ message: "Login successful", data: token });
+      res.status(201).json({ message: `Welcome ${user.name}`, data: token });
     }
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
@@ -73,8 +83,9 @@ module.exports.logout = async (req, res, next) => {
   }
 };
 
-async function idValidation(id) {
-  return !!(await User.findOne({ id }));
+function usernameAcceptance(username) {
+    const re = /^(?=.*[a-z])[a-z0-9_]{4,}$/;
+    return re.test(String(username));
 }
 
 module.exports.register = async (req, res, next) => {
@@ -83,10 +94,24 @@ module.exports.register = async (req, res, next) => {
     const id = uuidv4();
     const validEmail = emailAcceptance(email);
     const validPassword = passwordAcceptance(password);
-    const validId = idValidation(id);
-    if (!validEmail || !validPassword || !validId) {
+    const validUsername = usernameAcceptance(username);
+
+    if (!validEmail || !validPassword) {
       return res.status(200).json({ error: "Invalid email or password" });
     }
+
+    if (!validUsername) {
+      return res.status(200).json({ error: "Invalid username" });
+    }
+
+    if (await User.findOne({username: username})) {
+      return res.status(200).json({ error: "Username already exists" });
+    }
+
+    if (await User.findOne({email: email})) {
+      return res.status(200).json({ error: "Email already exists" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
@@ -100,8 +125,7 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-    res
-      .status(201)
+    res.status(201)
       .json({ message: `User (${user.name}) registered successfully` });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
@@ -123,17 +147,78 @@ module.exports.forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(201).json({ message: "User not found" });
-    }
-    // Send email with password reset link
 
-    res.status(200).json({ message: "Password reset link sent successfully" });
+    if (!user) {
+      return res.status(200).json({ error: "User not found" });
+    }
+
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Set the token expiry time (e.g., 1 hour from now)
+    const tokenExpiry = Date.now() + 3600000; // 1 hour
+
+    // Save the token and expiry to the user record (you might need to modify your User model)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = tokenExpiry;
+    await user.save();
+
+    // Construct the password reset URL
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`; // Change localhost to your actual frontend URL
+
+    // Send the password reset email
+    const mailOptions = {
+      from: 'your-email@gmail.com',
+      to: user.email,
+      subject: 'Password Reset Request',
+      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+      Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
+      ${resetUrl}\n\n
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: "Password reset link sent successfully" });
+
   } catch (error) {
-    res.status(201).json({ error: "Unexpected Error Occurred" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: forgotPassword function => ${error}`);
   }
 };
+
+module.exports.resetPassword = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // Find the user by the reset token and ensure the token hasn't expired
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() } // Check if the token hasn't expired
+    });
+
+    if (!user) {
+      return res.status(200).json({ error: 'Password reset token is invalid or has expired' });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the user's password and clear the reset token and expiry
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(201).json({ message: 'Password has been reset successfully' });
+
+  } catch (error) {
+    res.status(200).json({ error: "Unexpected Error Occurred" });
+    next(`ERROR IN: resetPassword function => ${error}`);
+  }
+};
+
 
 module.exports.getUser = async (req, res, next) => {
   try {

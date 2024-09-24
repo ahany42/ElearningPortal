@@ -12,6 +12,8 @@ router.get("/getUsers", VerifyTokenForAdmin, Controller.getUsers);
 router.put("/updateUser/:id", Controller.updateUser);
 router.delete("/deleteUser/:id", Controller.deleteUser);
 router.post("/forgotPassword", Controller.forgotPassword);
+// Reset password route
+router.post('/reset-password/:token', Controller.resetPassword);
 router.get("/checkToken", CheckToken);
 
 module.exports = router;

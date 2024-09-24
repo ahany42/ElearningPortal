@@ -14,21 +14,23 @@ const User = mongoose.model(
   "User",
   new mongoose.Schema(
     {
-      name: { type: String, required: true },
-      id: { type: String, required: true },
-      gender: {
-        type: String,
-        enum: ["Male", "Female"],
-        required: true,
-      },
-      email: { type: String, required: true },
-      username: { type: String, required: true, unique: true },
-      password: { type: String, required: true },
-      role: {
-        type: String,
-        enum: ["SuperAdmin", "Admin", "Instructor", "Student"],
-        required: true,
-      },
+        name: { type: String, required: true },
+        id: { type: String, required: true },
+        gender: {
+          type: String,
+          enum: ["Male", "Female"],
+          required: true,
+        },
+        email: { type: String, required: true },
+        username: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        role: {
+          type: String,
+          enum: ["SuperAdmin", "Admin", "Instructor", "Student"],
+          required: true,
+        },
+        resetPasswordToken: String,
+        resetPasswordExpires: Date,
     },
     { timestamps: true }
   )
