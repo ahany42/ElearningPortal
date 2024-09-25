@@ -81,7 +81,7 @@ const CourseCard = ({ id, title, desc, hours}) => {
     }
 
     // For testing
-    const isEnrolled = true; // Will be included in each course object (After API Implementation)
+    const isEnrolled = false; // Will be included in each course object (After API Implementation)
 
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){

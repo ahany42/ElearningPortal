@@ -14,22 +14,42 @@ const DeadlinesPage = () => {
   };
   return (
     <div className="deadlines-container">
-      {/* Buttons for Assignments and Exams */}
+      {/* Buttons for Assignments and Exams (Farah) */}
+      {/*<div className="button-group">*/}
+      {/*  <button*/}
+      {/*    className={`tab-button ${*/}
+      {/*      activeTab === "assignments" ? "active" : ""*/}
+      {/*    }`}*/}
+      {/*    onClick={() => handleTabClick("assignments")}*/}
+      {/*  >*/}
+      {/*    Assignments*/}
+      {/*  </button>*/}
+      {/*  <button*/}
+      {/*    className={`tab-button ${activeTab === "exams" ? "active" : ""}`}*/}
+      {/*    onClick={() => handleTabClick("exams")}*/}
+      {/*  >*/}
+      {/*    Exams*/}
+      {/*  </button>*/}
+      {/*</div>*/}
+
+        {/* Switch Button for Assignments and Exams (Omar) */}
       <div className="button-group">
-        <button
-          className={`tab-button ${
-            activeTab === "assignments" ? "active" : ""
-          }`}
-          onClick={() => handleTabClick("assignments")}
-        >
-          Assignments
-        </button>
-        <button
-          className={`tab-button ${activeTab === "exams" ? "active" : ""}`}
-          onClick={() => handleTabClick("exams")}
-        >
-          Exams
-        </button>
+        <div className="btn-container">
+
+          <label className="switch btn-color-mode-switch">
+            <input value="1" id="color_mode"
+                   name="color_mode" type="checkbox"
+                   onChange={(e) => {
+                        if (e.target.checked) {
+                          handleTabClick("exams");
+                        } else {
+                          handleTabClick("assignments");
+                        }
+                   }} />
+              <label className="btn-color-mode-switch-inner" data-off="Assignments" data-on="Exams" htmlFor="color_mode"></label>
+          </label>
+
+        </div>
       </div>
 
       {/* Table to display either assignments or exams */}

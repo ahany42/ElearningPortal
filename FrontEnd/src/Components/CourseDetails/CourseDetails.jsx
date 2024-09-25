@@ -1,19 +1,47 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useParams } from "react-router";
 import ReactImg from '../../assets/React.png';
-import { faEdit,faTrash,faUser,faChalkboardTeacher, faFileAlt} from '@fortawesome/free-solid-svg-icons';
+import { faUser,faChalkboardTeacher, faFileAlt} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseDetails.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { CurrentUserContext } from '../../App';
+import {toast} from "react-toastify";
 
 const CourseDetails = () => {
     const {id} = useParams();
     const { courses } = useContext(CurrentUserContext);
+    const [ _, setMsgsList ] = useState([]);
+
+    const EnrollCourse = (courseID) => {
+        setMsgsList(  (prevState) => {
+            if (!prevState.includes(courseID)) {
+                setTimeout(() => {
+                    toast.success(`Course (${courseID}) Enrolled Successfully`, {
+                        autoClose: 1500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        style: {
+                            userSelect: 'none',
+                            gap: '10px',
+                            padding: '20px',
+                        },
+                        onClose: () => {
+                            setMsgsList(prevState.filter(m => m !== courseID));
+                        }
+                    });
+                }, 0)
+                return [...prevState, courseID];
+            }
+            return prevState;
+        });
+    }
 
     //for testing
-    const isEnrolled = true;
+    const isEnrolled = false;
 
     const course = courses.find(course => course.id === id);
 
@@ -33,7 +61,8 @@ const CourseDetails = () => {
                           </div>
                           {
                               !isEnrolled? (
-                                  <button className="enroll-button bold-text blue-text" onClick={()=>EnrollCourse(role)}>
+                                  <button className="enroll-button bold-text blue-text"
+                                          onClick={()=>EnrollCourse(course.id)}>
                                       Enroll
                                   </button>
                               ) : (

@@ -40,10 +40,11 @@ const Course = mongoose.model(
   "Course",
   new mongoose.Schema(
     {
-      title: { type: String, required: true, unique: true },
-      desc: { type: String, required: true },
-      id: { type: String, required: true, unique: true },
-      hours: { type: Number, required: true },
+        title: { type: String, required: true, unique: true },
+        desc: { type: String, required: true },
+        id: { type: String, required: true, unique: true },
+        hours: { type: Number, required: true },
+        image: { type: String },
     },
     { timestamps: true }
   )

@@ -81,6 +81,19 @@ const Login = () => {
 
           const data = await response.json();
           if (!data.error) {
+              toast.success(data.message, {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  style: {
+                      userSelect: 'none',
+                      gap: '10px',
+                      padding: '20px',
+                  }
+              });
+
               // Successful login, redirect to courses
               setCookie('token', data.data);
               setIsAuthenticated(true);

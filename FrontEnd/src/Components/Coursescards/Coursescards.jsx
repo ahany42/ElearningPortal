@@ -1,4 +1,5 @@
-import {useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
+import { CurrentUserContext } from "../../App.jsx";
 import {useNavigate} from "react-router-dom";
 import CourseCard from '../CourseCard/CourseCard';
 import AddCourseForm from '../addCourseForm/AddCourseForm';
@@ -16,8 +17,8 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
     const [filter, setFilter] = useState("");
-     //for testing
-     const role = "Admin";
+    const { currentUser } = useContext(CurrentUserContext);
+
     const filterHandler = (filter) => {
         const filteredCourses = courses.filter(course => course.title.toLowerCase().includes(filter.toLowerCase()));
         setCoursesList(filteredCourses);
@@ -59,10 +60,13 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
           <span ref={CardsContainer} className='mt-5'>
               <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
                  <SearchBar setFilter={setFilter}/>
-                 {(role==="Admin") || (role==="SuperAdmin") && <button className="AddButton" onClick={showFormHandler}>
-                    <FontAwesomeIcon icon={faPlus} title="Add Course"/>
-                    Add Course
-                </button>}
+                 {
+                     currentUser.role && ((currentUser.role === "Admin") || (currentUser.role === "SuperAdmin")) &&
+                     <button className="AddButton" onClick={showFormHandler}>
+                         <FontAwesomeIcon icon={faPlus} title="Add Course"/>
+                         Add Course
+                     </button>
+                 }
               </div>
               <div className="cards pb-5 pt-3">
                   {
