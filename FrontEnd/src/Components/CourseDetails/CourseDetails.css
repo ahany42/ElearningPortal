@@ -1,6 +1,10 @@
 .course-cover{
     width:90%;
     margin:100px auto auto auto;
+     position: relative; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    
 }
 .course-title,.course-stats,.course-hours-description{
     position: absolute; 
@@ -11,15 +15,14 @@
 .course-title{
     left: 10px; 
     top: 10px; 
+    font-weight: bold;
 }
 .course-stats{
     right:10px;
     bottom:10px;
     display: flex;
     gap:20px;
-}
-.course-cover {
-    position: relative; 
+    flex-wrap: wrap;
 }
 .course-hours-description{
     left:10px;
@@ -29,10 +32,6 @@
 
 .enroll-button {
     height: fit-content;
+    
 }
 
-.stats {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}

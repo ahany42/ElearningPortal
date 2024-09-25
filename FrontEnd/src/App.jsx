@@ -206,7 +206,7 @@ function App() {
     };
 
     return (
-        <CurrentUserContext.Provider value={{currentUser, setCurrentUser, isAuthenticated, setIsAuthenticated, courses}}>
+        <CurrentUserContext.Provider value={{currentUser, setCurrentUser, isAuthenticated, setIsAuthenticated, courses,setCourses}}>
             <div className="body-container">
                 { showHeaderAndFooter && <Header/> }
                 <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>

@@ -12,10 +12,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 let messagesList = [];
 let errorList = [];
-
+let deletedArr=[]
 const CourseCard = ({ id, title, desc, hours}) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated } = useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses } =
+      useContext(CurrentUserContext);
 
     const showErrors = (error) => {
         if (!errorList.includes(error)) {
@@ -59,13 +60,25 @@ const CourseCard = ({ id, title, desc, hours}) => {
         }
     }
 
-    const EditCourse = ()=>{
+    const EditCourse = (id)=>{
         showToast("Edit Coming Soon");
     }
 
-    const DeleteCourse = ()=>{
-        showToast ("Delete Coming Soon");
-    }
+let DeleteCourseHandler = (courseId) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this course?"
+  );
+  if (confirmDelete) {
+    console.log(courseId);
+    setCourses((prevState) =>
+      deletedArr= prevState.filter((course) => course.id !== courseId)
+            
+    );
+      console.log(deletedArr);
+    showToast("Course deleted successfully"); // Optional: Show a toast message
+  }
+};
+
 
     const CourseDetails = ()=>{
         navigate(`/CourseDetails/${id}`)
@@ -168,35 +181,48 @@ const CourseCard = ({ id, title, desc, hours}) => {
         }
         // SuperAdmin and Admin
         else return (
-            <div className="card" key={id}>
-                <div className="card-header position-relative">
-                    <img src={ReactImg || CoursePlaceholder} alt="Course"/>
-                    <div className="course-icons admin-icons">
-                        <FontAwesomeIcon icon={faEdit} style={{cursor: 'pointer'}} className="edit-icon" onClick={EditCourse}/>
-                        <FontAwesomeIcon icon={faTrash} style={{color: 'red', cursor: 'pointer'}} onClick={DeleteCourse}/>
-                    </div>
-                </div>
-                <div className="card-body">
-                    <div className="card-header-container"
-                         style={{left: '50%', transform: 'translateX(-50%)'}}>
-                        <div className="cardButton-container">
-                            <button className="enroll-button bold-text"
-                                    onClick={CourseDetails}>
-                                Details
-                            </button>
-                        </div>
-                    </div>
-                    <h5 className="pascalCase-text bold-text">{title}</h5>
-                    <p>{desc}</p>
-                    <div className="card-bottom">
-                        <div>{hours} Hours</div>
-                        <div className="alignCenter-text">
-                                    20 <FontAwesomeIcon icon={faUser}/>
-                                </div>
-                    </div>
-                </div>
+          <div className="card" key={id}>
+            <div className="card-header position-relative">
+              <img src={ReactImg || CoursePlaceholder} alt="Course" />
+              <div className="course-icons admin-icons">
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ cursor: "pointer" }}
+                  className="edit-icon"
+                  onClick={() => EditCourse(id)}
+                />
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  style={{ color: "red", cursor: "pointer" }}
+                  onClick={() => DeleteCourseHandler(id)}
+                />
+              </div>
             </div>
-            )
+            <div className="card-body">
+              <div
+                className="card-header-container"
+                style={{ left: "50%", transform: "translateX(-50%)" }}
+              >
+                <div className="cardButton-container">
+                  <button
+                    className="enroll-button bold-text"
+                    onClick={CourseDetails}
+                  >
+                    Details
+                  </button>
+                </div>
+              </div>
+              <h5 className="pascalCase-text bold-text">{title}</h5>
+              <p>{desc}</p>
+              <div className="card-bottom">
+                <div>{hours} Hours</div>
+                <div className="alignCenter-text">
+                  20 <FontAwesomeIcon icon={faUser} />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
 
     } else { // Guest User View (currentUser = {})
         return (

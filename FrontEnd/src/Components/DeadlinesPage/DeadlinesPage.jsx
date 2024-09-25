@@ -14,25 +14,7 @@ const DeadlinesPage = () => {
   };
   return (
     <div className="deadlines-container">
-      {/* Buttons for Assignments and Exams (Farah) */}
-      {/*<div className="button-group">*/}
-      {/*  <button*/}
-      {/*    className={`tab-button ${*/}
-      {/*      activeTab === "assignments" ? "active" : ""*/}
-      {/*    }`}*/}
-      {/*    onClick={() => handleTabClick("assignments")}*/}
-      {/*  >*/}
-      {/*    Assignments*/}
-      {/*  </button>*/}
-      {/*  <button*/}
-      {/*    className={`tab-button ${activeTab === "exams" ? "active" : ""}`}*/}
-      {/*    onClick={() => handleTabClick("exams")}*/}
-      {/*  >*/}
-      {/*    Exams*/}
-      {/*  </button>*/}
-      {/*</div>*/}
-
-        {/* Switch Button for Assignments and Exams (Omar) */}
+ 
       <div className="button-group">
         <div className="btn-container">
 

@@ -8,29 +8,14 @@
   margin-bottom: 20px;
 }
 
-.tab-button {
-  padding: 10px 20px;
-  margin: 0 10px;
-  background-color: #fb8928;
-  color: white;
-  border: 3px solid chocolate;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.tab-button.active {
-  background-color: #1d96a7; 
-}
-
-.tab-button:hover {
-  background-color: #202e61;
-}
-
 .deadlines-table {
   margin: auto;
   width: 80%;
+}
+
+.deadlines-table th {
+  background-color: #1d96a7; 
+  color: white;
 }
 
 /*   Switch Button   */
