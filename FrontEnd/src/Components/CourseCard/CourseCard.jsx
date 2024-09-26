@@ -64,20 +64,17 @@ const CourseCard = ({ id, title, desc, hours}) => {
         showToast("Edit Coming Soon");
     }
 
-let DeleteCourseHandler = (courseId) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this course?"
-  );
-  if (confirmDelete) {
-    console.log(courseId);
-    setCourses((prevState) =>
-      deletedArr= prevState.filter((course) => course.id !== courseId)
-            
-    );
-      console.log(deletedArr);
-    showToast("Course deleted successfully"); // Optional: Show a toast message
-  }
-};
+
+    let DeleteCourseHandler = (courseId) => {
+        if (confirmDelete) {
+            console.log(courseId);
+            setCourses(
+                (prevState) =>
+                    prevState.filter((course) => course.id !== courseId)
+            );
+        showToast("Course deleted successfully");
+        }
+    };
 
 
     const CourseDetails = ()=>{
