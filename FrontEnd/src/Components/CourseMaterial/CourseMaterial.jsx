@@ -1,10 +1,10 @@
 import './CourseMaterial.css';
 const CourseMaterial = ({materialType}) => {
   return (
-    <div className="course-material">
+  <>
     {/* for testing */}
     { materialType === "exam"?(
-    <div className=" card material-card ">
+        <div className=" card material-card ">
     <div className="material-header card-header">
         m
     </div>
@@ -18,7 +18,8 @@ const CourseMaterial = ({materialType}) => {
 
         </div>
     ):null}
-    </div>
+    </>
+   
   )
 }
 

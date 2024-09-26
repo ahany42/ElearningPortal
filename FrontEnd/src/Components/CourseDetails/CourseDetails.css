@@ -1,10 +1,10 @@
-.course-cover{
+.course-details{
     width:90%;
-    margin:100px auto auto auto;
+    margin:100px auto 50px auto;
     position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    
+    min-height:80vh;
+
 }
 .course-title,.course-stats,.course-description{
     position: absolute; 
@@ -28,8 +28,13 @@
     bottom:10px;
     font-size:1em !important;
 }
-
+.details-header{
+    position: relative;
+}
 .enroll-button {
     height: fit-content;
     
+}
+.course-material{
+    width:100%;
 }

@@ -6,7 +6,7 @@
   padding: 0;
   scroll-behavior: smooth;
   font-family: 'Poppins', sans-serif;
-  /*background-color:#f7f5ed;*/ /* ELL BACKGROUND DAH 3AMEL HIDE 3ALA KOLL ELL TAGS */
+  text-decoration: none !important;
 }
 
 button, a {
