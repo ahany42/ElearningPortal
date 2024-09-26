@@ -18,7 +18,7 @@ const CourseDetails = () => {
     const { currentUser } = useContext(CurrentUserContext);
     const [ _, setMsgsList ] = useState([]);
     //for testing
-    const courseMaterialType = "exam";
+    const courseMaterialType = "announcement";
     //for testing
     const totalExams = 0;
     //for testing

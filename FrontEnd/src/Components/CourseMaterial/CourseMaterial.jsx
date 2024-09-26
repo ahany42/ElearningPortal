@@ -1,11 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen , faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen , faFileAlt ,faBullhorn} from '@fortawesome/free-solid-svg-icons';
 import './CourseMaterial.css';
 const CourseMaterial = ({materialType}) => {
     //for testing
     const submitted = false;
     //for testing
     const solved = true;
+    //for testing
+    const seeMore = true;
   return (
   <>
     {/* for testing */}
@@ -39,7 +41,19 @@ const CourseMaterial = ({materialType}) => {
         </div>
     ):materialType === "announcement"?(
         <div className="material-card">
-
+ <div className=" card material-card ">
+        <div className=" material-sub-card">
+        <FontAwesomeIcon className="material-icon" size="3x" icon={faBullhorn} color="#274546"/>
+        <div>
+        <div className="material-title-due">
+        <h6>Aly Hany posted a new announcement :Due Dates has been postponed to next week b..</h6>
+        </div>
+        <h6 className="material-date">26th Sep 24</h6>
+        </div>
+       
+        {seeMore? <h6 className="material-button blue-text bold-text">See More</h6>:null}
+        </div>
+        </div>
         </div>
     ):null}
     </>
