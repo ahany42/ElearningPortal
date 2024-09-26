@@ -1,7 +1,7 @@
 .course-cover{
     width:90%;
     margin:100px auto auto auto;
-     position: relative; 
+    position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     
@@ -33,4 +33,3 @@
     height: fit-content;
     
 }
-

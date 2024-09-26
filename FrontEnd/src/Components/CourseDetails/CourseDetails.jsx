@@ -7,13 +7,16 @@ import './CourseDetails.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { CurrentUserContext } from '../../App';
+import CourseMaterial from '../CourseMaterial/CourseMaterial';
 import {toast} from "react-toastify";
 
 const CourseDetails = () => {
     const {id} = useParams();
     const { courses } = useContext(CurrentUserContext);
+    const { currentUser } = useContext(CurrentUserContext);
     const [ _, setMsgsList ] = useState([]);
-
+    //for testing
+    const courseMaterialType = "exam";
     const EnrollCourse = (courseID) => {
         setMsgsList(  (prevState) => {
             if (!prevState.includes(courseID)) {
@@ -49,6 +52,7 @@ const CourseDetails = () => {
       <>
           {
               course ? (
+                <>
                   <div className="card course-cover">
                       <div className="card-header details-header">
                           <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
@@ -59,8 +63,8 @@ const CourseDetails = () => {
                               <h6 className="stats">3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
                               <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                           </div>
-                          {
-                              !isEnrolled? (
+                          {   (currentUser.role==="Student" || currentUser.role === "Instructor" || currentUser.role === "") ? (
+                              !isEnrolled  ?  (
                                   <button className="enroll-button bold-text blue-text"
                                           onClick={()=>EnrollCourse(course.id)}>
                                       Enroll
@@ -69,11 +73,13 @@ const CourseDetails = () => {
                                   <p className="blue-text bold-text" style={{height: 'fit-content'}}>
                                       Enrolled
                                   </p>
-                              )
+                              )) :null
                           }
                           <h5 className="course-description">{course.desc}</h5>
                       </div>
                   </div>
+                  <CourseMaterial materialType = {courseMaterialType}/>
+                  </>
               ) : (
                     <h1 className="text-center">Course not found</h1>
                 )

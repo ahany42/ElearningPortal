@@ -1,0 +1,11 @@
+.course-material{
+    top:0;
+    display: flex;
+    flex-direction: column;
+    
+    width:100%;
+}
+.material-card{
+    width:90%;
+    height:80px;
+}
