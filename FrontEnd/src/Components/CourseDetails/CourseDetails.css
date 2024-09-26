@@ -3,7 +3,6 @@
     margin:100px auto 50px auto;
     position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    min-height:80vh;
 
 }
 .course-title,.course-stats,.course-description{
@@ -37,4 +36,7 @@
 }
 .course-material{
     width:100%;
+}
+.card-body{
+    height: fit-content;
 }

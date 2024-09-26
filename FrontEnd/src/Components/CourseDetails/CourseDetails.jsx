@@ -93,6 +93,12 @@ const CourseDetails = () => {
             <div className="material-list">
             <CourseMaterial materialType = {courseMaterialType}/>
             <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
+            <CourseMaterial materialType = {courseMaterialType}/>
             </div>:(
             <Placeholder text="You're all caught up" img={CaughtUp}/>
             )
