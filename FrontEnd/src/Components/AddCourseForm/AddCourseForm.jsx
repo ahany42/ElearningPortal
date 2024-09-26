@@ -44,24 +44,25 @@ const AddCourseForm = ({ addHandler, showFormHandler }) => {
 
     return (
         <div className="form-container">
+            <h4 className="green-text alignCenter-text bold-text form-title">Add Course Details</h4>
             {
                 error && <div className="alert alert-danger">{error}</div>
             }
             <form className="form ps-2 pe-2" onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title" className="green-text bold-text">Title</label>
                     <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="desc">Description</label>
+                    <label htmlFor="desc" className="green-text bold-text">Description</label>
                     <textarea onChange={handleChange} value={form.desc} name="desc" id="desc" rows="10" cols="50" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="hours">Hours</label>
+                    <label htmlFor="hours" className="green-text bold-text">Hours</label>
                     <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required />
                 </div>
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
-                    <button className="btn btn-outline-primary AddCourseButton" type="submit">Add</button>
+                    <button className="btn btn-outline-primary AddCourseButton green-bg light-text" type="submit">Add</button>
                     <button className="btn btn-outline-danger  CancelButton" onClick={showFormHandler} type="button">Cancel</button>
                 </div>
             </form>

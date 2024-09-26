@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { useParams } from "react-router";
 import ReactImg from '../../assets/React.png';
-import { faUser,faChalkboardTeacher, faFileAlt} from '@fortawesome/free-solid-svg-icons';
+import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseDetails.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,10 +51,10 @@ const CourseDetails = () => {
               course ? (
                   <div className="card course-cover">
                       <div className="card-header details-header">
-                          <h3 className="course-title alignLeft-text">{course.title}</h3>
+                          <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                           <img src={ReactImg} alt="Course Photo"/>
                           <div className="course-stats">
-                              <h6 className="stats">{course.hours} <AccessTimeOutlinedIcon fontSize="large" /></h6>
+                              <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
                               <h6 className="stats">20 <FontAwesomeIcon icon={faUser}/></h6>
                               <h6 className="stats">3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
                               <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
@@ -71,7 +71,7 @@ const CourseDetails = () => {
                                   </p>
                               )
                           }
-                          <h5 className="course-hours-description">{course.desc}</h5>
+                          <h5 className="course-description">{course.desc}</h5>
                       </div>
                   </div>
               ) : (
