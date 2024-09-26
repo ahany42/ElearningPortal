@@ -21,7 +21,7 @@ import { jwtDecode } from "jwt-decode";
 import HomePage from "./Components/HomePage/HomePage.jsx";
 import CourseDetails from "./Components/CourseDetails/CourseDetails.jsx";
 import Logout from "./Components/Logout/Logout.jsx";
-
+import AddExam from "./Components/AddExam/AddExam.jsx";
 const pathsWithNoHeaderAndFooter = [
     '/ForgetPassword',
 ];
@@ -220,6 +220,7 @@ function App() {
                                element={<CoursesPage courses={courses} addCourseHandler={addCourseHandler} />}/>
                         <Route path="/deadline" element={<DeadlinesPage/>}/>
                         <Route path="/CourseDetails/:id" element={<CourseDetails />}/>
+                        <Route path="/AddExam" element={<AddExam/>}/>
                         <Route path="/logout" element={<Logout />}/>
                         <Route path="*" element={
                             <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
