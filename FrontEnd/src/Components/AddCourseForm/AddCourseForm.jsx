@@ -62,8 +62,8 @@ const AddCourseForm = ({ addHandler, showFormHandler }) => {
                     <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required />
                 </div>
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
-                    <button className="btn btn-outline-primary AddCourseButton green-bg light-text" type="submit">Add</button>
-                    <button className="btn btn-outline-danger  CancelButton" onClick={showFormHandler} type="button">Cancel</button>
+                    <button className="btn AddCourseButton" type="submit">Add</button>
+                    <button className="btn btn-outline-danger CancelButton" onClick={showFormHandler} type="button">Cancel</button>
                 </div>
             </form>
         </div>

@@ -12,11 +12,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 let messagesList = [];
 let errorList = [];
-let deletedArr=[]
+
 const CourseCard = ({ id, title, desc, hours}) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated, setCourses } =
-      useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
 
     const showErrors = (error) => {
         if (!errorList.includes(error)) {
@@ -64,12 +63,13 @@ const CourseCard = ({ id, title, desc, hours}) => {
         showToast("Edit Coming Soon");
     }
 
-let DeleteCourseHandler = (courseId) => {
-    setCourses((prevState) =>
-        prevState.filter((course) => course.id !== courseId)
-)
-showToast("Course deleted successfully")
-}
+    const DeleteCourseHandler = (courseId) => {
+        setCourses((prevState) =>
+            prevState.filter((course) => course.id !== courseId)
+        );
+        showToast("Course deleted successfully");
+    };
+
 
     const CourseDetails = ()=>{
         navigate(`/CourseDetails/${id}`)

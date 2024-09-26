@@ -7,11 +7,9 @@
 }
 .material-sub-card{
     display: flex;
-    margin: 20px;
-    margin-left: 80px;
+    margin: 20px 20px 20px 80px;
     align-items: center;
     justify-content: left;
-    width:100%;
 }
 .material-icon{
     left: 0;
@@ -19,6 +17,8 @@
     position: absolute;
 }
 .material-button{
+    cursor: pointer;
+    user-select: none;
     right: 0;
     bottom:0;
     margin-right: 10px;

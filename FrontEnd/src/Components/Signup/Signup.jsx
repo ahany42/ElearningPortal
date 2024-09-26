@@ -3,7 +3,7 @@ import { CurrentUserContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -30,7 +30,7 @@ import {jwtDecode} from "jwt-decode";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const [genderValue, setGenderValue] = useState("");
+  const [genderValue, setGenderValue] = useState("Male");
   const [formData, setFormData] = useState({
     name: "",
     gender: genderValue,
@@ -47,7 +47,7 @@ const SignUp = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowPassword2 = () => setShowPassword2(!showPassword2);
   const handleMouseDownPassword = (event) => event.preventDefault();
-  const handleGenderChange = (event)=>{
+  const handleGenderChange = (event)=> {
     setGenderValue(event.target.value);
     setFormData((prevData) => ({
       ...prevData,

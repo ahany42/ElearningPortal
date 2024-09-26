@@ -19,31 +19,26 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
     const [filter, setFilter] = useState("");
     const { currentUser } = useContext(CurrentUserContext);
 
-    useEffect(() => {
-      setCoursesList(courses);
-    }, [courses]);
-
-
-    useEffect(() => {
-  if (showForm) {
-    CardsContainer.current.style.opacity = "0.3";
-    CardsContainer.current.style.pointerEvents = "none";
-    CardsContainer.current.style.userSelect = "none";
-  } else {
-    CardsContainer.current.style.opacity = "1";
-    CardsContainer.current.style.pointerEvents = "";
-    CardsContainer.current.style.userSelect = "";
-  }
- }, [showForm]);
-
-
-
     const filterHandler = (filter) => {
         const filteredCourses = courses.filter(course => course.title.toLowerCase().includes(filter.toLowerCase()));
         setCoursesList(filteredCourses);
     }
 
-    
+    useEffect(() => {
+        setCoursesList(courses);
+    }, [courses]);
+
+    useEffect(() => {
+        if (showForm) {
+            CardsContainer.current.style.opacity = '0.3';
+            CardsContainer.current.style.pointerEvents = 'none';
+            CardsContainer.current.style.userSelect = 'none';
+        } else {
+            CardsContainer.current.style.opacity = '1';
+            CardsContainer.current.style.pointerEvents = '';
+            CardsContainer.current.style.userSelect = '';
+        }
+    }, [showForm]);
 
     useEffect(() => {
         if (filter) {

@@ -5,7 +5,7 @@ import {
   StepLabel,
   Box,
 } from '@mui/material';
-const steps = ['Exam Details', 'Add Questions'];
+const steps = ['ExamInfo', 'AddQuestion'];
 import AddQuestions from './AddQuestions';
 import ExamInfo from './ExamInfo';
 import './AddExam.css';

@@ -15,24 +15,24 @@ const DeadlinesPage = () => {
   return (
     <div className="deadlines-container">
  
-      <div className="button-group">
-        <div className="btn-container">
+        <div className="button-group">
+          <div className="btn-container">
 
-          <label className="switch btn-color-mode-switch">
-            <input value="1" id="color_mode"
-                   name="color_mode" type="checkbox"
-                   onChange={(e) => {
-                        if (e.target.checked) {
-                          handleTabClick("exams");
-                        } else {
-                          handleTabClick("assignments");
-                        }
-                   }} />
-              <label className="btn-color-mode-switch-inner" data-off="Assignments" data-on="Exams" htmlFor="color_mode"></label>
-          </label>
+            <label className="switch btn-color-mode-switch">
+              <input value="1" id="color_mode"
+                     name="color_mode" type="checkbox"
+                     onChange={(e) => {
+                          if (e.target.checked) {
+                            handleTabClick("exams");
+                          } else {
+                            handleTabClick("assignments");
+                          }
+                     }} />
+                <label className="btn-color-mode-switch-inner" data-off="Assignments" data-on="Exams" htmlFor="color_mode"></label>
+            </label>
 
+          </div>
         </div>
-      </div>
 
       {/* Table to display either assignments or exams */}
       <Table striped bordered hover className="deadlines-table">

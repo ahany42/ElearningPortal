@@ -4,7 +4,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 5;
+    z-index: 101;
     width: 400px;
     padding: 32px 24px;
     font-size: 14px;
@@ -94,13 +94,19 @@
 }
 
 .AddCourseButton{
-   margin-bottom: 20px;
-    border: 1px solid #274546 !important;
-    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+    border: 2px solid #274546 !important;
+    background: #274546 !important;
+    transition: all 0.15s ease;
+    color: white;
 }
-.AddCourseButton:hover,.CancelButton:hover{
-    transform: scale(1.02);
+
+.AddCourseButton:active {
+    background: #274546 !important;
+    color: white !important;
 }
-.CancelButton{
-    border-width:2px !important;
+
+.CancelButton {
+    border-width: 2px !important;
+    transition: all 0.15s ease;
 }

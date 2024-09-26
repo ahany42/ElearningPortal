@@ -59,56 +59,52 @@ const CourseDetails = () => {
 
     return (
         
-      course ? (
-       
-            <div className="card course-details">
-                <div className="card-header details-header">
-                    <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
-                    <img src={ReactImg} alt="Course Photo"/>
-                    <div className="course-stats">
-                        <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
-                        <h6 className="stats">20 <FontAwesomeIcon icon={faUser}/></h6>
-                        <h6 className="stats">3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
-                        <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
-                    </div>
-                    {   (currentUser.role==="Student" || currentUser.role === "Instructor" || currentUser.role === "") ? (
-                        !isEnrolled  ?  (
-                            <button className="enroll-button bold-text blue-text"
-                                    onClick={()=>EnrollCourse(course.id)}>
-                                Enroll
-                            </button>
-                        ) : (
-                            <p className="blue-text bold-text" style={{height: 'fit-content'}}>
-                                Enrolled
-                            </p>
-                        )) :null
-                    }
-                    <h5 className="course-description">{course.desc}</h5>
-                </div>
-          
-            <div className="course-material card-body">
-            <h5>Added Material:</h5>
-            {
-            (totalAnnouncements + totalAssignments + totalExams !== 0) ?
-            <div className="material-list">
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            <CourseMaterial materialType = {courseMaterialType}/>
-            </div>:(
-            <Placeholder text="You're all caught up" img={CaughtUp}/>
-            )
-            }
-            </div>
-            </div>
-           
-        ) : (
-           <Placeholder text="Course Not Found" img={NotFoundImg}/>
-            )
+      course ?
+          <div className="card course-details">
+              <div className="card-header details-header">
+                  <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
+                  <img src={ReactImg} alt="Course Photo"/>
+                  <div className="course-stats">
+                      <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
+                      <h6 className="stats">20 <FontAwesomeIcon icon={faUser}/></h6>
+                      <h6 className="stats">3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
+                      <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
+                  </div>
+                  {
+                      ( currentUser.role==="Student" || currentUser.role === "Instructor" || currentUser.role === "" ) ?
+                          !isEnrolled?
+                              <button className="enroll-button bold-text blue-text"
+                                      onClick={()=>EnrollCourse(course.id)}>
+                                  Enroll
+                              </button> :
+                              <p className="blue-text bold-text" style={{height: 'fit-content'}}>
+                                  Enrolled
+                              </p> :
+                          null
+                  }
+                  <h5 className="course-description">{course.desc}</h5>
+              </div>
+
+              <div className="course-material card-body">
+                  <h5>Added Material:</h5>
+                  {
+                      ( totalAnnouncements + totalAssignments + totalExams !== 0 ) ?
+                          <div className="material-list">
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial materialType = {courseMaterialType}/>
+                          </div> :
+                          <Placeholder text="You're all caught up" img={CaughtUp}/>
+                  }
+              </div>
+          </div>
+      :
+          <Placeholder text="Course Not Found" img={NotFoundImg}/>
     )
 }
 
