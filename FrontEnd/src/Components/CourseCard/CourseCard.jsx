@@ -64,18 +64,12 @@ const CourseCard = ({ id, title, desc, hours}) => {
         showToast("Edit Coming Soon");
     }
 
-
-    let DeleteCourseHandler = (courseId) => {
-        if (confirmDelete) {
-            console.log(courseId);
-            setCourses(
-                (prevState) =>
-                    prevState.filter((course) => course.id !== courseId)
-            );
-        showToast("Course deleted successfully");
-        }
-    };
-
+let DeleteCourseHandler = (courseId) => {
+    setCourses((prevState) =>
+        prevState.filter((course) => course.id !== courseId)
+)
+showToast("Course deleted successfully")
+}
 
     const CourseDetails = ()=>{
         navigate(`/CourseDetails/${id}`)
