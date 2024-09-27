@@ -1,89 +1,51 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import React, {useContext, useEffect, useState} from "react";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, FormControl, TextField, Box } from "@mui/material";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
+import {CurrentUserContext} from "../../App.jsx";
+
 const ForgotPassword = () => {
+  // const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
   });
-  const [_, setMessagesList] = useState([]);
+  const { setLoading, showMessage } = useContext(CurrentUserContext);
 
   // const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:3008/forgotpassword",
-        JSON.stringify(formData),
-        {
-          headers: { "Content-Type": "application/json" },
+    await setLoading(true);
+    setTimeout(async () => {
+      try {
+        const response = await axios.post(
+            "http://localhost:3008/forgotpassword",
+            JSON.stringify(formData),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+        ).then((response) => {
+          setLoading(false);
+          return response;
+        });
+        if (!response.data.error) {
+          showMessage(response.data.message, false);
+        } else {
+          showMessage(response.data.error, true);
         }
-      );
-      if (!response.data.error) {
-        setMessagesList((prevMessagesList) => {
-          if (!prevMessagesList.includes(response.data.message)) {
-            toast.success(response.data.message, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: "none",
-                gap: "10px",
-                padding: "20px",
-              },
-
-              onClose: () => {
-                setMessagesList((prevState) =>
-                  prevState.filter((e) => e !== response.data.message)
-                );
-              },
-            });
-            // navigate("/ChangePassword");
-            return [...prevMessagesList, response.data.message];
-          } else {
-            return prevMessagesList;
-          }
-        });
-      } else {
-        setMessagesList((prevMessagesList) => {
-          if (!prevMessagesList.includes(response.data.error)) {
-            toast.error(response.data.error, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: "none",
-                gap: "10px",
-                padding: "20px",
-              },
-              onClose: () => {
-                setMessagesList((prevState) =>
-                  prevState.filter((e) => e !== response.data.error)
-                );
-              },
-            });
-            return [...prevMessagesList, response.data.error];
-          } else {
-            return prevMessagesList;
-          }
-        });
+      } catch (error) {
+        setLoading(false);
+        showMessage("Something went wrong. Please try again.", true);
       }
-    } catch (error) {
-      toast.warn("Something went wrong. Please try again.");
-    }
+    }, 1000);
   };
 
   return (
     <>
       <Box sx={{ width: "80%", margin: "80px auto" }}>
-        <h4>Reset Your Password</h4>
+        <h4 className="mb-3">Reset your password</h4>
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
           <TextField
@@ -117,30 +79,6 @@ const ForgotPassword = () => {
             }}
           />
 
-          {/* Password Field */}
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{
-              my: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "grey",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#274546",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#274546",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                "&.Mui-focused": {
-                  color: "#274546 !important",
-                },
-              },
-            }}
-          ></FormControl>
           <Button
             type="submit"
             variant="contained"

@@ -114,7 +114,7 @@ const Login = () => {
   return (
     <>
     <Box sx={{width: '80%', margin: '80px auto'}}>
-        <h4>Login to your account</h4>
+        <h4 className="mb-3">Login to your account</h4>
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
         <TextField label="Username"

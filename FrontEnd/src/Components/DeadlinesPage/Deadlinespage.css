@@ -13,6 +13,10 @@
   width: 80%;
 }
 
+#color_mode {
+  cursor: auto;
+}
+
 .deadlines-table th {
   background-color: #1d96a7; 
   color: white;
@@ -45,6 +49,7 @@
 }
 
 .btn-color-mode-switch > label.btn-color-mode-switch-inner:before {
+  cursor: pointer;
   content: attr(data-on);
   position: absolute;
   font-size: 20px;

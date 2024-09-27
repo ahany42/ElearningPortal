@@ -15,8 +15,8 @@ const crypto = require("crypto");
 const transporter = nodemailer.createTransport({
   service: "gmail", // Or any other email provider
   auth: {
-    user: "merackosj.40@gmail.com", // Replace with your email
-    pass: "kejoqypehonpusgc", // Replace with your email password or app-specific password
+    user: "e.learning.system.depi@gmail.com", // Replace with your email
+    pass: "gxeqtzwcqhhmfzhf", // Replace with your email password or app-specific password
   },
 });
 
@@ -163,7 +163,7 @@ module.exports.forgotPassword = async (req, res, next) => {
     const resetToken = crypto.randomBytes(32).toString("hex");
 
     // Set the token expiry time (e.g., 1 hour from now)
-    const tokenExpiry = Date.now() + 3600000; // 1 hour
+    const tokenExpiry = Date.now() + (1000 * 60 * 10); // 10 minutes
 
     // Save the token and expiry to the user record (you might need to modify your User model)
     user.resetPasswordToken = resetToken;
@@ -192,6 +192,37 @@ module.exports.forgotPassword = async (req, res, next) => {
     next(`ERROR IN: forgotPassword function => ${error}`);
   }
 };
+
+module.exports.verifyResetToken = async (req, res, next) => {
+    try {
+        const { token } = req.params;
+
+        if (token && token.toLowerCase() === "null") {
+            return res.status(200).json({ error: "Password reset token is required" });
+        }
+
+        const user =
+            await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+
+        const userResetToken =
+            await User.findOne({resetPasswordToken: token});
+
+        if ( userResetToken && Date.now() > userResetToken.resetPasswordExpires ) {
+          userResetToken.resetPasswordToken = undefined;
+          userResetToken.resetPasswordExpires = undefined;
+          await userResetToken.save();
+          return res.status(200).json({ error: "Password reset token has expired" });
+        }
+        if (!user) {
+            return res.status(200).json({ error: "Password reset token is invalid" });
+        } else {
+            res.status(201).json({ message: "Password reset token is valid" });
+        }
+    } catch (error) {
+      res.status(200).json({ error: "Unexpected Error Occurred" });
+      next(`ERROR IN: verifyResetToken function => ${error}`);
+    }
+}
 
 module.exports.resetPassword = async (req, res, next) => {
   try {

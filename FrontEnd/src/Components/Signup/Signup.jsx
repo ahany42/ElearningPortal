@@ -175,7 +175,7 @@ const SignUp = () => {
   return (
     <>
       <Box sx={{ width: "80%", margin: "100px auto" }}>
-        <h4>Create New Account</h4>
+        <h4 className="mb-3">Create New Account</h4>
         <form onSubmit={handleSubmit}>
           <TextField
             label="Full Name"

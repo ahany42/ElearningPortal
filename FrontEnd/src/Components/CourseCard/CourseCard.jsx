@@ -60,7 +60,9 @@ const CourseCard = ({ id, title, desc, hours}) => {
     }
 
     const EditCourse = (id)=>{
-        showToast("Edit Coming Soon");
+        navigate(`/editCourseForm/${id}`, {
+            state: { id, title, desc, hours},
+        });
     }
 
     const DeleteCourseHandler = (courseId) => {

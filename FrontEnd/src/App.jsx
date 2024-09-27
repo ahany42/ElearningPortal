@@ -33,7 +33,12 @@ import CourseDetails from "./Components/CourseDetails/CourseDetails.jsx";
 import Logout from "./Components/Logout/Logout.jsx";
 import AddExam from "./Components/AddExam/AddExam.jsx";
 import ChangePassword from "./Components/ChangePassword/ChangePassword.jsx";
-const pathsWithNoHeaderAndFooter = ["/ForgetPassword"];
+import Loader from "./Components/Loader/Loader.jsx";
+import EditCourseForm from "./Components/EditCourseForm/EditCourseForm.jsx";
+
+const pathsWithNoHeaderAndFooter = [
+    // "/ForgetPassword",
+];
 
 const pathsRequireAuthentication = [
   "/MyCourses",
@@ -42,7 +47,11 @@ const pathsRequireAuthentication = [
   // '/Courses'
 ];
 
-const pathsNotRequireAuthentication = ["/login", "/ForgetPassword", "/SignUp"];
+const pathsNotRequireAuthentication = [
+    '/login',
+    '/ForgetPassword',
+    '/SignUp',
+];
 
 let data = [
   {
@@ -73,222 +82,208 @@ let data = [
 
 export const CurrentUserContext = createContext();
 
+let messagesList = [];
+
 function App() {
-  const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
-  const [courses, setCourses] = useState(data);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getCookie("token"));
-  const [currentUser, setCurrentUser] = useState({});
-  const [activeErrors, setActiveErrors] = useState([]);
-  const navigate = useNavigate();
-  const routes = useLocation();
+    const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
+    const [ courses, setCourses ] = useState(data);
+    const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
+    const [ currentUser, setCurrentUser ] = useState({});
+    const [ activeErrors, setActiveErrors ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
+    const navigate = useNavigate();
+    const routes = useLocation();
 
-  useEffect(() => {
-    let interval = null;
-    if (isAuthenticated) {
-      setCurrentUser(jwtDecode(getCookie("token")));
-      interval = setInterval(async () => {
-        if (!getCookie("token")) {
-          setIsAuthenticated(false);
-          setCurrentUser({});
-          clearInterval(interval);
-          if (!activeErrors.includes("Session Expired, please login again")) {
-            setActiveErrors([
-              ...activeErrors,
-              "Session Expired, please login again",
-            ]);
-            toast.error("Session Expired, please login again", {
-              autoClose: 3000, // Auto close after 3 seconds
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: "none",
-                gap: "10px",
-                padding: "20px",
-              },
-              onClose: () => {
-                setActiveErrors((prevState) =>
-                  prevState.filter(
-                    (e) => e !== "Session Expired, please login again"
-                  )
-                );
-              },
-            });
-          }
-          navigate("/login");
-          return;
+    useEffect(() => {
+        let interval = null;
+        if ( isAuthenticated ) {
+            setCurrentUser(jwtDecode(getCookie('token')));
+            interval = setInterval(async () => {
+                if (!getCookie('token')) {
+                    setIsAuthenticated(false);
+                    setCurrentUser({});
+                    clearInterval(interval);
+                    if (!activeErrors.includes('Session Expired, please login again')) {
+                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
+                        toast.error('Session Expired, please login again', {
+                            autoClose: 3000, // Auto close after 3 seconds
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            style: {
+                                userSelect: 'none',
+                                gap: '10px',
+                                padding: '20px',
+                            },
+                            onClose: () => {
+                                setActiveErrors(prevState =>
+                                    prevState.filter(e => e !== 'Session Expired, please login again'))
+                            }
+                        });
+                    }
+                    navigate('/login');
+                    return;
+                }
+                if (checkCookieExpiry('token')) {
+                    setIsAuthenticated(false);
+                    setCurrentUser({});
+                    await axios.post('http://localhost:3008/logout');
+                    if (!activeErrors.includes('Session Expired, please login again')) {
+                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
+                        toast.error('Session Expired, please login again', {
+                            autoClose: 3000, // Auto close after 3 seconds
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            style: {
+                                userSelect: 'none',
+                                gap: '10px',
+                                padding: '20px',
+                            },
+                            onClose: () => {
+                                setActiveErrors(prevState =>
+                                    prevState.filter(e => e !== 'Session Expired, please login again'))
+                            }
+                        });
+                    }
+                    navigate('/login');
+                }
+            }, 1000);
+        } else {
+            setCurrentUser({})
+            axios.post('http://localhost:3008/logout');
+            clearInterval(interval);
         }
-        if (checkCookieExpiry("token")) {
-          setIsAuthenticated(false);
-          setCurrentUser({});
-          await axios.post("http://localhost:3008/logout");
-          if (!activeErrors.includes("Session Expired, please login again")) {
-            setActiveErrors([
-              ...activeErrors,
-              "Session Expired, please login again",
-            ]);
-            toast.error("Session Expired, please login again", {
-              autoClose: 3000, // Auto close after 3 seconds
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: "none",
-                gap: "10px",
-                padding: "20px",
-              },
-              onClose: () => {
-                setActiveErrors((prevState) =>
-                  prevState.filter(
-                    (e) => e !== "Session Expired, please login again"
-                  )
-                );
-              },
-            });
-          }
-          navigate("/login");
+        return () => clearInterval(interval);
+    }, [isAuthenticated])
+
+    useEffect(() => {
+
+        // Redirect to previous route if the user is already authenticated
+        if (pathsNotRequireAuthentication.includes(routes.pathname) && isAuthenticated) {
+            if (!activeErrors.includes('You are already logged in')) {
+                setActiveErrors([...activeErrors, 'You are already logged in']);
+                toast.error('You are already logged in', {
+                    autoClose: 3000, // Auto close after 3 seconds
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: 'none',
+                        gap: '10px',
+                        padding: '20px',
+                    },
+                    onClose: () => {
+                        setActiveErrors(prevState => prevState.filter(e => e !== 'You are already logged in'))
+                    }
+                });
+            }
+            navigate(-1);
         }
-      }, 1000);
-    } else {
-      setCurrentUser({});
-      axios.post("http://localhost:3008/logout");
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
 
-  useEffect(() => {
-    // Redirect to previous route if the user is already authenticated
-    if (
-      pathsNotRequireAuthentication.includes(routes.pathname) &&
-      isAuthenticated
-    ) {
-      if (!activeErrors.includes("You are already logged in")) {
-        setActiveErrors([...activeErrors, "You are already logged in"]);
-        toast.error("You are already logged in", {
-          autoClose: 3000, // Auto close after 3 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: {
-            userSelect: "none",
-            gap: "10px",
-            padding: "20px",
-          },
-          onClose: () => {
-            setActiveErrors((prevState) =>
-              prevState.filter((e) => e !== "You are already logged in")
-            );
-          },
+        // Redirect to login page if the user is not authenticated
+        if (pathsRequireAuthentication.includes(routes.pathname) && !isAuthenticated) {
+            if (!activeErrors.includes('You must login first')) {
+                setActiveErrors([...activeErrors, 'You must login first']);
+                toast.error('You must login first', {
+                    autoClose: 3000, // Auto close after 3 seconds
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: 'none',
+                        gap: '10px',
+                        padding: '20px',
+                    },
+                    onClose: () => {
+                        setActiveErrors(prevState => prevState.filter(e => e !== 'You must login first'))
+                    }
+                });
+            }
+            navigate('/login');
+        }
+
+        // Hide header and footer for specific pages
+        if(pathsWithNoHeaderAndFooter.includes(routes.pathname) ||
+            document.querySelector('.body-content').innerHTML.includes('Page Not Found')) {
+            setShowHeaderAndFooter(false);
+        } else {
+            setShowHeaderAndFooter(true);
+        }
+    }, [routes]);
+
+    const addCourseHandler = (newCourse) => {
+        setCourses((prevState) => {
+            return [...prevState, newCourse]
         });
-      }
-      navigate(-1);
+    };
+
+    const showMessage = (msg, error) => {
+        if (msg && (error === true || error === false)) {
+            if (!messagesList.includes(msg)) {
+                messagesList.push(msg);
+                toast[error ? "error" : "success"](msg, {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: "none",
+                        gap: "10px",
+                        padding: "20px",
+                    },
+                    onClose: () => {
+                        messagesList = messagesList.filter((e) => e !== msg);
+                    },
+                });
+            }
+        }
     }
 
-    // Redirect to login page if the user is not authenticated
-    if (
-      pathsRequireAuthentication.includes(routes.pathname) &&
-      !isAuthenticated
-    ) {
-      if (!activeErrors.includes("You must login first")) {
-        setActiveErrors([...activeErrors, "You must login first"]);
-        toast.error("You must login first", {
-          autoClose: 3000, // Auto close after 3 seconds
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: {
-            userSelect: "none",
-            gap: "10px",
-            padding: "20px",
-          },
-          onClose: () => {
-            setActiveErrors((prevState) =>
-              prevState.filter((e) => e !== "You must login first")
-            );
-          },
-        });
-      }
-      navigate("/login");
-    }
+    return (
+        <CurrentUserContext.Provider value={{currentUser, setCurrentUser, isAuthenticated, showMessage,
+                                             setIsAuthenticated, courses, setCourses, setLoading}}>
+            <div className="body-container">
+                { showHeaderAndFooter && <Header/> }
+                <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>
+                    <ToastContainer style={{width: 'fit-content'}}/>
+                    {
+                        loading?
+                            <Loader/> : (
+                                <Routes>
+                                    <Route path="/" element={<HomePage/>}/>
+                                    <Route path="/login" element={<Login />}/>
+                                    <Route path="/ForgetPassword" element={<ForgotPassword/>}/>
+                                    <Route path="/resetPassword" element={<ChangePassword />} />
+                                    <Route path="/SignUp" element={<SignUp/>}/>
+                                    <Route path="/courses"
+                                           element={
+                                               <CoursesPage courses={courses} addCourseHandler={addCourseHandler} />
+                                           }
+                                    />
+                                    <Route path="/deadline" element={<DeadlinesPage/>}/>
+                                    <Route path="/CourseDetails/:id" element={<CourseDetails />}/>
+                                    <Route path="/editCourseForm/:id"
+                                           element={<EditCourseForm />}/>
+                                    <Route path="/AddExam" element={<AddExam/>}/>
+                                    <Route path="/logout" element={<Logout />}/>
+                                    <Route path="*" element={
+                                        <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
+                                    }/>
+                                </Routes>
+                            )
+                    }
+                </div>
 
-    // Hide header and footer for specific pages
-    if (
-      pathsWithNoHeaderAndFooter.includes(routes.pathname) ||
-      document
-        .querySelector(".body-content")
-        .innerHTML.includes("Page Not Found")
-    ) {
-      setShowHeaderAndFooter(false);
-    } else {
-      setShowHeaderAndFooter(true);
-    }
-  }, [routes]);
-
-  const addCourseHandler = (newCourse) => {
-    setCourses((prevState) => {
-      return [...prevState, newCourse];
-    });
-  };
-
-  return (
-    <CurrentUserContext.Provider
-      value={{
-        currentUser,
-        setCurrentUser,
-        isAuthenticated,
-        setIsAuthenticated,
-        courses,
-        setCourses,
-      }}
-    >
-      <div className="body-container">
-        {showHeaderAndFooter && <Header />}
-        <div
-          className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}
-        >
-          <ToastContainer style={{ width: "fit-content" }} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/ForgetPassword" element={<ForgotPassword />} />
-            <Route path="/resetPassword" element={<ChangePassword />} />
-            <Route path="/SignUp" element={<SignUp />} />
-            <Route
-              path="/courses"
-              element={
-                <CoursesPage
-                  courses={courses}
-                  addCourseHandler={addCourseHandler}
-                />
-              }
-            />
-            <Route path="/deadline" element={<DeadlinesPage />} />
-            <Route path="/CourseDetails/:id" element={<CourseDetails />} />
-            <Route path="/AddExam" element={<AddExam />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route
-              path="*"
-              element={
-                <Placeholder
-                  text="Page Not Found"
-                  img={NotFoundImg}
-                  buttonText="Back To Home"
-                  buttonRoute="/"
-                />
-              }
-            />
-          </Routes>
-        </div>
-
-        {showHeaderAndFooter && <Footer />}
-      </div>
-    </CurrentUserContext.Provider>
-  );
+                {showHeaderAndFooter && <Footer />}
+            </div>
+        </CurrentUserContext.Provider>
+);
 }
 
 export default App;

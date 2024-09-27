@@ -1,8 +1,6 @@
 const { Course, Student_Course, Instructor_Course, Exam, Assignment, User } = require('../db/Database');
 const multer = require('multer');
 const { v4 } = require('uuid');
-const {jwtDecode} = require("jwt-decode");
-const bcrypt = require('bcrypt');
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -37,17 +35,17 @@ class CourseController {
               // Image handling added here
               const { title, desc, hours, instructorId } = req.body;
               const image = req.file ? req.file.path : null; // Store image path from multer
-              const loggedInUser = jwtDecode(req.headers.authorization);
               const id = v4();
 
-              const user = await User.findOne({ id: instructorId });
+              const user =
+                  await User.findOne({ id: instructorId });
 
               if (!title || !desc || !hours || !user) {
                      return res.status(200).json({ error: "All fields are required" });
               }
 
               if (user.role.toLowerCase() !== "instructor") {
-                 return res.status(200).json({ error: "Invalid role of instructorId" });
+                     return res.status(200).json({error: "Invalid role of instructorId"});
               }
 
               try {
@@ -66,7 +64,7 @@ class CourseController {
                             duration: hours
                      });
 
-                     res.status(200).json(course);
+                     res.status(201).json({data: course, message: `Course (${title}) created successfully`});
               } catch (error) {
                      res.status(200).json({ error: error.message });
                      next(`ERROR IN: login function => ${error.message}`);

@@ -13,12 +13,15 @@ import {
   InputAdornment,
   Box,
   IconButton,
-  Tooltip,
+  Tooltip, Alert,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { NavLink, useNavigate } from "react-router-dom";
+import {getCookie} from "../Cookie/Cookie.jsx";
+
+let errorMessages = [];
 
 const ChangePassword = () => {
   const location = useLocation();
@@ -26,13 +29,63 @@ const ChangePassword = () => {
   const token = searchParams.get("token");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+    const [update, setUpdate] = useState(false);
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [activeErrors, setActiveErrors] = useState([]);
   const [formData, setFormData] = useState({
     password: "",
+    confirmpassword: ""
   });
+
   // const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
   const navigate = useNavigate();
+
+  const checkToken = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3008/verifyRestToken/${token}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+      const data = await response.json();
+      if (data.error) {
+        toast.error(data.error, {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error("Something went wrong, please try again", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      navigate("/login");
+    }
+  }
+
+  // Start auto checker for token validity
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUpdate(prevState => !prevState);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    checkToken();
+  }, [update]);
 
   useEffect(() => {
     if (error && !activeErrors.includes(error)) {
@@ -88,21 +141,61 @@ const ChangePassword = () => {
 
         navigate("/login");
       } else {
-        // Show error message
-        setError(data.error);
-        // setIsAuthenticated(false);
+        if (data.error.toLowerCase().includes("token")) {
+          toast.error("Invalid token, please try again", {
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          navigate("/login");
+        } else {
+          if (!errorMessages.includes(data.error)) {
+            errorMessages.push(data.error);
+            toast.error(data.error, {
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              onClose: () => {
+                errorMessages = errorMessages.filter((e) => e !== data.error);
+              }
+            });
+          }
+        }
       }
     } catch (error) {
-      console.warn(error);
-      setError(error.message);
-      // setIsAuthenticated(false);
+      toast.error("Something went wrong, please try again", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      navigate("/login");
     }
   };
 
   return (
     <>
       <Box sx={{ width: "80%", margin: "80px auto" }}>
-        <h4>Plase enter the new password and confirm it</h4>
+        {
+          passwordError? (
+                <>
+                  <h4>Set your new password</h4>
+                  <Alert severity="error" sx={{my: 2}}>
+                    {passwordError}
+                  </Alert>
+                </>
+          ) : (
+                <h4 className="mb-3">Set your new password</h4>
+          )
+        }
         <form onSubmit={handleSubmit}>
           {/* Password Field */}
           <FormControl
@@ -133,9 +226,12 @@ const ChangePassword = () => {
               name="password"
               required
               value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
+              onChange={(e) => {
+                setFormData({ ...formData, password: e.target.value });
+                if (e.target.value === "" && formData.confirmpassword === "") {
+                  setPasswordError("");
+                }
+              }}
               type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
@@ -186,9 +282,14 @@ const ChangePassword = () => {
               name="confirmpassword"
               required
               value={formData.confirmpassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmpassword: e.target.value })
-              }
+              onChange={(e) => {
+                  setFormData({ ...formData, confirmpassword: e.target.value });
+                  if (formData.password !== e.target.value) {
+                      setPasswordError("Passwords do not match");
+                  } else {
+                    setPasswordError("");
+                  }
+              }}
               type={showPassword2 ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
@@ -206,15 +307,31 @@ const ChangePassword = () => {
           </FormControl>
 
           {/* Sign In Button */}
-          <Button
-            type="submit"
-            variant="contained"
-            className="green-bg pascalCase-text"
-            fullWidth
-            sx={{ my: 2 }}
-          >
-            Submit
-          </Button>
+          {
+            passwordError? (
+                <Button
+                    type="submit"
+                    disabled
+                    variant="contained"
+                    className="green-bg pascalCase-text"
+                    style={{ cursor: "not-allowed", color: "white", opacity: 0.7 }}
+                    fullWidth
+                    sx={{ my: 2 }}
+                >
+                  Submit
+                </Button>
+            ) : (
+                <Button
+                    type="submit"
+                    variant="contained"
+                    className="green-bg pascalCase-text"
+                    fullWidth
+                    sx={{ my: 2 }}
+                >
+                  Submit
+                </Button>
+            )
+          }
         </form>
       </Box>
     </>
