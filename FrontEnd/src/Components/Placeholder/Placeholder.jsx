@@ -3,7 +3,7 @@ import './Placeholder.css'
 const Placeholder = ({img,text,buttonText,buttonRoute}) => {
   return (
     <>
-     <div className="page-component d-flex flex-column align-items-center gap-4">
+     <div className="page-component d-flex flex-column align-items-center gap-4 container">
          <img width='300' draggable='false' src={img} className="PlaceholderImage" alt="Placeholder"/>
          <div className="TextContainer">
             <h3>{text}</h3>
