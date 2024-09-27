@@ -11,12 +11,15 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { v4 } from 'uuid';
 import './Coursescards.css'
 import {ToastContainer} from "react-toastify";
+import EditCourseForm from "../EditCourseForm/EditCourseForm.jsx";
 
 const CoursesCards = ({ courses, addCourseHandler}) => {
     const [showForm, setShowForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
     const CardsContainer = useRef(null);
     const [filter, setFilter] = useState("");
+    const [courseEdit, setCourseEdit] = useState({});
     const { currentUser } = useContext(CurrentUserContext);
 
     const filterHandler = (filter) => {
@@ -29,7 +32,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
     }, [courses]);
 
     useEffect(() => {
-        if (showForm) {
+        if (showForm || showEditForm) {
             CardsContainer.current.style.opacity = '0.3';
             CardsContainer.current.style.pointerEvents = 'none';
             CardsContainer.current.style.userSelect = 'none';
@@ -38,7 +41,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
             CardsContainer.current.style.pointerEvents = '';
             CardsContainer.current.style.userSelect = '';
         }
-    }, [showForm]);
+    }, [showForm, showEditForm]);
 
     useEffect(() => {
         if (filter) {
@@ -52,14 +55,24 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
       setShowForm(!showForm);
     };
 
+    const showEditFormHandler = () => {
+        setShowEditForm(!showEditForm);
+    };
+
     return (
       <>
-        {showForm && (
-          <AddCourseForm
-            addHandler={addCourseHandler}
-            showFormHandler={showFormHandler}
-          />
-        )}
+        {
+            showForm && (
+                <AddCourseForm addHandler={addCourseHandler}
+                               showFormHandler={showFormHandler} />
+            )
+        }
+        {
+            showEditForm && (
+                <EditCourseForm {...courseEdit}
+                               showEditFormHandler={showEditFormHandler} />
+            )
+        }
           <span ref={CardsContainer} className='mt-5'>
               <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
                  <SearchBar setFilter={setFilter}/>
@@ -77,7 +90,8 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
                   }
                   {
                       coursesList.map(course => (
-                        <CourseCard key={v4()} {...course} />
+                        <CourseCard setCourseEdit={setCourseEdit} showEditFormHandler={showEditFormHandler}
+                                    showFormHandler={showFormHandler} key={v4()} {...course} />
                       ))
                   }
               </div>

@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import {useLocation, useNavigate} from "react-router-dom";
 import {CurrentUserContext} from "../../App.jsx";
+import { v4 } from 'uuid';
 
-const EditCourseForm = () => {
-    const [form, setForm] = useState({
+let errorList = [];
+
+const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
+    const [ form, setForm ] = useState({
         title: "",
         desc: "",
         hours: "",
     });
-    const [courseData, setCourseData] = useState({});
-    const routeState = useLocation().state;
+    const [ courseData, setCourseData ] = useState({});
     const { showMessage, setCourses } = useContext(CurrentUserContext);
 
     const editCourseHandler = (id, updatedCourse) => {
@@ -24,81 +25,100 @@ const EditCourseForm = () => {
     };
 
     useEffect(() => {
-        if (routeState) {
-            setForm({
-                title: routeState.title,
-                desc: routeState.desc,
-                hours: routeState.hours,
-            });
-            setCourseData(routeState);
-        } else {
-            showMessage("Course not found", true);
-            navigate("/courses");
-        }
+        setForm({ title, desc, hours });
+        setCourseData({ id, title, desc, hours});
     }, []);
 
-    const navigate=useNavigate()
     const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
+        setForm({ ...form, [e.target.name]: e.target.value });
+
+        if (e.target.name === 'hours' && e.target.value && e.target.value < 1) {
+            if (!errorList.includes('Hours must be greater than 0')) {
+                errorList.push('Hours must be greater than 0');
+            }
+        } else {
+            if (e.target.name === 'hours') {
+                errorList = errorList.filter(e => e !== 'Hours must be greater than 0');
+            }
+        }
+
+        if (e.target.name === 'hours' && e.target.value && isNaN(e.target.value)) {
+            if (!errorList.includes('Hours must be a number')) {
+                errorList.push('Hours must be a number');
+            }
+        } else {
+            if (e.target.name === 'hours') {
+                errorList = errorList.filter(e => e !== 'Hours must be a number');
+            }
+        }
+
+        if (e.target.name === 'title' && e.target.value && !isNaN(e.target.value)) {
+            if (!errorList.includes('Title must be a string')) {
+                errorList.push('Title must be a string');
+            }
+        } else {
+            if (e.target.name === 'title') {
+                errorList = errorList.filter(e => e !== 'Title must be a string');
+            }
+        }
+
+        if (e.target.name === 'desc' && e.target.value && !isNaN(e.target.value)) {
+            if (!errorList.includes('Description must be a string')) {
+                errorList.push('Description must be a string');
+            }
+        } else {
+            if (e.target.name === 'desc') {
+                errorList = errorList.filter(e => e !== 'Description must be a string');
+            }
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!e.target.checkValidity()) return;
+        if (errorList.length) return;
 
-        try {
-            editCourseHandler(courseData.id, form);
-            showMessage("Course updated successfully", false);
-            navigate("/courses");
-        } catch (error) {
-            showMessage("Unexpected error occurred, please try again", true);
-        }
+        editCourseHandler(courseData.id, form);
+        showMessage("Course updated successfully", false);
+        showEditFormHandler();
     };
 
     return (
-        <div className="course-form">
-            <form onSubmit={handleSubmit}>
+        <div className="form-container">
+            <h4 className="green-text alignCenter-text bold-text form-title">Edit Course</h4>
+            {
+                errorList.length > 0 &&
+                    <div className="alert alert-danger">
+                        {
+                            errorList.map((error) =>
+                                <div key={v4()}>
+                                    <span style={{fontSize: "17px"}}>∗</span> {error}
+                                </div>
+                            )
+                        }
+                    </div>
+            }
+            <form className="form ps-2 pe-2" onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label>Title</label>
-                    <input
-                        type="text"
-                        name="title"
-                        value={form.title}
-                        onChange={handleChange}
-                        required
-                    />
+                    <label htmlFor="title" className="green-text bold-text">Title</label>
+                    <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required/>
                 </div>
                 <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                        name="desc"
-                        value={form.desc}
-                        onChange={handleChange}
-                        required
-                    />
+                    <label htmlFor="desc" className="green-text bold-text">Description</label>
+                    <textarea onChange={handleChange} value={form.desc} name="desc" id="desc" rows="10" cols="50" required/>
                 </div>
                 <div className="form-group">
-                    <label>Hours</label>
-                    <input
-                        type="number"
-                        name="hours"
-                        value={form.hours}
-                        onChange={handleChange}
-                        required
-                    />
+                    <label htmlFor="hours" className="green-text bold-text">Hours</label>
+                    <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required/>
                 </div>
-                <div className="d-flex flex-column justify-content-between mt-2 mb-2">
-                    <button className="btn SaveCourseButton" type="submit">
-                        Save
-                    </button>
-                    <button
-                        className="btn btn-outline-danger CancelButton"
-                        type="button"
-                        onClick={() => navigate("/courses")}
-                    >
-                        Cancel
+                <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
+                    <button className="btn AddCourseButton" type="submit">Save</button>
+                    <button className="btn btn-outline-danger CancelButton"
+                            onClick={() => {
+                                showEditFormHandler();
+                                errorList = [];
+                            }}
+                            type="button">Cancel
                     </button>
                 </div>
             </form>

@@ -268,8 +268,6 @@ function App() {
                                     />
                                     <Route path="/deadline" element={<DeadlinesPage/>}/>
                                     <Route path="/CourseDetails/:id" element={<CourseDetails />}/>
-                                    <Route path="/editCourseForm/:id"
-                                           element={<EditCourseForm />}/>
                                     <Route path="/AddExam" element={<AddExam/>}/>
                                     <Route path="/logout" element={<Logout />}/>
                                     <Route path="*" element={

@@ -13,7 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 let messagesList = [];
 let errorList = [];
 
-const CourseCard = ({ id, title, desc, hours}) => {
+const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit }) => {
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
 
@@ -60,9 +60,11 @@ const CourseCard = ({ id, title, desc, hours}) => {
     }
 
     const EditCourse = (id)=>{
-        navigate(`/editCourseForm/${id}`, {
-            state: { id, title, desc, hours},
-        });
+        showEditFormHandler();
+        setCourseEdit({id, title, desc, hours});
+        // navigate(`/editCourseForm/${id}`, {
+        //     state: { id, title, desc, hours},
+        // });
     }
 
     const DeleteCourseHandler = (courseId) => {
