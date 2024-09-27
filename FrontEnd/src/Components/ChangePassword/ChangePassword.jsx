@@ -1,11 +1,224 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from "react";
+// import { CurrentUserContext } from "../../App";
+import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
+// import { jwtDecode } from "jwt-decode";
+
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  Box,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
-    return (
-        <>
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const token = searchParams.get("token");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [error, setError] = useState("");
+  const [activeErrors, setActiveErrors] = useState([]);
+  const [formData, setFormData] = useState({
+    password: "",
+  });
+  // const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
+  const navigate = useNavigate();
 
-        </>
-    )
-}
+  useEffect(() => {
+    if (error && !activeErrors.includes(error)) {
+      setActiveErrors([...activeErrors, error]);
+      toast.error(error, {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        onClose: () => {
+          setError(""); // Reset the error message
+          setActiveErrors((prevState) => prevState.filter((e) => e !== error));
+        },
+      });
+    }
+  }, [error]);
 
-export default ChangePassword
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPassword2 = () => setShowPassword2(!showPassword2);
+  const handleMouseDownPassword = (event) => event.preventDefault();
+
+  // Handle keypress for Enter key navigation
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      const response = await fetch(
+        `http://localhost:3008/resetPassword/${token}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+      if (!data.error) {
+        toast.success(data.message, {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: {
+            userSelect: "none",
+            gap: "10px",
+            padding: "20px",
+          },
+        });
+
+        navigate("/login");
+      } else {
+        // Show error message
+        setError(data.error);
+        // setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.warn(error);
+      setError(error.message);
+      // setIsAuthenticated(false);
+    }
+  };
+
+  return (
+    <>
+      <Box sx={{ width: "80%", margin: "80px auto" }}>
+        <h4>Plase enter the new password and confirm it</h4>
+        <form onSubmit={handleSubmit}>
+          {/* Password Field */}
+          <FormControl
+            variant="outlined"
+            fullWidth
+            sx={{
+              my: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#274546",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#274546",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                "&.Mui-focused": {
+                  color: "#274546 !important",
+                },
+              },
+            }}
+          >
+            <InputLabel>Password</InputLabel>
+            <OutlinedInput
+              name="password"
+              required
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
+                    <IconButton edge="end">
+                      <InfoOutlined />
+                    </IconButton>
+                  </Tooltip>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
+
+          {/* Confirm Password Field */}
+          <FormControl
+            variant="outlined"
+            fullWidth
+            sx={{
+              my: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#274546",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#274546",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                "&.Mui-focused": {
+                  color: "#274546 !important",
+                },
+              },
+            }}
+          >
+            <InputLabel>Confirm Password</InputLabel>
+            <OutlinedInput
+              name="confirmpassword"
+              required
+              value={formData.confirmpassword}
+              onChange={(e) =>
+                setFormData({ ...formData, confirmpassword: e.target.value })
+              }
+              type={showPassword2 ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword2}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Confirm Password"
+            />
+          </FormControl>
+
+          {/* Sign In Button */}
+          <Button
+            type="submit"
+            variant="contained"
+            className="green-bg pascalCase-text"
+            fullWidth
+            sx={{ my: 2 }}
+          >
+            Submit
+          </Button>
+        </form>
+      </Box>
+    </>
+  );
+};
+
+export default ChangePassword;

@@ -13,6 +13,6 @@ router.delete("/deleteUser/:id", Controller.deleteUser);
 router.post("/forgotPassword", Controller.forgotPassword);
 
 // Reset password route
-router.post('/reset-password/:token', Controller.resetPassword);
+router.post("/resetPassword/:token", Controller.resetPassword);
 
 module.exports = router;

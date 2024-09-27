@@ -8,16 +8,16 @@ const bcrypt = require("bcrypt");
 const { Secret_Key } = require("../../env");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 // Email configuration (you might want to use environment variables for this)
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Or any other email provider
+  service: "gmail", // Or any other email provider
   auth: {
-    user: 'merackosj.40@gmail.com', // Replace with your email
-    pass: 'kejoqypehonpusgc' // Replace with your email password or app-specific password
-  }
+    user: "merackosj.40@gmail.com", // Replace with your email
+    pass: "kejoqypehonpusgc", // Replace with your email password or app-specific password
+  },
 });
 
 function emailAcceptance(email) {
@@ -30,6 +30,11 @@ function passwordAcceptance(password) {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(String(password));
+}
+
+function usernameAcceptance(username) {
+  const re = /^(?=.*[a-z])[a-z0-9_]{4,}$/;
+  return re.test(String(username));
 }
 
 module.exports.login = async (req, res, next) => {
@@ -52,8 +57,14 @@ module.exports.login = async (req, res, next) => {
       return res.status(200).json({ error: "Invalid password" });
     } else {
       const token = await jwt.sign(
-        { name: user.name, username: user.username, id: user.id,
-                  role: user.role, gender: user.gender, email: user.email },
+        {
+          name: user.name,
+          username: user.username,
+          id: user.id,
+          role: user.role,
+          gender: user.gender,
+          email: user.email,
+        },
         Secret_Key,
         { expiresIn: "1h" }
       );
@@ -83,11 +94,6 @@ module.exports.logout = async (req, res, next) => {
   }
 };
 
-function usernameAcceptance(username) {
-    const re = /^(?=.*[a-z])[a-z0-9_]{4,}$/;
-    return re.test(String(username));
-}
-
 module.exports.register = async (req, res, next) => {
   try {
     const { name, gender, email, username, password, role } = req.body;
@@ -104,11 +110,11 @@ module.exports.register = async (req, res, next) => {
       return res.status(200).json({ error: "Invalid username" });
     }
 
-    if (await User.findOne({username: username})) {
+    if (await User.findOne({ username: username })) {
       return res.status(200).json({ error: "Username already exists" });
     }
 
-    if (await User.findOne({email: email})) {
+    if (await User.findOne({ email: email })) {
       return res.status(200).json({ error: "Email already exists" });
     }
 
@@ -125,7 +131,8 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-    res.status(201)
+    res
+      .status(201)
       .json({ message: `User (${user.name}) registered successfully` });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
@@ -153,7 +160,7 @@ module.exports.forgotPassword = async (req, res, next) => {
     }
 
     // Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
     // Set the token expiry time (e.g., 1 hour from now)
     const tokenExpiry = Date.now() + 3600000; // 1 hour
@@ -164,23 +171,22 @@ module.exports.forgotPassword = async (req, res, next) => {
     await user.save();
 
     // Construct the password reset URL
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`; // Change localhost to your actual frontend URL
+    const resetUrl = `http://localhost:7000/resetPassword/?token=${resetToken}`; // Change localhost to your actual frontend URL
 
     // Send the password reset email
     const mailOptions = {
-      from: 'your-email@gmail.com',
+      from: "DEPI.graduationProject@outlook.com",
       to: user.email,
-      subject: 'Password Reset Request',
+      subject: "Password Reset Request",
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-      Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
+      Please click on the following link to complete the process within one hour of receiving it:\n\n
       ${resetUrl}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     };
 
     await transporter.sendMail(mailOptions);
 
     res.status(201).json({ message: "Password reset link sent successfully" });
-
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: forgotPassword function => ${error}`);
@@ -195,14 +201,20 @@ module.exports.resetPassword = async (req, res, next) => {
     // Find the user by the reset token and ensure the token hasn't expired
     const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() } // Check if the token hasn't expired
+      resetPasswordExpires: { $gt: Date.now() }, // Check if the token hasn't expired
     });
 
     if (!user) {
-      return res.status(200).json({ error: 'Password reset token is invalid or has expired' });
+      return res
+        .status(200)
+        .json({ error: "Password reset token is invalid or has expired" });
     }
 
     // Hash the new password
+    const isValid = passwordAcceptance(password);
+    if (!isValid) {
+      return res.status(200).json({ error: "Invalid password" });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update the user's password and clear the reset token and expiry
@@ -211,26 +223,24 @@ module.exports.resetPassword = async (req, res, next) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
-    res.status(201).json({ message: 'Password has been reset successfully' });
-
+    res.status(201).json({ message: "Password has been reset successfully" });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: resetPassword function => ${error}`);
   }
 };
 
-
 module.exports.getUser = async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params; // Use req.params instead of req.body
     const user = await User.findOne({ id });
 
     if (!user) {
-      return res.status(200).json({ error: "User not found" });
+      return res.status(404).json({ error: "User not found" }); // Use 404 status for not found
     }
-    res.status(201).json({ data: user });
+    res.status(200).json({ data: user }); // Use 200 status for successful retrieval
   } catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occurred" });
+    res.status(500).json({ error: "Unexpected Error Occurred" }); // Use 500 status for server error
     next(`ERROR IN: getUser function => ${error}`);
   }
 };
@@ -238,26 +248,18 @@ module.exports.getUser = async (req, res, next) => {
 module.exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findOneAndDelete({ id });
+    const user = await User.findOneAndDelete({ _id: id }); // Use _id for MongoDB document ID
+
     if (!user) {
-      return res.status(200).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" }); // Use 404 status for not found
     }
     res
-      .status(201)
-      .json({ message: `User (${user.name}) deleted successfully` });
+      .status(200)
+      .json({ message: `User (${user.name}) deleted successfully` }); // Use 200 status for successful deletion
   } catch (error) {
     console.log(`ERROR IN: deleteUser function => ${error}`);
+    res.status(500).json({ error: "Unexpected Error Occurred" }); // Use 500 status for server error
     next(error);
-  }
-};
-
-module.exports.logout = async (req, res, next) => {
-  try {
-    await Session.deleteOne();
-    res.status(201).json({ message: "Logged out successfully" });
-  } catch (err) {
-    res.status(200).json({ error: "Unexpected Error Occurred" });
-    next(`ERROR IN: Logout Function => ${err}`);
   }
 };
 
