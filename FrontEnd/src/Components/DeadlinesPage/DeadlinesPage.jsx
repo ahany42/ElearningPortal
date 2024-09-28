@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Deadlinespage.css";
 import { useNavigate } from "react-router";
+import { v4 as uuidv4 } from "uuid";
 
-const DeadlinesPage = () => {
+const DeadlinesPage = ({ assignments }) => {
   const [activeTab, setActiveTab] = useState("assignments");
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
   const navigate = useNavigate();
+
   return (
     <div className="deadlines-container">
       <div className="button-group">
@@ -38,8 +40,6 @@ const DeadlinesPage = () => {
           </label>
         </div>
       </div>
-
-      {/* Table to display either assignments or exams */}
       <Table striped bordered hover className="deadlines-table">
         <thead>
           <tr>
@@ -47,41 +47,39 @@ const DeadlinesPage = () => {
             <th>Title</th>
             <th>Course</th>
             <th>Date</th>
-            <th>Assignments/Exams View</th>
+            <th>View Details</th>
           </tr>
         </thead>
         <tbody>
           {activeTab === "assignments" ? (
-            <>
+            assignments && assignments.length > 0 ? (
+              assignments.map((assignment, index) => (
+                <tr key={uuidv4()}>
+                  <td>{index + 1}</td>
+                  <td>{assignment.title}</td>
+                  <td>{assignment.course}</td>
+                  <td>{assignment.dueDate}</td>
+                  <td>
+                    <button
+                      className="view-btn"
+                      onClick={() =>
+                        navigate("/AssignmentPage", {
+                          state: { assignment },
+                        })
+                      }
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td>1</td>
-                <td>Assignment 1</td>
-                <td>React Basics</td>
-                <td>2024-09-30</td>
-                <td>
-                  <button
-                    className="view-btn"
-                    onClick={() => navigate("/AssignmentPage")}
-                  >
-                    View
-                  </button>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  No Assignments Available
                 </td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>Assignment 2</td>
-                <td>Node.js</td>
-                <td>2024-10-05</td>
-                <td>
-                  <button
-                    className="view-btn"
-                    onClick={() => navigate("/AssignmentPage")}
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-            </>
+            )
           ) : (
             <>
               <tr>
@@ -90,7 +88,12 @@ const DeadlinesPage = () => {
                 <td>React Advanced</td>
                 <td>2024-10-20</td>
                 <td>
-                  <button className="view-btn">View</button>
+                  <button
+                    className="view-btn"
+                    onClick={() => navigate("/ExamPage")}
+                  >
+                    View
+                  </button>
                 </td>
               </tr>
               <tr>
@@ -99,7 +102,12 @@ const DeadlinesPage = () => {
                 <td>Node.js</td>
                 <td>2024-11-15</td>
                 <td>
-                  <button className="view-btn">View</button>
+                  <button
+                    className="view-btn"
+                    onClick={() => navigate("/ExamPage")}
+                  >
+                    View
+                  </button>
                 </td>
               </tr>
             </>

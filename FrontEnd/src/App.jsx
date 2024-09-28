@@ -3,7 +3,7 @@ import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
 import "./index.css";
 import {
@@ -35,6 +35,7 @@ import AddExam from "./Components/AddExam/AddExam.jsx";
 import ChangePassword from "./Components/ChangePassword/ChangePassword.jsx";
 import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
+import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -52,7 +53,7 @@ const pathsNotRequireAuthentication = [
     '/SignUp',
 ];
 
-let data = [
+const data = [
   {
     id: "e55d8be9-d517-4fdb-a813-7314410d920f",
     title: "html&css",
@@ -78,6 +79,22 @@ let data = [
     hours: 5,
   },
 ];
+const tasks = [
+  {
+    id: uuidv4(),
+    title: "Assignment 1",
+    course: "React Basics",
+    dueDate: "2024-09-30",
+    description: "This is a React assignment",
+  },
+  {
+    id: uuidv4(),
+    title: "Assignment 2",
+    course: "Node.js",
+    dueDate: "2024-10-05",
+    description: "This is a Node.js assignment",
+  },
+];
 
 export const CurrentUserContext = createContext();
 
@@ -89,6 +106,7 @@ function App() {
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] = useState({});
     const [ activeErrors, setActiveErrors ] = useState([]);
+    const [assignments, setAssignments] = useState(tasks)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
@@ -220,6 +238,10 @@ function App() {
             return [...prevState, newCourse]
         });
     };
+    const addAssignmentHandler=(newAssignment)=>{
+        setAssignments([...assignments,newAssignment])
+    }
+
 
     const showMessage = (msg, error) => {
         if (msg && (error === true || error === false)) {
@@ -283,11 +305,23 @@ function App() {
                     />
                   }
                 />
-                <Route path="/deadline" element={<DeadlinesPage />} />
+                <Route
+                  path="/deadline"
+                  element={<DeadlinesPage assignments={assignments} />}
+                />
                 <Route path="/CourseDetails/:id" element={<CourseDetails />} />
                 <Route path="/AddExam" element={<AddExam />} />
                 <Route path="/logout" element={<Logout />} />
-                <Route path="/AssignmentPage" element={<AssignmentPage />} />
+                <Route
+                path="/AssignmentPage"
+                  element={
+                    <AssignmentPage
+                    addAssignmentHandler={addAssignmentHandler}
+                    setAssignments
+                    ={setAssignments}/>
+                }
+                />
+                <Route path="/ExamPage" element={<ExamPage />} />
                 <Route
                   path="*"
                   element={
