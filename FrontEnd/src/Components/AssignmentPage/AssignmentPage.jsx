@@ -9,22 +9,25 @@ import {
   TextField,
 } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons"; // Import a valid icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
 let messagesList = [];
+
 const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [assignment, setAssignment] = useState({
     title: "",
     course: "",
     dueDate: "",
     description: "",
   });
+
   const [isEditing, setIsEditing] = useState(false);
   const [editableAssignment, setEditableAssignment] = useState(assignment);
 
@@ -35,6 +38,17 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
       setEditableAssignment(assignedData);
     }
   }, [location.state?.assignment]);
+
+  const submitAssignmentHandler = () => {
+    const newAssignment = {
+      title: "New Assignment",
+      course: "New Course",
+      dueDate: "2024-12-01",
+      description: "This is a new assignment",
+    };
+    addAssignmentHandler(newAssignment);
+    navigate("/deadline");
+  };
 
   const showToast = (msg) => {
     if (!messagesList.includes(msg)) {
@@ -59,12 +73,14 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
 
   const DeleteAssignment = (assignmentID) => {
     setAssignments((prevState) => {
-      prevState.filter((assignment) => assignment.id !== assignmentID);
+      return prevState.filter((assignment) => assignment.id !== assignmentID);
     });
     showToast("Assignment deleted successfully");
   };
 
   const EditAssignment = () => {
+    // Update the original assignment state with editableAssignment
+    setAssignment(editableAssignment);
     setAssignments((prevAssignments) =>
       prevAssignments.map((a) =>
         a.id === assignment.id ? { ...a, ...editableAssignment } : a
@@ -81,6 +97,7 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
     >
       <Card elevation={3} style={{ padding: "1.5rem" }}>
         <CardContent>
+          {/* Assignment Title */}
           <Typography variant="h4" gutterBottom>
             {isEditing ? (
               <TextField
@@ -107,14 +124,14 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
               <>
                 <Button
                   variant="contained"
-                  style={{ marginRight: "10px", backgroundColor: "#ff7043" }}
+                  style={{ marginRight: "10px", backgroundColor: "#4caf50" }}
                   onClick={EditAssignment}
                 >
                   Save
                 </Button>
                 <Button
                   variant="contained"
-                  style={{ backgroundColor: "#6e6e69" }}
+                  style={{ backgroundColor: "#f44336" }}
                   onClick={() => setIsEditing(false)}
                 >
                   Cancel
@@ -136,6 +153,7 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
             )}
           </div>
 
+          {/* Assignment Information */}
           <Table className="table table-bordered">
             <thead>
               <tr>
@@ -208,27 +226,24 @@ const AssignmentPage = ({ addAssignmentHandler, setAssignments }) => {
             </tbody>
           </Table>
 
-          {!isEditing && (
-            <div style={{ marginTop: "2rem", textAlign: "center" }}>
-              <Button
-                variant="contained"
-                onClick={() => navigate(-1)}
-                style={{ marginRight: "1rem", backgroundColor: "#ff7043" }}
-              >
-                Back
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  addAssignmentHandler();
-                  navigate("/deadline");
-                }}
-                style={{ backgroundColor: "#6e6e69" }}
-              >
-                Add Assignment
-              </Button>
-            </div>
-          )}
+          {/* Assignment Actions */}
+          <div style={{ marginTop: "2rem", textAlign: "center" }}>
+            <Button
+              variant="contained"
+              onClick={() => navigate(-1)}
+              style={{ marginRight: "1rem", backgroundColor: "#ff7043" }}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={submitAssignmentHandler}
+              style={{ marginLeft: "1rem", backgroundColor: "#2196f3" }}
+            >
+              <FontAwesomeIcon icon={faPlus} style={{ marginRight: "5px" }} />
+              Add Assignment
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </Container>
