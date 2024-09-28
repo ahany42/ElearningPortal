@@ -5,7 +5,7 @@ import {
   StepLabel,
   Box,
 } from '@mui/material';
-const steps = ['ExamInfo', 'AddQuestion'];
+const steps = ['Exam Info', 'Add Questions'];
 import AddQuestions from './AddQuestions';
 import ExamInfo from './ExamInfo';
 import './AddExam.css';
@@ -24,9 +24,32 @@ const AddExam = () => {
     return (
       <Box sx={{ width: '100%' }}>
         <Stepper activeStep={activeStep}>
-          {steps.map((label) => (
+          {steps.map((label,index) => (
             <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel
+            StepIconComponent={(props) => (
+              <div
+                style={{
+                  backgroundColor: props.completed
+                    ? '#274546' 
+                    : props.active
+                    ? '#274546' 
+                    : 'gray', 
+                  width: 24,
+                  height: 24,
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fff', 
+                }}
+              >
+                {index+1}
+              </div>
+            )}
+          >
+            {label}
+          </StepLabel>
             </Step>
           ))}
         </Stepper>
