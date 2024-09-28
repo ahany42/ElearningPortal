@@ -1,18 +1,16 @@
-
 import React, { useState } from "react";
 
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './Deadlinespage.css';
+import "./Deadlinespage.css";
 import { useNavigate } from "react-router";
 
 const DeadlinesPage = () => {
-
   const [activeTab, setActiveTab] = useState("assignments");
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="deadlines-container">
       <div className="button-group">
@@ -112,4 +110,4 @@ const DeadlinesPage = () => {
   );
 };
 
-export default DeadlinesPage
+export default DeadlinesPage;
