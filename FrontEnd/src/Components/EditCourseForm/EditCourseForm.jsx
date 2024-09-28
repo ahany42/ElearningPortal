@@ -26,7 +26,7 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
 
     useEffect(() => {
         setForm({ title, desc, hours });
-        setCourseData({ id, title, desc, hours});
+         setCourseData({ id, title, desc, hours});
     }, []);
 
     const handleChange = (e) => {

@@ -34,8 +34,7 @@ import Logout from "./Components/Logout/Logout.jsx";
 import AddExam from "./Components/AddExam/AddExam.jsx";
 import ChangePassword from "./Components/ChangePassword/ChangePassword.jsx";
 import Loader from "./Components/Loader/Loader.jsx";
-import EditCourseForm from "./Components/EditCourseForm/EditCourseForm.jsx";
-
+import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -246,42 +245,68 @@ function App() {
     }
 
     return (
-        <CurrentUserContext.Provider value={{currentUser, setCurrentUser, isAuthenticated, showMessage,
-                                             setIsAuthenticated, courses, setCourses, setLoading}}>
-            <div className="body-container">
-                { showHeaderAndFooter && <Header/> }
-                <div className={"body-content" + (routes.pathname !== "/" ? " mt-5" : "")}>
-                    <ToastContainer style={{width: 'fit-content'}}/>
-                    {
-                        loading?
-                            <Loader/> : (
-                                <Routes>
-                                    <Route path="/" element={<HomePage/>}/>
-                                    <Route path="/login" element={<Login />}/>
-                                    <Route path="/ForgetPassword" element={<ForgotPassword/>}/>
-                                    <Route path="/resetPassword" element={<ChangePassword />} />
-                                    <Route path="/SignUp" element={<SignUp/>}/>
-                                    <Route path="/courses"
-                                           element={
-                                               <CoursesPage courses={courses} addCourseHandler={addCourseHandler} />
-                                           }
-                                    />
-                                    <Route path="/deadline" element={<DeadlinesPage/>}/>
-                                    <Route path="/CourseDetails/:id" element={<CourseDetails />}/>
-                                    <Route path="/AddExam" element={<AddExam/>}/>
-                                    <Route path="/logout" element={<Logout />}/>
-                                    <Route path="*" element={
-                                        <Placeholder text="Page Not Found" img={NotFoundImg} buttonText="Back To Home" buttonRoute="/"/>
-                                    }/>
-                                </Routes>
-                            )
-                    }
-                </div>
+      <CurrentUserContext.Provider
+        value={{
+          currentUser,
+          setCurrentUser,
+          isAuthenticated,
+          showMessage,
+          setIsAuthenticated,
+          courses,
+          setCourses,
+          setLoading,
+        }}
+      >
+        <div className="body-container">
+          {showHeaderAndFooter && <Header />}
+          <div
+            className={
+              "body-content" + (routes.pathname !== "/" ? " mt-5" : "")
+            }
+          >
+            <ToastContainer style={{ width: "fit-content" }} />
+            {loading ? (
+              <Loader />
+            ) : (
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/ForgetPassword" element={<ForgotPassword />} />
+                <Route path="/resetPassword" element={<ChangePassword />} />
+                <Route path="/SignUp" element={<SignUp />} />
+                <Route
+                  path="/courses"
+                  element={
+                    <CoursesPage
+                      courses={courses}
+                      addCourseHandler={addCourseHandler}
+                    />
+                  }
+                />
+                <Route path="/deadline" element={<DeadlinesPage />} />
+                <Route path="/CourseDetails/:id" element={<CourseDetails />} />
+                <Route path="/AddExam" element={<AddExam />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/AssignmentPage" element={<AssignmentPage />} />
+                <Route
+                  path="*"
+                  element={
+                    <Placeholder
+                      text="Page Not Found"
+                      img={NotFoundImg}
+                      buttonText="Back To Home"
+                      buttonRoute="/"
+                    />
+                  }
+                />
+              </Routes>
+            )}
+          </div>
 
-                {showHeaderAndFooter && <Footer />}
-            </div>
-        </CurrentUserContext.Provider>
-);
+          {showHeaderAndFooter && <Footer />}
+        </div>
+      </CurrentUserContext.Provider>
+    );
 }
 
 export default App;

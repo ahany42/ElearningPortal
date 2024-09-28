@@ -109,3 +109,33 @@
   left: 20px;
 }
 /* End Switch Button */
+
+
+/* Targets the 5th column (Assignments/Exams View) */
+.deadlines-table th:nth-child(5), 
+.deadlines-table td:nth-child(5) {
+  width: 1%; 
+  white-space: nowrap;
+}
+.view-btn {
+  margin-left: auto;
+  display: block;
+  border-radius: 50px;
+  padding: 10px 20px; 
+  background-color: #fb8928; 
+  color: white; 
+  border: none; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
+
+.view-btn:hover {
+  background-color: #ff7043; 
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
+  transform: scale(1.05); 
+}
+
+.view-btn:active {
+  transform: scale(0.98); /* Button presses in slightly when clicked */
+}
