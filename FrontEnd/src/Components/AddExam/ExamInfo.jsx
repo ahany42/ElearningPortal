@@ -192,10 +192,10 @@ const ExamInfo = ({ handleNext, formData, setFormData }) => {
     </Box>
       </form>
 
-    </Box>
-        <Button variant="contained" onClick={handleNext}>
+        <Button variant="contained" onClick={handleNext} className="stepper-button">
             Next
         </Button>
+    </Box>
         </div>
     );
 };

@@ -136,8 +136,14 @@ h6{
 .dark-bg{
   background-color: black !important;
 }
-
 .Toastify__close-button {
   margin: auto;
 }
-
+.stepper-button{
+  background-color: #274546 !important;
+  width:100px;
+  margin-top:50px !important;
+} 
+.stepper-back-button{
+  margin-right: 50px !important;
+}

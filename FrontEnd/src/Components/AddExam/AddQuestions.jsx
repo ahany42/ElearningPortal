@@ -1,27 +1,21 @@
 import {
     Button,
-    Typography,
-    TextField,
+    Box,
   } from '@mui/material';
 import './AddExam.css';
 const AddQuestions = ({ handleBack, formData, setFormData }) => {
     return (
-      <div>
-        {/* to be deleted */}
-        <Typography variant="h6">Add Questions</Typography>
-        <TextField
-          label="Email"
-          value={formData.email || ''}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          fullWidth
-        />
-        <Button variant="contained" onClick={handleBack}>
+      <>
+      <Box sx={{width: '80%', margin: '80px auto'}}>
+
+        <Button variant="contained" className="stepper-button stepper-back-button" onClick={handleBack}>
           Back
         </Button>
-        <Button variant="contained" onClick={() => alert(JSON.stringify(formData))}>
+        <Button variant="contained" className="stepper-button" onClick={() => alert(JSON.stringify(formData))}>
           Submit
         </Button>
-      </div>
+      </Box>
+      </>
     );
   };
   

@@ -23,6 +23,7 @@ const AddExam = () => {
   
     return (
       <Box sx={{ width: '100%' }}>
+         <Box sx={{width: '80%', margin: '80px auto'}}>
         <Stepper activeStep={activeStep}>
           {steps.map((label,index) => (
             <Step key={label}>
@@ -53,6 +54,7 @@ const AddExam = () => {
             </Step>
           ))}
         </Stepper>
+        </Box>
   
         <Box sx={{ mt: 2, mb: 2 }}>
           {activeStep === 0 ? (
