@@ -5,23 +5,30 @@ h1 {
 }
 
 .user-data {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+
+.user-data label {
     font-weight: bold;
-    margin: 10px;
+    margin-left: 5px;
+}
+
+.user-data input {
+    margin-top: 5px;
 }
 
 .data-input {
+    flex-grow: 1;
     margin-left: 10px;
     padding: 5px;
-    /* Adding some padding for better UX */
     border: 1px solid #ccc;
-    /* Border for the input fields */
     background-color: white;
-    /* Default background when editing */
     border-radius: 4px;
-    /* Rounded corners */
-    width: 30%;
-    /* Full width for better alignment */
-    box-sizing: border-box;
+    margin-left: 10px;
+    width: 40%;
 }
 
 .data-input.read-only {
