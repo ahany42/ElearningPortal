@@ -5,6 +5,7 @@ import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import { v4 as uuidv4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
+import UserProfile from "./Components/UserProfile/UserProfile.jsx";
 import "./index.css";
 import {
   Routes,
@@ -305,6 +306,7 @@ function App() {
                 <Route path="/ForgetPassword" element={<ForgotPassword />} />
                 <Route path="/resetPassword" element={<ChangePassword />} />
                 <Route path="/SignUp" element={<SignUp />} />
+                <Route path="/Profile" element={<UserProfile />} />
                 <Route
                   path="/courses"
                   element={
