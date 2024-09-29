@@ -1,6 +1,6 @@
 .course-details{
     width:90%;
-    margin:100px auto 50px auto;
+    margin:10px auto 50px auto;
     position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
@@ -37,6 +37,6 @@
 .course-material{
     width:100%;
 }
-.card-body{
-    height: fit-content;
+.course-material{
+    height: fit-content !important;
 }

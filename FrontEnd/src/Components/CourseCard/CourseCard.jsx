@@ -66,7 +66,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         //     state: { id, title, desc, hours},
         // });
     }
-
+    
     const DeleteCourseHandler = (courseId) => {
         setCourses((prevState) =>
             prevState.filter((course) => course.id !== courseId)
@@ -87,12 +87,16 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         }
         showToast("Enroll Coming Soon");
     }
-
+    const ShowStudentsList= ()=>{
+    navigate(`/StudentsList/${id}`)
+    }
     // For testing
     const isEnrolled = false; // Will be included in each course object (After API Implementation)
 
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
+        // //for testing
+        // if(false){
             return (
                 <div className="card" key={id}>
                     <div className="card-header">
@@ -133,7 +137,10 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     </div>
                 </div>
             );
-        } else if (currentUser.role === "Instructor") {
+        } 
+        else if (currentUser.role === "Instructor") {
+        // //for testing
+        // else if(true){
             return (
                 <div className="card" key={id}>
                     <div className="card-header">
@@ -166,8 +173,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text">
-                                20 <FontAwesomeIcon icon={faUser}/>
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                                20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -206,9 +213,9 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text">
-                        20 <FontAwesomeIcon icon={faUser}/>
-                    </div>
+                    <div className="alignCenter-text" onClick={ShowStudentsList(id)}>
+                                20 <FontAwesomeIcon icon={faUser} />
+                            </div>
                 </div>
             </div>
           </div>
