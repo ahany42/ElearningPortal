@@ -1,10 +1,10 @@
 import { useParams } from 'react-router';
 import UserCard from '../UserCard/UserCard';
-const StudentList = () => {
+const InstructorsList = () => {
     const {id} = useParams();
   return (
     <>
-     <h5 className="sub-title">Enrolled Students: </h5>
+     <h5 className="sub-title">Course Instructors: </h5>
      <UserCard/>
      <UserCard/>
      <UserCard/>
@@ -17,4 +17,4 @@ const StudentList = () => {
   )
 }
 
-export default StudentList
+export default InstructorsList

@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from 'react';
-import { useParams } from "react-router";
+import { useParams,useNavigate} from "react-router";
 import ReactImg from '../../assets/React.png';
 import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,8 +12,10 @@ import {toast} from "react-toastify";
 import NotFoundImg from '../../assets/404.svg';
 import Placeholder from '../Placeholder/Placeholder';
 import CaughtUp from '../../assets/Grades.svg';
+import InstructorsList from '../InstructorsList/InstructorsList';
 const CourseDetails = () => {
     const {id} = useParams();
+    const navigate = useNavigate();
     const { courses } = useContext(CurrentUserContext);
     const { currentUser } = useContext(CurrentUserContext);
     const [ _, setMsgsList ] = useState([]);
@@ -54,7 +56,12 @@ const CourseDetails = () => {
 
     //for testing
     const isEnrolled = false;
-
+    const StudentsList = ()=>{
+        navigate(`/StudentsList/${id}`)
+    }
+    const InstructorsList = ()=>{
+        navigate(`/InstructorsList/${id}`)
+    }
     const course = courses.find(course => course.id === id);
 
     return (
@@ -66,8 +73,8 @@ const CourseDetails = () => {
                   <img src={ReactImg} alt="Course Photo"/>
                   <div className="course-stats">
                       <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
-                      <h6 className="stats">20 <FontAwesomeIcon icon={faUser}/></h6>
-                      <h6 className="stats">3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
+                      <h6 className="stats" onClick={StudentsList}>20 <FontAwesomeIcon icon={faUser}/></h6>
+                      <h6 className="stats" onClick={InstructorsList}>3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
                       <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                   </div>
                   {
