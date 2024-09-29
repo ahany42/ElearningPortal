@@ -81,16 +81,16 @@ const data = [
 ];
 const tasks = [
   {
-    id: uuidv4(),
+    id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
     title: "Assignment 1",
-    course: "React Basics",
+    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
     dueDate: "2024-09-30",
     description: "This is a React assignment",
   },
   {
-    id: uuidv4(),
+    id: "263b8b3d-9b82-4512-8392-5b1971fdba39",
     title: "Assignment 2",
-    course: "Node.js",
+    courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
     dueDate: "2024-10-05",
     description: "This is a Node.js assignment",
   },
@@ -238,9 +238,6 @@ function App() {
             return [...prevState, newCourse]
         });
     };
-    const addAssignmentHandler=(newAssignment)=>{
-        setAssignments([...assignments,newAssignment])
-    }
 
 
     const showMessage = (msg, error) => {
@@ -263,29 +260,41 @@ function App() {
                     },
                 });
             }
+        } else if (msg && error === null) {
+            if (!messagesList.includes(msg)) {
+                messagesList.push(msg);
+                toast.info(msg, {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: "none",
+                        gap: "10px",
+                        padding: "20px",
+                    },
+                    onClose: () => {
+                        messagesList = messagesList.filter((e) => e !== msg);
+                    },
+                });
+            }
         }
     }
 
     return (
       <CurrentUserContext.Provider
         value={{
-          currentUser,
-          setCurrentUser,
-          isAuthenticated,
-          showMessage,
-          setIsAuthenticated,
-          courses,
-          setCourses,
-          setLoading,
+            currentUser, setCurrentUser,
+            isAuthenticated, showMessage,
+            setIsAuthenticated, courses,
+            setCourses, setLoading,
+            setAssignments
         }}
       >
         <div className="body-container">
           {showHeaderAndFooter && <Header />}
-          <div
-            className={
-              "body-content" + (routes.pathname !== "/" ? " mt-5" : "")
-            }
-          >
+          <div className="body-content">
             <ToastContainer style={{ width: "fit-content" }} />
             {loading ? (
               <Loader />
@@ -315,10 +324,7 @@ function App() {
                 <Route
                 path="/AssignmentPage"
                   element={
-                    <AssignmentPage
-                    addAssignmentHandler={addAssignmentHandler}
-                    setAssignments
-                    ={setAssignments}/>
+                    <AssignmentPage assignments={assignments}/>
                 }
                 />
                 <Route path="/ExamPage" element={<ExamPage />} />

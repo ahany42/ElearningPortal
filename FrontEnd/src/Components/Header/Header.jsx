@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {useState, useContext} from "react";
 import {CurrentUserContext} from "../../App";
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {v4} from "uuid";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
@@ -30,6 +30,7 @@ const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElProfile, setAnchorElProfile] = useState(null);
   const { isAuthenticated } = useContext(CurrentUserContext);
+  const route = useLocation().pathname;
 
   const profileOptions = isAuthenticated ? [
       { name: 'Profile', to: '/profile' },
@@ -56,7 +57,8 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
+    <header className="header"
+            style={route === "/"? {position: "absolute", top: 0, zIndex: "100"} : {}}>
       <nav className="navbar">
           <NavLink to='/' style={{textDecoration: 'none'}}>
               <div className="logo">E-Learning</div>

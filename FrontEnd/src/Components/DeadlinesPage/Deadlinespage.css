@@ -5,7 +5,7 @@
 .button-group {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .deadlines-table {
@@ -20,6 +20,28 @@
 .deadlines-table th {
   background-color: #1d96a7; 
   color: white;
+}
+
+.deadlines-table th {
+  padding: 10px;
+  text-align: center;
+}
+
+.deadlines-table td {
+  position: relative;
+}
+
+.deadlines-table td span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.center-value {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) !important;
 }
 
 /*   Switch Button   */
@@ -118,7 +140,7 @@
   white-space: nowrap;
 }
 .view-btn {
-  margin-left: auto;
+  margin: 0.5rem auto;
   display: block;
   border-radius: 50px;
   padding: 10px 20px; 
@@ -138,4 +160,9 @@
 
 .view-btn:active {
   transform: scale(0.98); /* Button presses in slightly when clicked */
+}
+
+.add-deadline {
+  top: 50%;
+  transform: translateY(-50%);
 }

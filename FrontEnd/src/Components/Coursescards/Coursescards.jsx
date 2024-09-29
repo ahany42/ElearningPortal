@@ -73,7 +73,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
                                showEditFormHandler={showEditFormHandler} />
             )
         }
-          <span ref={CardsContainer} className='mt-5'>
+          <span ref={CardsContainer}>
               <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
                  <SearchBar setFilter={setFilter}/>
                  {
