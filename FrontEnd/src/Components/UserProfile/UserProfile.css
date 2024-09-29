@@ -1,0 +1,56 @@
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-data {
+    font-weight: bold;
+    margin: 10px;
+}
+
+.data-input {
+    margin-left: 10px;
+    padding: 5px;
+    /* Adding some padding for better UX */
+    border: 1px solid #ccc;
+    /* Border for the input fields */
+    background-color: white;
+    /* Default background when editing */
+    border-radius: 4px;
+    /* Rounded corners */
+    width: 30%;
+    /* Full width for better alignment */
+    box-sizing: border-box;
+}
+
+.data-input.read-only {
+    border: none;
+    background-color: inherit;
+    color: #333;
+    pointer-events: none;
+    cursor: default;
+}
+
+.data-input.read-only:focus {
+    outline: none;
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+.button-group .edit {
+    font-weight: 600;
+    width: 80px;
+    border: none;
+    border-radius: 5px;
+}
+
+.button-group .change-password{
+    font-weight: 600;
+    margin-left: 10px;
+    width: 200PX;
+    border: none;
+    border-radius: 5px;
+}
