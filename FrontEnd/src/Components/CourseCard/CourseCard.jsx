@@ -95,8 +95,6 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
-        // //for testing
-        // if(false){
             return (
                 <div className="card" key={id}>
                     <div className="card-header">
@@ -115,11 +113,11 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <div className="course-icons" style={isEnrolled? {top:0, left:0} : {}}>
                             {
                                 isEnrolled ? (
-                                    <span className="enroll-text bold-text blue-text">
+                                    <span className=" enroll-text enroll-text bold-text blue-text">
                                         Enrolled
                                     </span>
                                 ) : (
-                                    <button className="enroll-button bold-text blue-text"
+                                    <button className=" enroll-text enroll-button bold-text blue-text"
                                             onClick={EnrollCourse}>
                                         Enroll
                                     </button>
@@ -139,8 +137,6 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
             );
         } 
         else if (currentUser.role === "Instructor") {
-        // //for testing
-        // else if(true){
             return (
                 <div className="card" key={id}>
                     <div className="card-header">
