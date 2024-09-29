@@ -29,7 +29,7 @@ const UserProfile = () => {
   };
 
   const changePassword = () => {
-    navigate('/ChangePassword');
+    navigate('/ResetPassword');
   }
 
   return (

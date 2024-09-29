@@ -305,7 +305,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/ForgetPassword" element={<ForgotPassword />} />
-                <Route path="/ChangePassword" element={<ChangePassword />} />
+                <Route path="/ResetPassword" element={<ChangePassword />} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Profile" element={<UserProfile />} />
                 <Route
