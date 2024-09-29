@@ -6,6 +6,7 @@ import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
 import { v4 as uuidv4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
 import UserProfile from "./Components/UserProfile/UserProfile.jsx";
+import StudentList from "./Components/StudentsList/StudentList.jsx";
 import "./index.css";
 import {
   Routes,
@@ -322,6 +323,7 @@ function App() {
                 />
                 <Route path="/CourseDetails/:id" element={<CourseDetails />} />
                 <Route path="/AddExam" element={<AddExam />} />
+                <Route path="/StudentsList/:id" element={<StudentList />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route
                 path="/AssignmentPage"
