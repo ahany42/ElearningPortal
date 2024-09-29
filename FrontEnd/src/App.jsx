@@ -82,6 +82,7 @@ const data = [
     hours: 5,
   },
 ];
+
 const tasks = [
   {
     id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
@@ -99,6 +100,20 @@ const tasks = [
   },
 ];
 
+const values = [
+  {
+    id: 1,
+    name: "Midterm Exam",
+    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
+    date: "2024-10-20",
+  },
+  {
+    id: 2,
+    name: "Final Exam",
+    courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
+    date: "2024-11-15",
+  },
+];
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -110,6 +125,7 @@ function App() {
     const [ currentUser, setCurrentUser ] = useState({});
     const [ activeErrors, setActiveErrors ] = useState([]);
     const [assignments, setAssignments] = useState(tasks)
+    const [exams, setExams] = useState(values)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
@@ -288,11 +304,15 @@ function App() {
     return (
       <CurrentUserContext.Provider
         value={{
-            currentUser, setCurrentUser,
-            isAuthenticated, showMessage,
-            setIsAuthenticated, courses,
-            setCourses, setLoading,
-            setAssignments
+          currentUser,
+          setCurrentUser,
+          isAuthenticated,
+          showMessage,
+          setIsAuthenticated,
+          courses,
+          setCourses,
+          setLoading,
+          setAssignments,
         }}
       >
         <div className="body-container">
@@ -320,20 +340,23 @@ function App() {
                 />
                 <Route
                   path="/deadline"
-                  element={<DeadlinesPage assignments={assignments} />}
+                  element={
+                    <DeadlinesPage assignments={assignments} exams={exams} />
+                  }
                 />
                 <Route path="/CourseDetails/:id" element={<CourseDetails />} />
                 <Route path="/AddExam" element={<AddExam />} />
                 <Route path="/StudentsList/:id" element={<StudentList />} />
-                <Route path="/InstructorsList/:id" element={<InstructorsList />} />
+                <Route
+                  path="/InstructorsList/:id"
+                  element={<InstructorsList />}
+                />
                 <Route path="/logout" element={<Logout />} />
                 <Route
-                path="/AssignmentPage"
-                  element={
-                    <AssignmentPage assignments={assignments}/>
-                }
+                  path="/AssignmentPage"
+                  element={<AssignmentPage assignments={assignments} />}
                 />
-                <Route path="/ExamPage" element={<ExamPage />} />
+                <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
                 <Route
                   path="*"
                   element={
