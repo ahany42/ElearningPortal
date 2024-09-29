@@ -1,12 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useContext } from 'react';
 import ReactImg from '../../assets/React.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { CurrentUserContext } from "../../App.jsx";
 import './UserCard.css';
 const UserCard = () => {
   const RemoveStudent = ()=>{
     alert("coming soon");
   }
+  const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
   return (
     <div className=" card user-card ">
     <div className=" user-sub-card">
@@ -22,7 +25,7 @@ const UserCard = () => {
             </h6>
         </div>
         
-        <FontAwesomeIcon className="remove-user-button" icon={faTrash} onClick={RemoveStudent} color="red"/>
+        {((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) && <FontAwesomeIcon className="remove-user-button" icon={faTrash} onClick={RemoveStudent} color="red"/>}
             
         
     </div>
