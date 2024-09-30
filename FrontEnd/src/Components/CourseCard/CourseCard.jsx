@@ -209,7 +209,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text" onClick={ShowStudentsList(id)}>
+                    <div className="alignCenter-text" onClick={ShowStudentsList}>
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                 </div>

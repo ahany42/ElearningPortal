@@ -24,7 +24,7 @@ const records =[{
 ]  
   return (
     <>
-    <h5 className="alignCenter-text">Aly Hany's Progress</h5>
+    <h5 className="alignCenter-text">Aly Hany's Progress in React Js</h5>
         <table className="student-progress-table">
             <th>Exam/Assignment</th>
             <th>Submission Date</th>

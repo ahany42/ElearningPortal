@@ -29,8 +29,8 @@
 .remove-user-button{
     cursor: pointer;
     user-select: none;
-    right: 0;
-    bottom:5px;
+    right: 5px;
+    top:5px;
     margin-right: 10px;
     position: absolute;
     border:none;
