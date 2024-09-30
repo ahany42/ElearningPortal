@@ -5,14 +5,17 @@ const StudentList = () => {
   return (
     <>
      <h5 className="sub-title">Enrolled Students: </h5>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
-     <UserCard/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
+     <UserCard isStudent={true}/>
     </>
   )
 }

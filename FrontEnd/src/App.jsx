@@ -39,6 +39,7 @@ import ChangePassword from "./Components/ChangePassword/ChangePassword.jsx";
 import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
+import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -357,6 +358,7 @@ function App() {
                   element={<AssignmentPage assignments={assignments} />}
                 />
                 <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
+                <Route path="/ViewProgress/:id" element={<StudentProgress/>} />
                 <Route
                   path="*"
                   element={
