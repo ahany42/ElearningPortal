@@ -1,5 +1,5 @@
 .PlaceholderImage{
-    width:50%;
+    width: 350px;
 }
 .TextContainer{
     margin: 0.5em;
@@ -15,7 +15,10 @@
     .PlaceholderDiv{
         min-height: 72vh;
     }
-    .PlaceholderImage{
-        width:70%;
+    .PlaceholderImage {
+        width: 250px;
+    }
+    .TextContainer h3 {
+        font-size: 1.2rem !important;
     }
 }

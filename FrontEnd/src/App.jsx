@@ -40,6 +40,7 @@ import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
+
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -47,7 +48,7 @@ const pathsWithNoHeaderAndFooter = [
 const pathsRequireAuthentication = [
   "/MyCourses",
   "/logout",
-  "/Deadline",
+  "/deadline",
   // '/Courses'
 ];
 
@@ -55,6 +56,7 @@ const pathsNotRequireAuthentication = [
     '/login',
     '/ForgetPassword',
     '/SignUp',
+    '/ResetPassword',
 ];
 
 const data = [
@@ -84,7 +86,7 @@ const data = [
   },
 ];
 
-const tasks = [
+const INITIAL_ASSIGNMENTS = [
   {
     id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
     title: "Assignment 1",
@@ -101,20 +103,23 @@ const tasks = [
   },
 ];
 
-const values = [
-  {
-    id: 1,
-    name: "Midterm Exam",
-    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-    date: "2024-10-20",
-  },
-  {
-    id: 2,
-    name: "Final Exam",
-    courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-    date: "2024-11-15",
-  },
+const INITIAL_EXAMS = [
+    {
+        id: "994dd950-6315-4351-b4f9-01b446613dec",
+        title: "Midterm Exam",
+        courseID: "6ad77ebe-1397-4903-8360-ad58a9d18679",
+        dueDate: "2024-09-30",
+        description: "This is a React assignment",
+    },
+    {
+        id: "a6bc188c-0cac-4407-9ac7-da47f1b66d4c",
+        title: "Final Exam",
+        courseID: "e55d8be9-d517-4fdb-a813-7314410d920f",
+        dueDate: "2024-10-05",
+        description: "This is a Node.js assignment",
+    },
 ];
+
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -125,8 +130,8 @@ function App() {
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] = useState({});
     const [ activeErrors, setActiveErrors ] = useState([]);
-    const [assignments, setAssignments] = useState(tasks)
-    const [exams, setExams] = useState(values)
+    const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
+    const [exams, setExams] = useState(INITIAL_EXAMS)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
@@ -218,7 +223,7 @@ function App() {
                     }
                 });
             }
-            navigate(-1);
+            navigate("/");
         }
 
         // Redirect to login page if the user is not authenticated
@@ -305,15 +310,11 @@ function App() {
     return (
       <CurrentUserContext.Provider
         value={{
-          currentUser,
-          setCurrentUser,
-          isAuthenticated,
-          showMessage,
-          setIsAuthenticated,
-          courses,
-          setCourses,
-          setLoading,
-          setAssignments,
+            currentUser, setCurrentUser,
+            isAuthenticated, showMessage,
+            setIsAuthenticated, courses,
+            setCourses, setLoading,
+            setAssignments, setExams
         }}
       >
         <div className="body-container">
@@ -341,23 +342,18 @@ function App() {
                 />
                 <Route
                   path="/deadline"
-                  element={
-                    <DeadlinesPage assignments={assignments} exams={exams} />
-                  }
+                  element={<DeadlinesPage assignments={assignments} exams={exams} />}
                 />
                 <Route path="/CourseDetails/:id" element={<CourseDetails />} />
                 <Route path="/AddExam" element={<AddExam />} />
                 <Route path="/StudentsList/:id" element={<StudentList />} />
-                <Route
-                  path="/InstructorsList/:id"
-                  element={<InstructorsList />}
-                />
+                <Route path="/InstructorsList/:id" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}
                 />
-                <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
+                <Route path="/ExamPage" element={<ExamPage />} />
                 <Route path="/ViewProgress/:id" element={<StudentProgress/>} />
                 <Route
                   path="*"

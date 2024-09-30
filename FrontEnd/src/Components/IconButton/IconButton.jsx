@@ -13,7 +13,8 @@ const IconButton = ({label,to}) => {
   }
 
   return (
-      <NavLink to={to} style={{textDecoration: 'none', color: 'inherit'}}>
+      <NavLink to={to} style={{textDecoration: 'none', color: 'inherit'}}
+               onDragStart={(e) => e.preventDefault()}>
         <div className='icon-button'>
           {label}
         </div>

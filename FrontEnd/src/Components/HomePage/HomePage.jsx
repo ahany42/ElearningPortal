@@ -8,15 +8,6 @@ import LeftPart from '../../assets/left-part-background.png';
 import { Carousel } from 'react-bootstrap';
 
 const HomePage = () => {
-    const [anchorElNav, setAnchorElNav] = useState(null);
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
 
     return (
       <div className="home-container">
@@ -28,7 +19,7 @@ const HomePage = () => {
         />
         <div className="CarouselContainer">
           <h4 className="alignCenter-text extraBold-text">Top Courses</h4>
-          <Carousel>
+            <Carousel>
             <Carousel.Item>
               <img
                 className="d-block w-100"

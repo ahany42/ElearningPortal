@@ -60,7 +60,8 @@ const Header = () => {
     <header className="header"
             style={route === "/"? {position: "absolute", top: 0, zIndex: "100"} : {}}>
       <nav className="navbar">
-          <NavLink to='/' style={{textDecoration: 'none'}}>
+          <NavLink to='/' style={{textDecoration: 'none'}}
+                   onDragStart={(e) => e.preventDefault()}>
               <div className="logo">E-Learning</div>
           </NavLink>
         <div className="icon-group">
@@ -100,7 +101,8 @@ const Header = () => {
                 }}
             >
                 {profileOptions.map((option) => (
-                    <NavLink key={v4()} to={option.to} style={{ textDecoration: 'none' }}>
+                    <NavLink key={v4()} to={option.to} style={{ textDecoration: 'none' }}
+                             onDragStart={(e) => e.preventDefault()}>
                         <MenuItem onClick={handleCloseProfileMenu}>
                             <Typography>{option.name}</Typography>
                         </MenuItem>
@@ -140,7 +142,8 @@ const Header = () => {
           >
             {burgerListPages.map((page) => (
                 page.auth === undefined ? (
-                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}>
+                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                             onDragStart={(e) => e.preventDefault()}>
                         <MenuItem onClick={handleCloseNavMenu}>
                             <Typography sx={{ textAlign: 'center' }}>
                                 {page.name}
@@ -149,7 +152,8 @@ const Header = () => {
                     </NavLink>
                 ) : (
                     isAuthenticated === page.auth &&
-                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}>
+                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                             onDragStart={(e) => e.preventDefault()}>
                         <MenuItem onClick={handleCloseNavMenu}>
                             <Typography sx={{ textAlign: 'center' }}>
                                 {page.name}

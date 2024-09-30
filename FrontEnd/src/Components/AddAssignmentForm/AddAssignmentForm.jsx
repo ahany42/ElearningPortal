@@ -48,7 +48,7 @@ const AddAssignmentForm = ({ addHandler, showFormHandler }) => {
     }
 
     return (
-        <div className="form-container">
+        <div className="form-container-addAssignment">
             <h4 className="green-text alignCenter-text bold-text form-title">Add Assignment</h4>
             {
                 errorList.length > 0 &&

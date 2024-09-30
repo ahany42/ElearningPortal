@@ -16,6 +16,7 @@
 
 
 .navbar {
+    /*padding: 10px 30px !important;*/
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,9 +47,24 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
+@media (max-width: 850px) {
+    .courses-buttons-container {
+        margin-top: 1rem;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .icon-group {
     display: none;
   }
+}
+
+@media (max-width: 450px) {
+    .navbar {
+        padding: 10px 30px !important;
+    }
+    .logo {
+        font-size: 18px;
+    }
 }

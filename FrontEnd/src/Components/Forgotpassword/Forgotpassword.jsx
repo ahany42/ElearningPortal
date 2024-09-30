@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       try {
         const response = await axios.post(
             "http://localhost:3008/forgotpassword",
-            JSON.stringify(formData),
+            JSON.stringify({...formData, isedit: false}),
             {
               headers: { "Content-Type": "application/json" },
             }

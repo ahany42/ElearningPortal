@@ -22,8 +22,8 @@ const DeadlinesPage = ({ assignments, exams }) => {
 
   const showFormHandler = () => {
     if (activeTab === "exams") {
-      showMessage("Exams are not available yet", null);
-      return;
+        showMessage("Exams are not available yet", null);
+        return;
     }
     setShowForm(!showForm);
   };
@@ -41,64 +41,53 @@ const DeadlinesPage = ({ assignments, exams }) => {
   }, [showForm]);
 
   const addAssignmentHandler = (newAssignment) => {
-    setAssignments((prevState) => [...prevState, newAssignment]);
-  };
+    setAssignments((prevState) => {
+      return [...prevState, newAssignment];
+    });
+  }
 
   return (
-    <>
-      {showForm &&
-        (activeTab === "assignments" ? (
-          <AddAssignmentForm
-            addHandler={addAssignmentHandler}
-            showFormHandler={showFormHandler}
-          />
-        ) : (
-          <></> // You can add an Exam Form here
-        ))}
-      <div className="deadlines-container pb-5" ref={CardsContainer}>
-        <div className="button-group position-relative mt-5 mb-5">
-          <div className="btn-container">
-            <label className="switch btn-color-mode-switch">
-              <input
-                value="1"
-                id="color_mode"
-                name="color_mode"
-                type="checkbox"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    handleTabClick("exams");
-                  } else {
-                    handleTabClick("assignments");
-                  }
-                }}
-              />
-              <label
-                className="btn-color-mode-switch-inner"
-                data-off="Assignments"
-                data-on="Exams"
-                htmlFor="color_mode"
-              ></label>
-            </label>
+      <>
+        {
+            showForm && (
+                activeTab === "assignments" ? (
+                    <AddAssignmentForm addHandler={addAssignmentHandler}
+                                   showFormHandler={showFormHandler} />
+                ) : (
+                    <></> // Add Exam Form
+                )
+            )
+        }
+        <div className="deadlines-container pb-5" ref={CardsContainer}>
+          <div className="button-group position-relative mt-5 mb-5">
+            <input id="switch"
+                   onChange={(e) => {
+                     if (e.target.checked) {
+                       handleTabClick("exams");
+                     } else {
+                       handleTabClick("assignments");
+                     }
+                   }}
+                   type="checkbox"
+            />
+            <div className="switch-app">
+              <label htmlFor="switch" className="switch-label">
+                <span className="switch-light">Assignments</span>
+                <span className="switch-dark">Exams</span>
+              </label>
+            </div>
+            {
+                currentUser.role && ((currentUser.role === "Admin") || (currentUser.role === "SuperAdmin")) &&
+                <button className="AddButton add-deadline"
+                        onClick={showFormHandler}>
+                  <FontAwesomeIcon icon={faPlus}
+                                   title={activeTab === "assignments" ? "Add Assignment" : "Add Exam"}/>
+                  {activeTab === "assignments" ? "Add Assignment" : "Add Exam"}
+                </button>
+            }
           </div>
-          {currentUser.role &&
-            (currentUser.role === "Admin" ||
-              currentUser.role === "SuperAdmin") && (
-              <button
-                className="AddButton add-deadline"
-                onClick={showFormHandler}
-              >
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  title={
-                    activeTab === "assignments" ? "Add Assignment" : "Add Exam"
-                  }
-                />
-                {activeTab === "assignments" ? "Add Assignment" : "Add Exam"}
-              </button>
-            )}
-        </div>
-        <Table striped bordered hover className="deadlines-table">
-          <thead>
+          <Table striped bordered hover className="deadlines-table">
+            <thead>
             <tr>
               <th style={{ width: "70px" }}>No</th>
               <th>Title</th>
@@ -112,23 +101,15 @@ const DeadlinesPage = ({ assignments, exams }) => {
               assignments && assignments.length > 0 ? (
                 assignments.map((assignment, index) => (
                   <tr key={uuidv4()}>
-                    <td>
-                      <span className="center-value">{index + 1}</span>
-                    </td>
-                    <td>
-                      <span>{assignment.title}</span>
-                    </td>
+                    <td><span className='center-value'>{index + 1}</span></td>
+                    <td><span>{assignment.title || "Not Available"}</span></td>
                     <td>
                       <span>
-                        {
-                          courses.find((c) => c.id === assignment.courseID)
-                            ?.title
-                        }
+                        {courses.find((c) => c.id === assignment.courseID)?.title
+                            || "Not available"}
                       </span>
                     </td>
-                    <td>
-                      <span>{assignment.dueDate}</span>
-                    </td>
+                    <td><span>{assignment.dueDate || "Not Available"}</span></td>
                     <td>
                       <button
                         className="view-btn"
@@ -151,40 +132,36 @@ const DeadlinesPage = ({ assignments, exams }) => {
                 </tr>
               )
             ) : exams && exams.length > 0 ? (
-              exams.map((exam, index) => (
-                <tr key={uuidv4()}>
-                  <td>
-                    <span className="center-value">{index + 1}</span>
-                  </td>
-                  <td>
-                    <span>{exam.name}</span>
-                  </td>
-                  <td>
-                    <span>
-                      {courses.find((c) => c.id === exam.courseID)?.title}
-                    </span>
-                  </td>
-                  <td>
-                    <span>{exam.date}</span>
-                  </td>
-                  <td>
-                    <button
-                      className="view-btn"
-                      onClick={() =>
-                        navigate("/ExamPage", { state: { eid: exam.id } })
-                      }
-                    >
-                      View
-                    </button>
+                exams.map((exam, index) => (
+                    <tr key={uuidv4()}>
+                      <td><span className='center-value'>{index + 1}</span></td>
+                      <td><span>{exam.title || "Not Available"}</span></td>
+                      <td>
+                        <span>
+                          {courses.find((c) => c.id === exam.courseID)?.title || "Not Available"}
+                        </span>
+                      </td>
+                      <td><span>{exam.dueDate || "Not Available"}</span></td>
+                      <td>
+                        <button
+                            className="view-btn"
+                            onClick={() =>
+                                navigate("/ExamPage", {
+                                  state: { eid: exam.id },
+                                })
+                            }
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                ))
+            ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No Exams Available
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  No Exams Available
-                </td>
-              </tr>
             )}
           </tbody>
         </Table>

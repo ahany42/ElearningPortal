@@ -1,4 +1,4 @@
-.form-container {
+.form-container-editCourse {
     position: absolute;
     background: white;
     top: 50%;
@@ -18,23 +18,23 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
-.form-container button:active {
+.form-container-editCourse button:active {
     scale: 0.95;
 }
 
-.form-container .form {
+.form-container-editCourse .form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.form-container .form-group {
+.form-container-editCourse .form-group {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.form-container .form-group label {
+.form-container-editCourse .form-group label {
     display: block;
     margin-bottom: 5px;
     color: white;
@@ -42,7 +42,7 @@
     font-size: 12px;
 }
 
-.form-container .form-group input {
+.form-container-editCourse .form-group input {
     cursor: text;
     width: 100%;
     padding: 12px 16px;
@@ -53,7 +53,7 @@
     border: 2px solid #274546;
 }
 
-.form-container .form-group textarea {
+.form-container-editCourse .form-group textarea {
     cursor: text;
     width: 100%;
     padding: 12px 16px;
@@ -66,15 +66,15 @@
     font-family: inherit;
 }
 
-.form-container .form-group input::placeholder {
+.form-container-editCourse .form-group input::placeholder {
     opacity: 0.5;
 }
 
-.form-container .form-group input:focus, .form-container .form-group textarea:focus {
+.form-container-editCourse .form-group input:focus, .form-container-editCourse .form-group textarea:focus {
     outline: none;
 }
 
-.form-container .form-submit-btn {
+.form-container-editCourse .form-submit-btn {
     display: flex;
     align-items: flex-start;
     justify-content: center;

@@ -9,13 +9,17 @@ const SearchBar = ({ setFilter }) => {
             <Autocomplete
                 freeSolo
                 id="free-solo-2-demo"
+                sx={{ textAlign: 'center' }}
                 disableClearable={false}
                 options={[]}
-                clearIcon={<ClearIcon sx={{ cursor: 'pointer', position: 'absolute', right: '10px' }} />}
+                clearIcon={
+                    <ClearIcon sx={{ cursor: 'pointer', position: 'absolute', right: '10px' }} />
+                }
                 renderInput={(params) => (
                     <TextField
                         {...params}
                         label="Search input"
+                        className="search-input-div"
                         sx={{
                             my: 2,
                             '& .MuiOutlinedInput-root': {
@@ -42,6 +46,12 @@ const SearchBar = ({ setFilter }) => {
                                 type: 'text',
                                 onChange: (e) => setFilter(e.target.value),
                             },
+                        }}
+                        onClick={(e) => {
+                            let nodeName = e.target.nodeName.toLowerCase();
+                            if (nodeName === 'svg' || nodeName === 'path' || nodeName === 'button') {
+                                setFilter('');
+                            }
                         }}
                     />
                 )}

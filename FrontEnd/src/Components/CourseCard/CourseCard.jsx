@@ -87,8 +87,9 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         }
         showToast("Enroll Coming Soon");
     }
+
     const ShowStudentsList= ()=>{
-    navigate(`/StudentsList/${id}`)
+        navigate(`/StudentsList/${id}`)
     }
     // For testing
     const isEnrolled = false; // Will be included in each course object (After API Implementation)
@@ -96,7 +97,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
-                <div className="card" key={id}>
+                <div className="card course-card" key={id}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -138,13 +139,13 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         } 
         else if (currentUser.role === "Instructor") {
             return (
-                <div className="card" key={id}>
+                <div className="card course-card" key={id}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
-                    <div className="card-body" style={isEnrolled ? {position: 'unset'} : {position: 'relative'}}>
+                    <div className="card-body" style={{position: 'unset'}}>
                         <div className="card-header-container"
-                             style={isEnrolled ? {left: '50%', transform: 'translateX(-50%)'} : {}}>
+                             style={{left: '50%', transform: 'translateX(-50%)'}}>
                             <div className="cardButton-container">
                                 <button className="enroll-button bold-text"
                                         onClick={CourseDetails}>
@@ -152,7 +153,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                                 </button>
                             </div>
                         </div>
-                        <div className="course-icons" style={isEnrolled ? {top: 0, left: 0} : {}}>
+                        <div className="course-icons" style={{top: 0, left: 0}}>
                             {
                                 isEnrolled ? (
                                     <span className="enroll-text bold-text blue-text">
@@ -179,7 +180,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         }
         // SuperAdmin and Admin
         else return (
-          <div className="card" key={id}>
+          <div className="card course-card" key={id}>
             <div className="card-header position-relative">
               <img src={ReactImg || CoursePlaceholder} alt="Course" />
               <div className="course-icons admin-icons">
@@ -209,9 +210,9 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text" onClick={ShowStudentsList}>
-                                20 <FontAwesomeIcon icon={faUser} />
-                            </div>
+                    <div className="alignCenter-text" onClick={() => ShowStudentsList(id)}>
+                        20 <FontAwesomeIcon icon={faUser} />
+                    </div>
                 </div>
             </div>
           </div>
@@ -219,7 +220,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     } else { // Guest User View (currentUser = {})
         return (
-            <div className="card" key={id}>
+            <div className="card course-card" key={id}>
                 <div className="card-header">
                     <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 </div>

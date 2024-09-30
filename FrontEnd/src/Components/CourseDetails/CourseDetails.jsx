@@ -65,7 +65,6 @@ const CourseDetails = () => {
     const course = courses.find(course => course.id === id);
 
     return (
-        
       course ?
           <div className="card course-details">
               <div className="card-header details-header">
@@ -80,7 +79,7 @@ const CourseDetails = () => {
                   {
                       ( currentUser.role==="Student" || currentUser.role === "Instructor" || currentUser.role === "" ) ?
                           !isEnrolled?
-                              <button className="enroll-button bold-text blue-text"
+                              <button className="enroll-button-courseDetails bold-text blue-text"
                                       onClick={()=>EnrollCourse(course.id)}>
                                   Enroll
                               </button> :

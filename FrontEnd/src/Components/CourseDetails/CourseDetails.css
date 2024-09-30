@@ -30,9 +30,14 @@
 .details-header{
     position: relative;
 }
-.enroll-button {
+.enroll-button-courseDetails {
     height: fit-content;
-    
+    background: transparent;
+    padding: 0 5px;
+    border: none;
+}
+.enroll-button-courseDetails:hover {
+    text-decoration: underline !important;
 }
 .course-material{
     width:100%;

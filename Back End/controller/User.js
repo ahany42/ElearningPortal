@@ -10,6 +10,7 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const {jwtDecode} = require("jwt-decode");
 
 // Email configuration (you might want to use environment variables for this)
 const transporter = nodemailer.createTransport({
@@ -152,7 +153,7 @@ module.exports.getUsers = async (req, res, next) => {
 
 module.exports.forgotPassword = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email, isedit } = req.body;
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -172,6 +173,10 @@ module.exports.forgotPassword = async (req, res, next) => {
 
     // Construct the password reset URL
     const resetUrl = `http://localhost:7000/resetPassword/?token=${resetToken}`; // Change localhost to your actual frontend URL
+
+    if (isedit) {
+        return res.status(201).json({ data: { resetToken } });
+    }
 
     // Send the password reset email
     const mailOptions = {
@@ -208,9 +213,6 @@ module.exports.verifyResetToken = async (req, res, next) => {
             await User.findOne({resetPasswordToken: token});
 
         if ( userResetToken && Date.now() > userResetToken.resetPasswordExpires ) {
-          userResetToken.resetPasswordToken = undefined;
-          userResetToken.resetPasswordExpires = undefined;
-          await userResetToken.save();
           return res.status(200).json({ error: "Password reset token has expired" });
         }
         if (!user) {
@@ -297,21 +299,37 @@ module.exports.deleteUser = async (req, res, next) => {
 module.exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, email, password, role } = req.body;
+    const sentUser = req.body;
     const user = await User.findOne({ id });
     if (!user) {
       return res.status(200).json({ error: "User not found" });
     }
-    user.name = name;
-    user.email = email;
-    user.password = await bcrypt.hash(password, 10);
-    user.role = role;
+
+    const checkUsername = await User.findOne({ username: sentUser.username });
+    if (checkUsername && checkUsername.id !== id) {
+      return res.status(200).json({ error: "Username already exists" });
+    }
+
+    const checkEmail =
+        await User.findOne({ email: sentUser.email });
+    if (checkEmail && checkEmail.id !== id) {
+      return res.status(200).json({ error: "Email already exists" });
+    }
+
+    user.name = sentUser.name;
+    user.email = sentUser.email;
+    user.username = sentUser.username;
 
     await user.save();
+    const token = await jwt.sign(
+        sentUser,
+        Secret_Key
+    )
 
-    res
-      .status(201)
-      .json({ message: `User (${user.name}) updated successfully` });
+    res.status(201).json({
+      message: `User (${user.name}) updated successfully`,
+      data: token
+    });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: updateUser function => ${error}`);

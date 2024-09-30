@@ -5,6 +5,7 @@
 .button-group {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 25px;
 }
 
@@ -29,12 +30,14 @@
 
 .deadlines-table td {
   position: relative;
+  vertical-align: middle;
+  width: 165px;
 }
 
 .deadlines-table td span {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  display: block;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .center-value {
@@ -44,91 +47,94 @@
   transform: translate(-50%, -50%) !important;
 }
 
-/*   Switch Button   */
-.btn-container {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.btn-color-mode-switch {
-  display: inline-block;
-  margin: 0;
-  position: relative;
-}
-
-.btn-color-mode-switch > label.btn-color-mode-switch-inner {
-  margin: 0;
-  width: 260px;
-  overflow: hidden;
-  height: 60px;
-  background-color: #fb8928;
-  border-radius: 26px;
-  position: relative;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 8px 0 rgba(17, 17, 17, 0.34) inset;
-  display: block;
-}
-
-.btn-color-mode-switch > label.btn-color-mode-switch-inner:before {
-  cursor: pointer;
-  content: attr(data-on);
-  position: absolute;
-  font-size: 20px;
-  font-weight: 600;
-  width: max-content;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 16px;
-  color: white;
-}
-
-.btn-color-mode-switch > label.btn-color-mode-switch-inner:after {
-  content: attr(data-off);
-  cursor: pointer;
-  width: max-content;
-  height: 45px;
-  background: #fff;
-  border-radius: 26px;
-  position: absolute;
-  font-size: 20px;
+/* Switch Button */
+.switch-app {
+  --light-col: #e8e8e8;
+  --dark-col: #26242e;
   display: flex;
-  justify-content: center;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 6 -2 #111;
-  padding: 10px;
-  color: #222;
-  font-weight: 600;
-  align-items: center;
-}
-
-.btn-color-mode-switch input[type="checkbox"] {
-  width: 50px;
-  height: 25px;
-  opacity: 0;
-  position: absolute;
-  top: 0;
+  flex-direction: column;
+  box-shadow: 0 4px 35px rgba(0, 0, 0, 0.1);
+  position: relative;
   z-index: 1;
-  margin: 0;
+  background-color: #d8d7d1;
+  border-radius: 30px;
+  overflow: hidden;
+  user-select: none;
 }
 
-.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner {
+.switch-label {
+  box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.15);
+  width: 290px;
+  padding: 18px 26px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+
+  font-size: 1.1rem;
+  font-weight: bolder;
+  color: var(--dark-col);
+  display: flex;
+  justify-content: space-between;
+}
+
+.switch-label::before {
+  content: "";
+  position: absolute;
+  width: 60%;
+  inset: 0;
+  border-radius: inherit;
+  display: block;
+  z-index: -1;
   background-color: #fb8928;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:after {
-  content: attr(data-on);
-  left: 162px;
+#switch {
+  appearance: none;
 }
 
-.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:before {
-  content: attr(data-off);
-  right: auto;
-  left: 20px;
+.switch-light, .switch-dark {
+  transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#switch:checked + .switch-app label span.switch-light, #switch:checked + .switch-app label span.switch-dark {
+  color: var(--dark-col);
+}
+
+#switch:not(:checked) + .switch-app label span.switch-light, #switch:checked + .switch-app label span.switch-dark {
+  color: var(--light-col);
+}
+
+#switch:checked + .switch-app label::before {
+  transform: translateX(150%);
+  width: 40%;
+}
+
+#switch:checked + .switch-app::before {
+  box-shadow: 0 0 0 150px var(--dark-col);
+}
+/* Circle */
+#switch:checked + .switch-app .circle::before {
+  transform: scale(1);
+  background: var(--dark-col);
+}
+
+#switch:checked + .switch-app .circle {
+  background: linear-gradient(40deg, #8983f7, #a3dafb 70%);
+}
+
+#switch:checked + .switch-app .time {
+  color: var(--light-col);
+}
+
+#switch:checked + .switch-app .icons .network {
+  border-bottom-color: var(--light-col);
+}
+
+#switch:checked + .switch-app .icons .battery {
+  background-color: var(--light-col);
 }
 /* End Switch Button */
 

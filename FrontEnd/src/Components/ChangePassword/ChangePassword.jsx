@@ -1,9 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-// import { CurrentUserContext } from "../../App";
-import { toast } from "react-toastify";
+import { CurrentUserContext } from "../../App";
 import { useLocation } from "react-router-dom";
-// import { jwtDecode } from "jwt-decode";
-
 import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
@@ -21,8 +18,6 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { NavLink, useNavigate } from "react-router-dom";
 import {getCookie} from "../Cookie/Cookie.jsx";
 
-let errorMessages = [];
-
 const ChangePassword = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -37,8 +32,9 @@ const ChangePassword = () => {
     password: "",
     confirmpassword: ""
   });
+  const state = useLocation().state;
 
-  // const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
+  const { showMessage } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
   const checkToken = async () => {
@@ -52,56 +48,37 @@ const ChangePassword = () => {
         });
       const data = await response.json();
       if (data.error) {
-        toast.error(data.error, {
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        navigate("/login");
+        showMessage(data.error, true);
+        navigate("/");
       }
     } catch (error) {
-      toast.error("Something went wrong, please try again", {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      navigate("/login");
+      showMessage("Something went wrong, please try again", true);
     }
   }
 
   // Start auto checker for token validity
   useEffect(() => {
-    const interval = setInterval(() => {
-      setUpdate(prevState => !prevState);
-    }, 1000);
-    return () => clearInterval(interval);
+    if (token !== null) {
+      const interval = setInterval(() => {
+        setUpdate(prevState => !prevState);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   useEffect(() => {
-    checkToken();
+    if (token !== null) {
+      checkToken();
+    } else {
+      showMessage("Token is required", true);
+      navigate(-1);
+    }
   }, [update]);
 
   useEffect(() => {
     if (error && !activeErrors.includes(error)) {
       setActiveErrors([...activeErrors, error]);
-      toast.error(error, {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        onClose: () => {
-          setError(""); // Reset the error message
-          setActiveErrors((prevState) => prevState.filter((e) => e !== error));
-        },
-      });
+      showMessage(error, true);
     }
   }, [error]);
 
@@ -126,57 +103,22 @@ const ChangePassword = () => {
 
       const data = await response.json();
       if (!data.error) {
-        toast.success(data.message, {
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: {
-            userSelect: "none",
-            gap: "10px",
-            padding: "20px",
-          },
-        });
-
-        navigate("/login");
+        showMessage(data.message, false);
+        if (state && state.edit) {
+          navigate("/Profile");
+        } else {
+          navigate("/login");
+        }
       } else {
         if (data.error.toLowerCase().includes("token")) {
-          toast.error("Invalid token, please try again", {
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showMessage("Invalid token, please try again", true);
           navigate("/login");
         } else {
-          if (!errorMessages.includes(data.error)) {
-            errorMessages.push(data.error);
-            toast.error(data.error, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              onClose: () => {
-                errorMessages = errorMessages.filter((e) => e !== data.error);
-              }
-            });
-          }
+          showMessage(data.error, true);
         }
       }
     } catch (error) {
-      toast.error("Something went wrong, please try again", {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      showMessage("Something went wrong, please try again", true);
       navigate("/login");
     }
   };

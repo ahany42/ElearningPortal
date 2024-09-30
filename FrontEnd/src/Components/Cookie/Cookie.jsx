@@ -16,6 +16,15 @@ function setCookie(name, value, hours) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+function updateCookie(name, value) {
+    const decoded = jwtDecode(value);
+    // Get the expiry time of the token
+    const date = new Date();
+    date.setTime(date.getTime() + (decoded.exp * 1000));
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
 // Getting the JWT token
 function getCookie(name) {
     const nameEQ = name + "=";
@@ -50,4 +59,4 @@ function checkCookieExpiry(name) {
     }
 }
 
-export { setCookie, getCookie, deleteCookie, checkCookieExpiry };
+export { setCookie, getCookie, deleteCookie, checkCookieExpiry, updateCookie };

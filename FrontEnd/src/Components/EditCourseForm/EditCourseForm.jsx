@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import {CurrentUserContext} from "../../App.jsx";
 import { v4 } from 'uuid';
+import './EditCourseForm.css';
 
 let errorList = [];
 
@@ -84,7 +85,7 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
     };
 
     return (
-        <div className="form-container">
+        <div className="form-container-editCourse">
             <h4 className="green-text alignCenter-text bold-text form-title">Edit Course</h4>
             {
                 errorList.length > 0 &&

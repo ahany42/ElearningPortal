@@ -1,6 +1,5 @@
 import {useContext, useEffect, useRef, useState} from 'react'
 import { CurrentUserContext } from "../../App.jsx";
-import {useNavigate} from "react-router-dom";
 import CourseCard from '../CourseCard/CourseCard';
 import AddCourseForm from '../addCourseForm/AddCourseForm';
 import Placeholder from '../Placeholder/Placeholder';
@@ -10,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { v4 } from 'uuid';
 import './Coursescards.css'
-import {ToastContainer} from "react-toastify";
 import EditCourseForm from "../EditCourseForm/EditCourseForm.jsx";
 
 const CoursesCards = ({ courses, addCourseHandler}) => {
@@ -28,6 +26,15 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
     }
 
     useEffect(() => {
+        if (filter) {
+            filterHandler(filter);
+        } else {
+            console.log(courses === coursesList)
+            setCoursesList(courses);
+        }
+    }, [filter]);
+
+    useEffect(() => {
         setCoursesList(courses);
     }, [courses]);
 
@@ -42,14 +49,6 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
             CardsContainer.current.style.userSelect = '';
         }
     }, [showForm, showEditForm]);
-
-    useEffect(() => {
-        if (filter) {
-            filterHandler(filter);
-        } else {
-            setCoursesList(courses);
-        }
-    }, [filter]);
 
     const showFormHandler = () => {
       setShowForm(!showForm);
@@ -74,7 +73,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
             )
         }
           <span ref={CardsContainer}>
-              <div className="d-flex position-relative mt-5 mb-5 justify-content-center align-items-center">
+              <div className="courses-buttons-container">
                  <SearchBar setFilter={setFilter}/>
                  {
                      currentUser.role && ((currentUser.role === "Admin") || (currentUser.role === "SuperAdmin")) &&
@@ -84,7 +83,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
                      </button>
                  }
               </div>
-              <div className="cards pb-5 pt-3">
+              <div className="cards courses-cards">
                   {
                       !coursesList.length && <Placeholder text="No Courses Exists" img={NoCoursesImg}/>
                   }
