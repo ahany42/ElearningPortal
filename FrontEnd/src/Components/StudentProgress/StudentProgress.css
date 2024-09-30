@@ -1,0 +1,16 @@
+.student-progress-table{
+    margin: 30px;
+}
+.on-time{
+    background: #b4b4b4;
+    padding: 0 5px;
+    border-radius: 10px; 
+    width:80px;
+}
+.late{
+    background: #b4b4b4;
+    padding: 0 5px;
+    border-radius: 10px; 
+    width:80px;
+    color:red;
+}
