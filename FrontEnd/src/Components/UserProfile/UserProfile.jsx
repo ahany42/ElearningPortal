@@ -58,6 +58,13 @@ const UserProfile = () => {
                     }
                 }, 1400);
             })
+            .catch((err) => {
+                console.clear();
+                setTimeout(() => {
+                    showMessage(err.message, true);
+                    setLoading(false);
+                }, 1400);
+            })
     }
 
     const changePassword = async () => {

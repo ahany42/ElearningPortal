@@ -3,7 +3,6 @@ import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
-import { v4 as uuidv4 } from "uuid";
 import SignUp from "./Components/Signup/Signup.jsx";
 import UserProfile from "./Components/UserProfile/UserProfile.jsx";
 import StudentList from "./Components/StudentsList/StudentList.jsx";
@@ -13,8 +12,7 @@ import {
   Routes,
   Route,
   useLocation,
-  useNavigate,
-  useParams,
+  useNavigate
 } from "react-router-dom";
 import NotFoundImg from "./assets/404.svg";
 import Placeholder from "./Components/Placeholder/Placeholder.jsx";
@@ -24,7 +22,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./Components/Footer/Footer.jsx";
 import {
   checkCookieExpiry,
-  deleteCookie,
   getCookie,
 } from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from "react-toastify";
@@ -40,6 +37,7 @@ import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
+import ENV from "../Front_ENV.jsx"; // To Be Used Later
 
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
@@ -59,7 +57,7 @@ const pathsNotRequireAuthentication = [
     '/ResetPassword',
 ];
 
-const data = [
+const INITIAL_COURSES = [
   {
     id: "e55d8be9-d517-4fdb-a813-7314410d920f",
     title: "html&css",
@@ -126,10 +124,9 @@ let messagesList = [];
 
 function App() {
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
-    const [ courses, setCourses ] = useState(data);
+    const [ courses, setCourses ] = useState(INITIAL_COURSES);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] = useState({});
-    const [ activeErrors, setActiveErrors ] = useState([]);
     const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
     const [exams, setExams] = useState(INITIAL_EXAMS)
     const [ loading, setLoading ] = useState(false);
@@ -145,25 +142,7 @@ function App() {
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     clearInterval(interval);
-                    if (!activeErrors.includes('Session Expired, please login again')) {
-                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
-                        toast.error('Session Expired, please login again', {
-                            autoClose: 3000, // Auto close after 3 seconds
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            style: {
-                                userSelect: 'none',
-                                gap: '10px',
-                                padding: '20px',
-                            },
-                            onClose: () => {
-                                setActiveErrors(prevState =>
-                                    prevState.filter(e => e !== 'Session Expired, please login again'))
-                            }
-                        });
-                    }
+                    showMessage('Session Expired, please login again', true);
                     navigate('/login');
                     return;
                 }
@@ -171,25 +150,7 @@ function App() {
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     await axios.post('http://localhost:3008/logout');
-                    if (!activeErrors.includes('Session Expired, please login again')) {
-                        setActiveErrors([...activeErrors, 'Session Expired, please login again']);
-                        toast.error('Session Expired, please login again', {
-                            autoClose: 3000, // Auto close after 3 seconds
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            style: {
-                                userSelect: 'none',
-                                gap: '10px',
-                                padding: '20px',
-                            },
-                            onClose: () => {
-                                setActiveErrors(prevState =>
-                                    prevState.filter(e => e !== 'Session Expired, please login again'))
-                            }
-                        });
-                    }
+                    showMessage('Session Expired, please login again', true);
                     navigate('/login');
                 }
             }, 1000);
@@ -203,49 +164,18 @@ function App() {
 
     useEffect(() => {
 
+        // Disable loader when the page is loaded
+        setLoading(false);
+
         // Redirect to previous route if the user is already authenticated
         if (pathsNotRequireAuthentication.includes(routes.pathname) && isAuthenticated) {
-            if (!activeErrors.includes('You are already logged in')) {
-                setActiveErrors([...activeErrors, 'You are already logged in']);
-                toast.error('You are already logged in', {
-                    autoClose: 3000, // Auto close after 3 seconds
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    style: {
-                        userSelect: 'none',
-                        gap: '10px',
-                        padding: '20px',
-                    },
-                    onClose: () => {
-                        setActiveErrors(prevState => prevState.filter(e => e !== 'You are already logged in'))
-                    }
-                });
-            }
+            showMessage('You are already logged in', true);
             navigate("/");
         }
 
         // Redirect to login page if the user is not authenticated
         if (pathsRequireAuthentication.includes(routes.pathname) && !isAuthenticated) {
-            if (!activeErrors.includes('You must login first')) {
-                setActiveErrors([...activeErrors, 'You must login first']);
-                toast.error('You must login first', {
-                    autoClose: 3000, // Auto close after 3 seconds
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    style: {
-                        userSelect: 'none',
-                        gap: '10px',
-                        padding: '20px',
-                    },
-                    onClose: () => {
-                        setActiveErrors(prevState => prevState.filter(e => e !== 'You must login first'))
-                    }
-                });
-            }
+            showMessage('You must login first', true);
             navigate('/login');
         }
 

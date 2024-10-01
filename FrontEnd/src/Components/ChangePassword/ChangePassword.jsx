@@ -15,8 +15,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
-import { NavLink, useNavigate } from "react-router-dom";
-import {getCookie} from "../Cookie/Cookie.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
   const location = useLocation();

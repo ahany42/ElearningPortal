@@ -1,11 +1,21 @@
 const express = require("express");
+const path = require('path');
 const app = express();
 const ENV = require("../env");
 const port = ENV.Back_Port;
-const { Session } = require("./db/Database");
+const { rateLimit } = require("express-rate-limit");
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: "Too many requests from this IP, please try again after 15 minutes",
+});
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
+
+app.use(limiter);
+
 const cors = require("cors");
 
 // Middleware to allow requests from other origins
@@ -15,6 +25,9 @@ app.use(
     credentials: true,
   })
 );
+
+// Serve the static folder (e.g., 'static/courses' where the images are stored)
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Importing routers
 const UserRouter = require("./router/UserRouter");

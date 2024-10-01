@@ -1,5 +1,44 @@
 const {Assignment, AssignmentAnswer, Session, User, Course} = require('../db/Database');
 const { v4: uuidv4 } = require('uuid');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer for image uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/assignments'); // Folder where images will be stored
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // Naming the file
+    }
+});
+
+// File filter to only accept PDFs
+const fileFilter = (req, file, cb) => {
+    const filetypes = /pdf/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only PDF files are allowed!'), false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
+});
+
+// Test code
+const oldDate = new Date();
+oldDate.setTime(oldDate.getTime() + (5 * 60 * 1000));
+const date = new Date();
+date.setTime(oldDate.getTime() + (60 * 60 * 1000));
+console.log(`(${oldDate.toUTCString()})` + "\n" + `(${date.toUTCString()})` )
 
 // Controller for Assignments
 class AssignmentController {
@@ -7,10 +46,11 @@ class AssignmentController {
     // Create a new assignment
     async createAssignment(req, res, next) {
         try {
-            const { courseID, startDate, duration, endDate, title, document } = req.body; // courseID as v4 uuid
+            const { courseID, startDate, duration, endDate, title } = req.body; // courseID as v4 uuid
+            const document = req.file ? req.file.path : null; // Store document path from multer
 
             // Validate input
-            if (!courseID || !startDate || !duration || !endDate || !title || !document) {
+            if (!courseID || !startDate || !duration || !endDate || !title) {
                 return res.status(200).json({ error: "All fields are required" });
             }
 
@@ -57,7 +97,6 @@ class AssignmentController {
 
             // check sql injection
             if (title.includes("'") || title.includes(";") || title.includes("--") ||
-                document.toString().includes("'") || document.toString().includes(";") || document.toString().includes("--") ||
                 startDate.toString().includes("'") || startDate.toString().includes(";") || startDate.toString().includes("--") ||
                 endDate.toString().includes("'") || endDate.toString().includes(";") || endDate.toString().includes("--") ||
                 duration.toString().includes("'") || duration.toString().includes(";") || duration.toString().includes("--") ||
@@ -65,16 +104,30 @@ class AssignmentController {
                 return res.status(200).json({ error: "Invalid characters" });
             }
 
-            // Create a new assignment object
-            const newAssignment = new Assignment({
-                id: uuidv4(),
-                courseID: course._id,
-                startDate,
-                duration,
-                endDate,
-                title,
-                document
-            });
+            let newAssignment;
+
+            if (document) {
+                // Create a new assignment object
+                newAssignment = new Assignment({
+                    id: uuidv4(),
+                    courseID: course._id,
+                    startDate,
+                    duration,
+                    endDate,
+                    title,
+                    document
+                });
+            } else {
+                // Create a new assignment object
+                newAssignment = new Assignment({
+                    id: uuidv4(),
+                    courseID: course._id,
+                    startDate,
+                    duration,
+                    endDate,
+                    title
+                });
+            }
 
             // Save to database
             const savedAssignment = await newAssignment.save();
@@ -222,7 +275,8 @@ class AssignmentController {
     async updateAssignment(req, res, next) {
         try {
             const assignmentID = req.params.id; // assignmentID as v4 uuid
-            const { title, document, startDate, endDate, duration } = req.body;
+            const { title, startDate, endDate, duration } = req.body;
+            const document = req.file ? req.file.path : null; // Store document path from multer
 
             // Check if the user is logged in
             if (!await Session.findOne()) {
@@ -240,14 +294,17 @@ class AssignmentController {
                 return res.status(200).json({error: "Assignment has ended and cannot be updated"});
             }
 
-            if (!title || !document || !startDate || !endDate || !duration) {
+            if (!title || !startDate || !endDate || !duration) {
                 return res.status(200).json({ error: "All fields are required" });
             }
 
             // Update assignment fields
-            assignment.title = title; assignment.document = document;
+            assignment.title = title; assignment.duration = duration;
             assignment.startDate = startDate; assignment.endDate = endDate;
-            assignment.duration = duration;
+
+            if (document) {
+                assignment.document = document;
+            }
 
             // Save the updated assignment
             const updatedAssignment = await assignment.save();
@@ -275,7 +332,28 @@ class AssignmentController {
                 return res.status(200).json({ error: "Assignment not found" });
             }
 
-            return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully` });
+            // Get the path to the assignment document (file)
+            const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
+
+            // First, delete the assignment
+            await Assignment.findOneAndDelete({ id: assignmentID });
+
+            // If a document is associated with the assignment, delete the file from the file system
+            if (filePath) {
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        res.status(200).json({ error: "Failed to delete associated file." });
+                        next(`ERROR IN: Delete Assignment Function => ${err}`);
+                        return;
+                    }
+
+                    // Return success response after the file and the assignment are deleted
+                    return res.status(201).json({ message: `Assignment (${assignment.title}) and associated file deleted successfully` });
+                });
+            } else {
+                // If there is no associated file, return success response for assignment deletion
+                return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully, no associated file found` });
+            }
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Delete Assignment Function => ${err}`);
@@ -283,5 +361,32 @@ class AssignmentController {
     }
 }
 
+// Middleware to handle the file upload
+const uploadCourseImage = (req, res, next) => {
+    try {
+
+        const uploadSingle = upload.single('pdf');
+
+        uploadSingle(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                // Multer-specific error occurred
+                res.status(200).json({error: err.message});
+                next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                return;
+            } else if (err) {
+                // Other errors like invalid file types
+                res.status(200).json({error: err.message});
+                next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                return;
+            }
+
+            next();
+        });
+    } catch (e) {
+        res.status(200).json({error: e.message});
+        next(`ERROR IN: uploadCourseImage function => ${e.message}`);
+    }
+};
+
 // Export the controller instance
-module.exports = new AssignmentController();
+module.exports = { Controller: new AssignmentController(), uploadCourseImage };

@@ -29,7 +29,6 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
         if (filter) {
             filterHandler(filter);
         } else {
-            console.log(courses === coursesList)
             setCoursesList(courses);
         }
     }, [filter]);

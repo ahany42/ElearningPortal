@@ -17,6 +17,7 @@ const VerifyTokenForAdmin = async (req, res, next) => {
     let decoded = jwt.verify(authorization, Secret_Key); // change decode to authorization
     decoded.role = decoded.role.toLowerCase();
     if (decoded.role === "admin" || decoded.role === "superadmin") {
+      req.user = decoded;
       next();
     } else {
       res.status(200).json({ error: "Invalid role" });
@@ -75,6 +76,7 @@ const VerifyTokenForStudent = async (req, res, next) => {
     let decoded = jwt.verify(authorization, Secret_Key); // change decode to authorization
     decoded.role = decoded.role.toLowerCase();
     if (decoded.role === "student" || decoded.role === "admin" || decoded.role === "superadmin") {
+      req.user = decoded;
       next();
     } else {
       res.status(200).json({ error: "Invalid role" });
@@ -105,6 +107,7 @@ const VerifyTokenForUser = async (req, res, next) => {
     decoded.role = decoded.role.toLowerCase();
     if (decoded.role === "student" || decoded.role === "instructor" ||
         decoded.role === "admin" || decoded.role === "superadmin") {
+      req.user = decoded;
       next();
     } else {
       res.status(200).json({ error: "Invalid role" });

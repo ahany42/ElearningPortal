@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, FormControl, TextField, Box } from "@mui/material";
+import { Button, TextField, Box } from "@mui/material";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import {CurrentUserContext} from "../../App.jsx";
@@ -12,8 +11,6 @@ const ForgotPassword = () => {
     email: "",
   });
   const { setLoading, showMessage } = useContext(CurrentUserContext);
-
-  // const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();

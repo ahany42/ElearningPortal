@@ -54,7 +54,7 @@ class CourseController {
                             desc,
                             id,
                             hours,
-                            image // Save the image path to the database
+                            image
                      });
 
                      // Optionally, create an Instructor_Course association
@@ -72,15 +72,26 @@ class CourseController {
        }
 
        async enrollCourse(req, res) {
-              const { studentId, courseId } = req.body;
+              const { courseId } = req.body;
+
+              const user = req.user;
+
+              if (!user) {
+                     return res.status(200).json({ error: "Invalid studentId" });
+              }
+
+              if (user.role.toLowerCase() !== "student") {
+                     return res.status(200).json({ error: "Invalid role of studentId" });
+              }
+
               try {
                      const studentCourse = await Student_Course.create({
                             studentID: studentId,
                             courseID: courseId
                      });
-                     res.status(200).json(studentCourse);
+                     res.status(201).json({ data: studentCourse });
               } catch (error) {
-                     res.status(400).json({ error: error.message });
+                     res.status(200).json({ error: error.message });
               }
        }
 

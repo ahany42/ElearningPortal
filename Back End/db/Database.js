@@ -152,7 +152,7 @@ const Assignment = mongoose.model(
       duration: { type: Number, required: true }, // Duration in hours
       endDate: { type: Date, required: true },
       title: { type: String, required: true },
-      document: { type: String, required: true },
+      document: { type: String },
     },
     { timestamps: true }
   )

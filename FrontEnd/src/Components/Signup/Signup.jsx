@@ -40,7 +40,7 @@ const SignUp = () => {
     password: "",
     confirmpassword: "",
   });
-  const { setIsAuthenticated, setCurrentUser } = useContext(CurrentUserContext);
+  const { setIsAuthenticated, setCurrentUser, showMessage, setLoading } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
 
@@ -59,31 +59,9 @@ const SignUp = () => {
     event.preventDefault();
     if (!formData.name || !formData.email || !formData.gender
         ||!formData.password ||!formData.username || !formData.confirmpassword )
-      toast.error("Please Fill All Fields", {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: {
-          userSelect: 'none',
-          gap: '10px',
-          padding: '20px',
-        }
-      });
+      showMessage('Please Fill All Fields', true)
     else if (formData.password !== formData.confirmpassword && formData.password && formData.confirmpassword)
-      toast.error("Password and Confirm Password are not matching", {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: {
-          userSelect: 'none',
-          gap: '10px',
-          padding: '20px',
-        }
-      });
+      showMessage('Password and Confirm Password are not matching', true);
     else {
       try {
         const res = await fetch('http://localhost:3008/register', {
@@ -96,6 +74,7 @@ const SignUp = () => {
         const response = await res.json();
 
         if (!response.error) {
+          setLoading(true);
           const loginResponse = await fetch('http://localhost:3008/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -104,66 +83,32 @@ const SignUp = () => {
 
           const data = await loginResponse.json();
           if (!data.error) {
-            // Successful login, redirect to courses
-            toast.success(data.message, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: 'none',
-                gap: '10px',
-                padding: '20px',
-              }
-            });
-            setCookie('token', data.data);
-            setIsAuthenticated(true);
-            setCurrentUser(jwtDecode(data.data));
-            navigate('/courses');
+            setTimeout(() => {
+              // Successful login, redirect to courses
+              setLoading(false);
+              showMessage(data.message, false);
+              setCookie('token', data.data);
+              setIsAuthenticated(true);
+              setCurrentUser(jwtDecode(data.data));
+              navigate('/courses');
+            }, 1400);
           } else {
-            toast.error(data.error, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              style: {
-                userSelect: 'none',
-                gap: '10px',
-                padding: '20px',
-              }
-            });
-            setIsAuthenticated(false);
+            setTimeout(() => {
+              setLoading(false);
+              showMessage(data.error, true);
+              setIsAuthenticated(false);
+            }, 1400);
           }
 
         } else {
-          toast.error(response.error, {
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: {
-              userSelect: 'none',
-              gap: '10px',
-              padding: '20px',
-            }
-          });
+          showMessage(response.error, true);
         }
       } catch (error) {
-        toast.error('Something went wrong. Please try again.', {
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: {
-            userSelect: 'none',
-            gap: '10px',
-            padding: '20px',
-          }
-        });
+        setTimeout(() => {
+          console.clear();
+          setLoading(false);
+          showMessage(error.message, true);
+        }, 1400);
     }
 
 
@@ -219,7 +164,7 @@ const SignUp = () => {
                 endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title="Username must be at least 4 characters, all lowercase, allow only an underscore as
-                       a special character, can include numbers but must include at least one character.">
+                       a special character, can include numbers.">
                         <IconButton edge="end">
                           <InfoOutlined />
                         </IconButton>
