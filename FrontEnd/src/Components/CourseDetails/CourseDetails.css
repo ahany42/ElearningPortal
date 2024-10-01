@@ -1,6 +1,6 @@
 .course-details{
     width:90%;
-    margin:10px auto 50px auto;
+    margin:50px auto 50px auto;
     position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
@@ -44,4 +44,10 @@
 }
 .course-material{
     height: fit-content !important;
+}
+.add-material{
+    top: 10px;
+}
+.add-material-button-container{
+    width: 90%;
 }

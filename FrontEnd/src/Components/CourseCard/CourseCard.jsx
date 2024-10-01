@@ -114,7 +114,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <div className="course-icons" style={isEnrolled? {top:0, left:0} : {}}>
                             {
                                 isEnrolled ? (
-                                    <span className=" enroll-text enroll-text bold-text blue-text">
+                                    <span className="enroll-text enroll-button bold-text blue-text">
                                         Enrolled
                                     </span>
                                 ) : (
@@ -156,11 +156,11 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <div className="course-icons" style={{top: 0, left: 0}}>
                             {
                                 isEnrolled ? (
-                                    <span className="enroll-text bold-text blue-text">
-                                        Teaching
-                                    </span>
+                                    <span className="enroll-text enroll-button bold-text blue-text">
+                                    Teaching
+                                </span>
                                 ) : (
-                                    <span className="enroll-text bold-text blue-text">
+                                    <span className="enroll-text enroll-button bold-text blue-text">
                                         Not Teaching
                                     </span>
                                 )

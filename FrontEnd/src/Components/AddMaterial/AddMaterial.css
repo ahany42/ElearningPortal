@@ -1,0 +1,15 @@
+.add-material-component{
+    display: flex;
+    font-size: 0.8em;
+    gap:4em;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto !important;
+}
+.add-material-card{
+    width:250px;
+    height:300px ;
+}
+.add-material-header{
+    height:50px;
+}

@@ -11,6 +11,7 @@ import CourseMaterial from '../CourseMaterial/CourseMaterial';
 import {toast} from "react-toastify";
 import NotFoundImg from '../../assets/404.svg';
 import Placeholder from '../Placeholder/Placeholder';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CaughtUp from '../../assets/Grades.svg';
 import InstructorsList from '../InstructorsList/InstructorsList';
 const CourseDetails = () => {
@@ -54,7 +55,7 @@ const CourseDetails = () => {
         });
     }
     const AddMaterial = ()=>{
-        navigate('./AddMaterial');
+        navigate('/AddMaterial');
     }
     //for testing
     const isEnrolled = false;
@@ -68,7 +69,16 @@ const CourseDetails = () => {
 
     return (
       course ?
-          <div className="card course-details">
+      <>
+               {(currentUser.role==="Instructor")&& 
+               <div className="add-material-button-container">
+               <button className="AddButton add-material" onClick={AddMaterial}>
+                           <FontAwesomeIcon icon={faPlus} title="Add Course"/>
+                           Add Material
+                       </button>
+                       </div>}
+      <div className="card course-details">
+              {/* check if instructor is teaching this course */}
               <div className="card-header details-header">
                   <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                   <img src={ReactImg} alt="Course Photo"/>
@@ -92,10 +102,6 @@ const CourseDetails = () => {
                   }
                   <h5 className="course-description">{course.desc}</h5>
               </div>
-            {(currentUser.role==="Instructor")&& <button className="AddButton" onClick={AddMaterial}>
-                         <FontAwesomeIcon icon={faPlus} title="Add Course"/>
-                         Add Material
-                     </button>}
               <div className="course-material card-body">
                   <h5>Added Material:</h5>
                   {
@@ -114,8 +120,10 @@ const CourseDetails = () => {
                   }
               </div>
           </div>
+          </>
       :
           <Placeholder text="Course Not Found" img={NotFoundImg}/>
+
     )
 }
 
