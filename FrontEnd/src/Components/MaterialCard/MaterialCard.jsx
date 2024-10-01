@@ -74,7 +74,7 @@ const MaterialCard = ({material}) => {
             </div>
         </div>
     :   material.materialType === "announcement" ?
-            <div className="material-card">
+            <div className="material-card card">
                 <div className=" card material-card ">
                     <div className=" material-sub-card">
                         <FontAwesomeIcon className="material-icon" size="3x" icon={faBullhorn} color="#274546"/>
