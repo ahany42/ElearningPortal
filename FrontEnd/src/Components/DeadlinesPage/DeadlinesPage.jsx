@@ -7,8 +7,7 @@ import { useNavigate } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AddAssignmentForm from "../AddAssignmentForm/AddAssignmentForm.jsx";
-
+import AddAssignment from "../AddAssignment/AddAssignment";
 const DeadlinesPage = ({ assignments, exams }) => {
   const [activeTab, setActiveTab] = useState("assignments");
   const [showForm, setShowForm] = useState(false);
@@ -51,7 +50,7 @@ const DeadlinesPage = ({ assignments, exams }) => {
         {
             showForm && (
                 activeTab === "assignments" ? (
-                    <AddAssignmentForm addHandler={addAssignmentHandler}
+                    <AddAssignment addHandler={addAssignmentHandler}
                                    showFormHandler={showFormHandler} />
                 ) : (
                     <></> // Add Exam Form

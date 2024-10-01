@@ -57,14 +57,17 @@ const ExamInfo = ({ handleNext, formData, setFormData }) => {
           />
         <TextField label="Course Title"
                    name="courseTitle"
-                   fullWidth type="text" value={formData.courseTitle}
-                   onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
-                   onChange={(e) => {
-                       setFormData({...formData,courseTitle: e.target.value});
-                       setError('');
-                       toast.dismiss();
-                   }}
-                   required
+                   readOnly
+                   fullWidth type="text" value="Hi"
+                  //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
+                  //  onChange={(e) => {
+                  //      setFormData({...formData,courseTitle: e.target.value});
+                  //      setError('');
+                  //      toast.dismiss();
+                  //  }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
             sx={{
               my: 2,
               '& .MuiOutlinedInput-root': {
