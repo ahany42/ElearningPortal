@@ -362,7 +362,7 @@ class AssignmentController {
 }
 
 // Middleware to handle the file upload
-const uploadCourseImage = (req, res, next) => {
+const uploadAssignmentDoc = (req, res, next) => {
     try {
 
         const uploadSingle = upload.single('pdf');
@@ -371,12 +371,12 @@ const uploadCourseImage = (req, res, next) => {
             if (err instanceof multer.MulterError) {
                 // Multer-specific error occurred
                 res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                next(`ERROR IN: uploadAssignmentDoc function => ${err.message}`);
                 return;
             } else if (err) {
                 // Other errors like invalid file types
                 res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                next(`ERROR IN: uploadAssignmentDoc function => ${err.message}`);
                 return;
             }
 
@@ -384,9 +384,9 @@ const uploadCourseImage = (req, res, next) => {
         });
     } catch (e) {
         res.status(200).json({error: e.message});
-        next(`ERROR IN: uploadCourseImage function => ${e.message}`);
+        next(`ERROR IN: uploadAssignmentDoc function => ${e.message}`);
     }
 };
 
 // Export the controller instance
-module.exports = { Controller: new AssignmentController(), uploadCourseImage };
+module.exports = { Controller: new AssignmentController(), uploadAssignmentDoc };

@@ -8,11 +8,15 @@ const storage = multer.diskStorage({
               cb(null, 'static/courses'); // Folder where images will be stored
        },
        filename: function (req, file, cb) {
-              cb(null, Date.now() + '-' + file.originalname); // Naming the file
+              cb(null, file.originalname); // Naming the file
        }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+       storage: storage,
+       fileFilter: fileFilter,
+       limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
+});
 
 /*
     Functions to be implemented:
@@ -146,8 +150,32 @@ class CourseController {
        }
 }
 
-// Middleware for uploading course image
-const uploadCourseImage = upload.single('image');
+// Middleware to handle the file upload
+const uploadCourseImage = (req, res, next) => {
+       try {
+
+              const uploadSingle = upload.single('image');
+
+              uploadSingle(req, res, function (err) {
+                     if (err instanceof multer.MulterError) {
+                            // Multer-specific error occurred
+                            res.status(200).json({error: err.message});
+                            next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                            return;
+                     } else if (err) {
+                            // Other errors like invalid file types
+                            res.status(200).json({error: err.message});
+                            next(`ERROR IN: uploadCourseImage function => ${err.message}`);
+                            return;
+                     }
+
+                     next();
+              });
+       } catch (e) {
+              res.status(200).json({error: e.message});
+              next(`ERROR IN: uploadCourseImage function => ${e.message}`);
+       }
+};
 
 // Export the controller and middleware
 module.exports = { Controller: new CourseController(), uploadCourseImage };
