@@ -157,11 +157,11 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             {
                                 isEnrolled ? (
                                     <span className="enroll-text bold-text blue-text">
-                                        Enrolled
+                                        Teaching
                                     </span>
                                 ) : (
                                     <span className="enroll-text bold-text blue-text">
-                                        Not Enrolled
+                                        Not Teaching
                                     </span>
                                 )
                             }
