@@ -64,7 +64,7 @@ const Student_Course = mongoose.model(
         ref: "Course",
         required: true,
       },
-      duration: { type: Number, required: true },
+      duration: { type: Number, required: true }, // In months
     },
     { timestamps: true }
   )
@@ -84,7 +84,7 @@ const Instructor_Course = mongoose.model(
         ref: "Course",
         required: true,
       },
-      duration: { type: Number, required: true },
+      duration: { type: Number, required: true }, // In months
     },
     { timestamps: true }
   )
@@ -196,17 +196,18 @@ const StudentExam = mongoose.model(
     { timestamps: true }
   )
 );
+
 //--------------------------------------------
 
 module.exports = {
-  User,
-  Course,
-  Student_Course,
-  Instructor_Course,
-  Session,
-  Exam,
-  Assignment,
-  StudentExam,
-  AssignmentAnswer,
-  Question,
+    User,
+    Course,
+    Student_Course,
+    Instructor_Course,
+    Session,
+    Exam,
+    StudentExam,
+    Assignment,
+    AssignmentAnswer,
+    Question,
 };

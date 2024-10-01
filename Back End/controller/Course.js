@@ -103,10 +103,17 @@ class CourseController {
                      return res.status(200).json({ error: "Invalid role of studentId" });
               }
 
+              const course = await Course.findOne({ id: courseId });
+              if (!course) {
+                     return res.status(200).json({ error: "Course is required" });
+              }
+
+              const student = await User.findOne({ id: user.id });
+
               try {
                      const studentCourse = await Student_Course.create({
-                            studentID: studentId,
-                            courseID: courseId
+                            studentID: student._id,
+                            courseID: course._id
                      });
                      res.status(201).json({ data: studentCourse });
               } catch (error) {

@@ -1,16 +1,26 @@
-const {Assignment, AssignmentAnswer, Session, User, Course} = require('../db/Database');
+const {Assignment, AssignmentAnswer, User, Course, Student_Course, Instructor_Course} = require('../db/Database');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Configure multer for image uploads
+// Configure multer for assignment uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'static/assignments'); // Folder where images will be stored
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname); // Naming the file
+        cb(null, `${Date.now()}_${file.originalname}`); // Naming the file
+    }
+});
+
+// Configure multer for assignments solution uploads
+const storage2 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'static/assignments_solutions'); // Folder where images will be stored
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`); // Naming the file
     }
 });
 
@@ -27,8 +37,14 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({
+const assignment_doc_upload = multer({
     storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
+});
+
+const assignment_answer_upload = multer({
+    storage: storage2,
     fileFilter: fileFilter,
     limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
@@ -44,48 +60,44 @@ class AssignmentController {
 
             // Validate input
             if (!courseID || !startDate || !duration || !endDate || !title) {
-                return res.status(200).json({ error: "All fields are required" });
-            }
-
-            // Check if the user is logged in
-            if (!await Session.findOne()) {
-                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+                return deleteAssociateFiles(document, "All fields are required", res, next);
             }
 
             // Check if the assignment title already exists
             if (await Assignment.findOne({ title })) {
-                return res.status(200).json({ error: "Assignment with the same title already exists" });
+                return deleteAssociateFiles(document, "Assignment with the same title already exists", res, next);
             }
 
             // Check if the end date is in the future
             if (endDate < new Date()) {
-                return res.status(200).json({ error: "End date must be in the future" });
+                return deleteAssociateFiles(document, "End date must be in the future", res, next);
             }
 
             // Check if the start date is before the end date
             if (startDate > endDate) {
-                return res.status(200).json({ error: "Start date must be before the end date" });
+                return deleteAssociateFiles(document, "Duration must be greater than 0", res, next);
             }
 
             // Check if the duration is greater than 0
             if (duration <= 0) {
-                return res.status(200).json({ error: "Duration must be greater than 0" });
+                return deleteAssociateFiles(document, "Duration must be greater than 0", res, next);
             }
 
             // Check if the start date is in the future
             if (startDate < new Date()) {
-                return res.status(200).json({error: "Start date must be in the future"});
+                return deleteAssociateFiles(document, "Start date must be in the future", res, next);
             }
 
             // Check if the course exists
             const course = await Course.findOne({ id: courseID });
             if (!course) {
-                return res.status(200).json({ error: "Course not found" });
+                return deleteAssociateFiles(document, "Course not found", res, next);
             }
 
             // Check if the assignment already exists
             if (await Assignment.findOne({ courseID: course._id, startDate, endDate })) {
-                return res.status(200).json({error: "Assignment with the same start and end date already exists"});
+                return deleteAssociateFiles(document,
+                    "Assignment with the same start and end date already exists", res, next);
             }
 
             // check sql injection
@@ -94,33 +106,21 @@ class AssignmentController {
                 endDate.toString().includes("'") || endDate.toString().includes(";") || endDate.toString().includes("--") ||
                 duration.toString().includes("'") || duration.toString().includes(";") || duration.toString().includes("--") ||
                 courseID.toString().includes("'") || courseID.toString().includes(";") || courseID.toString().includes("--")){
-                return res.status(200).json({ error: "Invalid characters" });
+                return deleteAssociateFiles(document, "Invalid characters", res, next);
             }
 
             let newAssignment;
 
-            if (document) {
-                // Create a new assignment object
-                newAssignment = new Assignment({
-                    id: uuidv4(),
-                    courseID: course._id,
-                    startDate,
-                    duration,
-                    endDate,
-                    title,
-                    document
-                });
-            } else {
-                // Create a new assignment object
-                newAssignment = new Assignment({
-                    id: uuidv4(),
-                    courseID: course._id,
-                    startDate,
-                    duration,
-                    endDate,
-                    title
-                });
-            }
+            // Create a new assignment object
+            newAssignment = new Assignment({
+                id: uuidv4(),
+                courseID: course._id,
+                startDate,
+                duration,
+                endDate,
+                title,
+                document
+            });
 
             // Save to database
             const savedAssignment = await newAssignment.save();
@@ -134,31 +134,33 @@ class AssignmentController {
     // Solve (submit) an assignment
     async solveAssignment(req, res, next) {
         try {
-            const { assignmentID, document } = req.body; // assignmentID as v4 uuid
-            const student = await Session.findOne();
+            const { assignmentID } = req.body; // assignmentID as v4 uuid
+            const document = req.file ? req.file.path : null; // Store document path from multer
+            const student = req.user;
 
-            // Check user logged in
-            if (!student) {
-                return res.status(200).json({ error: "You must be logged in to submit an assignment" });
-            }
+            const user = await User.findOne({ id: student.id });
 
             // Validate input
             if (!assignmentID || !document) {
-                return res.status(200).json({ error: "Assignment ID and document are required" });
+                return deleteAssociateFiles(document, "Assignment ID and document are required", res, next);
+            }
+
+            if (student.role.toLowerCase() !== "student") {
+                return deleteAssociateFiles(document, "Invalid role, students only can solve", res, next);
             }
 
             // Check if the assignment exists
             const assignment =
                 await Assignment.findOne({ id: assignmentID });
             if (!assignment) {
-                return res.status(200).json({ error: "Assignment not found" });
+                return deleteAssociateFiles(document, "Assignment not found", res, next);
             }
 
             // Check if the student has already submitted an answer for this assignment
             const existingAnswer =
-                await AssignmentAnswer.findOne({ assignmentID: assignment._id, studentID: student.userID });
+                await AssignmentAnswer.findOne({ assignmentID: assignment._id, studentID: user._id });
             if (existingAnswer) {
-                return res.status(200).json({ error: "You have already submitted this assignment" });
+                return deleteAssociateFiles(document, "You have already submitted this assignment", res, next);
             }
 
             // Create a new assignment answer submission
@@ -166,7 +168,7 @@ class AssignmentController {
                 id: uuidv4(),
                 document,
                 assignmentID: assignment._id,
-                studentID: student.userID,
+                studentID: user._id,
                 grade: null // Grade can be null initially, to be graded later by the instructor
             });
 
@@ -179,15 +181,66 @@ class AssignmentController {
         }
     }
 
+    // Delete an assignment answer by assignment id & logged in student
+    async deleteAssignmentAnswer(req, res, next) {
+        try {
+            const assignmentID = req.params.id; // assignmentID as v4 uuid
+            const { studentID } = req.body;
+
+            // Validate input
+            if (!assignmentID || !studentID) {
+                return res.status(200).json({ error: "Assignment ID & Student ID are required" });
+            }
+
+            const student = await User.findOne({ id: studentID });
+            if (!student) {
+                return res.status(200).json({ error: "Student not found" });
+            }
+
+            // Check if the assignment exists
+            const assignment =
+                await Assignment.findOne({ id: assignmentID });
+            if (!assignment) {
+                return res.status(200).json({ error: "Assignment not found" });
+            }
+            console.log(assignment._id, student._id)
+
+            // Check if the student has already submitted an answer for this assignment
+            const existingAnswer =
+                await AssignmentAnswer.findOne({ assignmentID : assignment._id, studentID: student._id });
+            if (!existingAnswer) {
+                return res.status(200).json({ error: "You have not submitted this assignment" });
+            }
+
+            // Delete the student's answer file from the file system
+            const filePath = existingAnswer.document ? path.join(__dirname, '..', existingAnswer.document) : null;
+            if (filePath) {
+                fs.unlink(filePath, async (err) => {
+                    if (err) {
+                        next(`WARNING IN: Delete Assignment Answer Function => ${err}`);
+                        await AssignmentAnswer.findOneAndDelete({ _id: existingAnswer._id });
+                        return res.status(201).json({ message: "Assignment answer deleted successfully" });
+                    }
+                });
+            }
+
+            // Delete the student's answer from the database
+            await AssignmentAnswer.findOneAndDelete({ _id: existingAnswer._id });
+            return res.status(201).json({ message: "Assignment answer deleted successfully" });
+        } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occured" });
+            next(`ERROR IN: Delete Assignment Answer Function => ${err}`);
+        }
+    }
+
     // Grade an assignment
     async gradeAssignment(req, res, next) {
         try {
             const { assignmentID, studentID, grade } = req.body; // Get the assignment ID, student ID as v4 uuid
-            const instructor = await Session.findOne();
+            const instructor = req.user;
 
-            // Check if the user is logged in
-            if (!instructor) {
-                return res.status(200).json({ error: "You must be logged in to grade an assignment" });
+            if (instructor.role.toLowerCase() !== "instructor") {
+                return res.status(200).json({ error: "Invalid role of instructorId" });
             }
 
             // Validate input
@@ -205,6 +258,10 @@ class AssignmentController {
             const student = await User.findOne({ id: studentID });
             if (!student) {
                 return res.status(200).json({ error: "Student not found" });
+            }
+
+            if (student.role.toLowerCase() !== "student") {
+                return res.status(200).json({ error: "Invalid role of studentId" });
             }
 
             // Check if the student has submitted an answer for this assignment
@@ -227,14 +284,55 @@ class AssignmentController {
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {
+            const assignments = await Assignment.find().populate('courseID', 'id');
+            const user = await User.findOne({ id: req.user.id });
 
-            // Check if the user is logged in
-            if (!await Session.findOne()) {
-                return res.status(200).json({ error: "You must be logged in to create an assignment" });
+            if (user.role.toLowerCase() === "student") {
+                let myAssignments = [];
+                for (const assignment of assignments) {
+                    if (await Student_Course.findOne({ studentID: user._id, courseID: assignment.courseID })) {
+                        myAssignments.push({
+                            id: assignment.id,
+                            title: assignment.title,
+                            startDate: assignment.startDate,
+                            endDate: assignment.endDate,
+                            duration: assignment.duration,
+                            document: assignment.document,
+                            courseID: assignment.courseID.id
+                        });
+                    }
+                }
+                return res.status(201).json({ data: myAssignments });
+            } else if (user.role.toLowerCase() === "instructor") {
+                let myAssignments = [];
+                for (const assignment of assignments) {
+                    if (await Instructor_Course.findOne({ studentID: user._id, courseID: assignment.courseID })) {
+                        myAssignments.push({
+                            id: assignment.id,
+                            title: assignment.title,
+                            startDate: assignment.startDate,
+                            endDate: assignment.endDate,
+                            duration: assignment.duration,
+                            document: assignment.document,
+                            courseID: assignment.courseID.id
+                        });
+                    }
+                }
+                return res.status(201).json({ data: myAssignments });
+            } else {
+                return res.status(201).json({ data:
+                    assignments.map(assignment => ({
+                        id: assignment.id,
+                        title: assignment.title,
+                        startDate: assignment.startDate,
+                        endDate: assignment.endDate,
+                        duration: assignment.duration,
+                        document: assignment.document,
+                        courseID: assignment.courseID.id
+                    }))
+                });
             }
 
-            const assignments = await Assignment.find().populate('courseID', 'title');
-            return res.status(201).json({ data: assignments });
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Get All Assignments Function => ${err}`);
@@ -244,20 +342,22 @@ class AssignmentController {
     // Get a single assignment by ID
     async getAssignmentById(req, res, next) {
         try {
-
-            // Check if the user is logged in
-            if (!await Session.findOne()) {
-                return res.status(200).json({ error: "You must be logged in to create an assignment" });
-            }
-
             const assignmentID = req.params.id;
-            const assignment = await Assignment.findOne({ id: assignmentID }).populate('courseID', 'title');
+            const assignment = await Assignment.findOne({ id: assignmentID }).populate('courseID', 'id');
 
             if (!assignment) {
                 return res.status(200).json({ error: "Assignment not found" });
             }
 
-            return res.status(201).json({data: assignment});
+            return res.status(201).json({data: {
+                id: assignment.id,
+                title: assignment.title,
+                startDate: assignment.startDate,
+                endDate: assignment.endDate,
+                duration: assignment.duration,
+                document: assignment.document,
+                courseID: assignment.courseID.id
+            }});
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Get Assignment By ID Function => ${err}`);
@@ -271,33 +371,35 @@ class AssignmentController {
             const { title, startDate, endDate, duration } = req.body;
             const document = req.file ? req.file.path : null; // Store document path from multer
 
-            // Check if the user is logged in
-            if (!await Session.findOne()) {
-                return res.status(200).json({ error: "You must be logged in to create an assignment" });
-            }
-
             // Find the assignment
             const assignment = await Assignment.findOne({ id: assignmentID });
 
             if (!assignment) {
-                return res.status(200).json({ error: "Assignment not found" });
-            }
-
-            if (assignment.endDate < new Date()) {
-                return res.status(200).json({error: "Assignment has ended and cannot be updated"});
+                return deleteAssociateFiles(document, "Assignment not found", res, next);
             }
 
             if (!title || !startDate || !endDate || !duration) {
-                return res.status(200).json({ error: "All fields are required" });
+                return deleteAssociateFiles(document, "All fields are required", res, next);
+            }
+
+            if (document) {
+                // Get the path to the assignment document (file)
+                const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
+
+                // If a document is associated with the assignment, delete the file from the file system
+                if (filePath) {
+                    fs.unlink(filePath, async (err) => {
+                        if (err) {
+                            return deleteAssociateFiles(document, "Error updating assignment", res, next);
+                        }
+                    });
+                }
             }
 
             // Update assignment fields
             assignment.title = title; assignment.duration = duration;
             assignment.startDate = startDate; assignment.endDate = endDate;
-
-            if (document) {
-                assignment.document = document;
-            }
+            assignment.document = document;
 
             // Save the updated assignment
             const updatedAssignment = await assignment.save();
@@ -313,13 +415,8 @@ class AssignmentController {
         try {
             const assignmentID = req.params.id; // assignmentID as v4 uuid
 
-            // Check if the user is logged in
-            if (!await Session.findOne()) {
-                return res.status(200).json({ error: "You must be logged in to create an assignment" });
-            }
-
             // Find and delete the assignment
-            const assignment = await Assignment.findOneAndDelete({ id: assignmentID });
+            const assignment = await Assignment.findOne({ id: assignmentID });
 
             if (!assignment) {
                 return res.status(200).json({ error: "Assignment not found" });
@@ -328,25 +425,22 @@ class AssignmentController {
             // Get the path to the assignment document (file)
             const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
 
-            // First, delete the assignment
-            await Assignment.findOneAndDelete({ id: assignmentID });
-
             // If a document is associated with the assignment, delete the file from the file system
             if (filePath) {
-                fs.unlink(filePath, (err) => {
+                fs.unlink(filePath, async (err) => {
                     if (err) {
-                        res.status(200).json({ error: "Failed to delete associated file." });
-                        next(`ERROR IN: Delete Assignment Function => ${err}`);
-                        return;
+                        next(`WARNING IN: Delete Assignment Function => ${err}`);
+                        // CREATE FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
+                        await deleteAssignmentFiles(assignment._id);
+                        await Assignment.findOneAndDelete({ id: assignmentID });
+                        return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully` });
                     }
-
-                    // Return success response after the file and the assignment are deleted
-                    return res.status(201).json({ message: `Assignment (${assignment.title}) and associated file deleted successfully` });
                 });
-            } else {
-                // If there is no associated file, return success response for assignment deletion
-                return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully, no associated file found` });
             }
+            // CREATE FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
+            await deleteAssignmentFiles(assignment._id);
+            await Assignment.findOneAndDelete({ id: assignmentID });
+            return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully` });
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Delete Assignment Function => ${err}`);
@@ -354,11 +448,53 @@ class AssignmentController {
     }
 }
 
+// FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
+async function deleteAssignmentFiles(assignmentID) {
+    const assignmentAnswers = await AssignmentAnswer.find({ assignmentID: assignmentID });
+    let errors = [];
+
+    // Delete all answers related to the assignment
+    for (const answer of assignmentAnswers) {
+        await AssignmentAnswer.findOneAndDelete({ _id: answer._id });
+
+        // Get the path to the assignment answer document (file)
+        const filePath = answer.document ? path.join(__dirname, '..', answer.document) : null;
+
+        // If a document is associated with the assignment answer, delete the file from the file system
+        if (filePath) {
+            fs.unlink(filePath, async (err) => {
+                if (err) {
+                    errors.push(`WARNING IN: Delete Assignment File Function => ${err}`);
+                }
+            });
+        }
+    }
+
+    if (errors.length > 0) {
+        return {error: errors };
+    } else {
+        return {message: "Assignment file and all related answers deleted successfully"};
+    }
+}
+
+// Function to delete associated files if error
+function deleteAssociateFiles(document, errMsg, res, next) {
+    if (document) {
+        fs.unlink(document, (err) => {
+            if (err) {
+                next(`WARNING IN: Delete Assignment Answer Function => ${err}`);
+                return res.status(200).json({ error: errMsg });
+            }
+        });
+    }
+    return res.status(200).json({ error: errMsg });
+}
+
 // Middleware to handle the file upload
 const uploadAssignmentDoc = (req, res, next) => {
     try {
 
-        const uploadSingle = upload.single('pdf');
+        const uploadSingle = assignment_doc_upload.single('pdf');
 
         uploadSingle(req, res, function (err) {
             if (err instanceof multer.MulterError) {
@@ -381,5 +517,31 @@ const uploadAssignmentDoc = (req, res, next) => {
     }
 };
 
+// Middleware to handle the file upload
+const uploadAssignmentAnswerDoc = (req, res, next) => {
+    try {
+        const uploadSingle = assignment_answer_upload.single('pdf');
+
+        uploadSingle(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                // Multer-specific error occurred
+                res.status(200).json({error: err.message});
+                next(`ERROR IN: uploadAssignmentAnswerDoc function => ${err.message}`);
+                return;
+            } else if (err) {
+                // Other errors like invalid file types
+                res.status(200).json({error: err.message});
+                next(`ERROR IN: uploadAssignmentAnswerDoc function => ${err.message}`);
+                return;
+            }
+
+            next();
+        });
+    } catch (e) {
+        res.status(200).json({error: e.message});
+        next(`ERROR IN: uploadAssignmentAnswerDoc function => ${e.message}`);
+    }
+};
+
 // Export the controller instance
-module.exports = { Controller: new AssignmentController(), uploadAssignmentDoc };
+module.exports = { Controller: new AssignmentController(), uploadAssignmentDoc, uploadAssignmentAnswerDoc };

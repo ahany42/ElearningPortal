@@ -8,8 +8,8 @@ const VerifyTokenForAdmin = async (req, res, next) => {
   const authorization = req.headers["authorization"];
 
   if (!authorization) {
-    res.status(200).json({ error: "token is required" });
-    next("token is required");
+    res.status(200).json({ error: "You must login first" });
+    next("ERROR IN: VerifyTokenForAdmin function => Token is required");
     return;
   }
 
@@ -20,17 +20,17 @@ const VerifyTokenForAdmin = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "Invalid role" });
-      next("Invalid role");
+      res.status(200).json({ error: "You are not authorised" });
+      next("ERROR IN: VerifyTokenForAdmin function => Invalid role");
     }
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      res.status(200).json({ error: "Token expired" });
+      res.status(200).json({ error: "Session Expired, please login again" });
       await Session.deleteOne({});
     } else {
-      res.status(200).json({ error: "Invalid token" });
+      res.status(200).json({ error: "Invalid credentials" });
     }
-    next(error);
+    next(`ERROR IN: VerifyTokenForAdmin function => ${error}`);
   }
 };
 
@@ -38,8 +38,8 @@ const VerifyTokenForInstructor = async (req, res, next) => {
   const authorization = req.headers["authorization"];
 
   if (!authorization) {
-    res.status(200).json({ error: "token is required" });
-    next("token is required");
+    res.status(200).json({ error: "You must login first" });
+    next("ERROR IN: VerifyTokenForInstructor function => Token is required");
     return;
   }
 
@@ -47,19 +47,20 @@ const VerifyTokenForInstructor = async (req, res, next) => {
     let decoded = jwt.verify(authorization, Secret_Key); // change decode to authorization
     decoded.role = decoded.role.toLowerCase();
     if (decoded.role === "instructor" || decoded.role === "admin" || decoded.role === "superadmin") {
-        next();
+      req.user = decoded
+      next();
     } else {
-      res.status(200).json({ error: "Invalid role" });
-      next("Invalid role");
+      res.status(200).json({ error: "You are not authorised" });
+      next("ERROR IN: VerifyTokenForInstructor function => Invalid role");
     }
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      res.status(200).json({ error: "Token expired" });
+      res.status(200).json({ error: "Session Expired, please login again" });
       await Session.deleteOne({});
     } else {
-      res.status(200).json({ error: "Invalid token" });
+      res.status(200).json({ error: "Invalid credentials" });
     }
-    next(error);
+    next(`ERROR IN: VerifyTokenForInstructor function => ${error}`);
   }
 };
 
@@ -67,8 +68,8 @@ const VerifyTokenForStudent = async (req, res, next) => {
   const authorization = req.headers["authorization"];
 
   if (!authorization) {
-    res.status(200).json({ error: "token is required" });
-    next("token is required");
+    res.status(200).json({ error: "You must login first" });
+    next("ERROR IN: VerifyTokenForStudent function => Token is required");
     return;
   }
 
@@ -79,17 +80,17 @@ const VerifyTokenForStudent = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "Invalid role" });
-      next("Invalid role");
+      res.status(200).json({ error: "You are not authorised" });
+      next("ERROR IN: VerifyTokenForStudent function => Invalid role");
     }
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      res.status(200).json({ error: "Token expired" });
+      res.status(200).json({ error: "Session Expired, please login again" });
       await Session.deleteOne({});
     } else {
-      res.status(200).json({ error: "Invalid token" });
+      res.status(200).json({ error: "Invalid credentials" });
     }
-    next(error);
+    next(`ERROR IN: VerifyTokenForStudent function => ${error}`);
   }
 };
 
@@ -97,8 +98,8 @@ const VerifyTokenForUser = async (req, res, next) => {
   const authorization = req.headers["authorization"];
 
   if (!authorization) {
-    res.status(200).json({ error: "token is required" });
-    next("token is required");
+    res.status(200).json({ error: "You must login first" });
+    next("ERROR IN: VerifyTokenForUser function => Token is required");
     return;
   }
 
@@ -110,17 +111,17 @@ const VerifyTokenForUser = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "Invalid role" });
-      next("Invalid role");
+      res.status(200).json({ error: "You are not authorised" });
+      next("ERROR IN: VerifyTokenForUser function => Invalid role");
     }
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      res.status(200).json({ error: "Token expired" });
+      res.status(200).json({ error: "Session Expired, please login again" });
       await Session.deleteOne({});
     } else {
-      res.status(200).json({ error: "Invalid token" });
+      res.status(200).json({ error: "Invalid credentials" });
     }
-    next(error);
+    next(`ERROR IN: VerifyTokenForUser function => ${error}`);
   }
 };
 
