@@ -3,15 +3,14 @@ import './AddAssignment.css';
 import {CurrentUserContext} from "../../App.jsx";
 import {v4} from "uuid";
 import {MenuItem, Select} from "@mui/material";
-import { useParams } from 'react-router';
+
 let errorList = [];
 
-const AddAssignment = ({ addHandler, showFormHandler}) => {
-    const {id} = useParams();
+const AddAssignment = ({ addHandler, showFormHandler }) => {
     const [ error, setError ] = useState('');
     const [ form, setForm ] = useState({ title: '', desc: '', due: '', course: '' });
     const { showMessage, setCourses, courses } = useContext(CurrentUserContext);
-    const currentCourse = courses.find(course=>course.id===id);
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -68,16 +67,40 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
                     <label htmlFor="title" className="green-text bold-text">Title</label>
                     <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required/>
                 </div>
+                <div className="d-flex justify-content-between gap-3">
                     <div className="form-group justify-content-between">
                         <label htmlFor="due" className="green-text bold-text">Due Date</label>
                         <input onChange={handleChange} value={form.due}
-                               style={{height: "57px",width: "100%"}}
+                               style={{height: "57px"}}
                                type="date" id="due" name="due" required/>
-               
-                </div>
-                <div className="form-group">
-                <label htmlFor="courseTitle" className="green-text bold-text">Course Title</label>
-                <input value={currentCourse.title || "Course Not Available"} readOnly name="courseTitle"/>
+                    </div>
+                    <div className="form-group flex-grow-1">
+                        <label htmlFor="course" className="green-text bold-text">Course</label>
+                        <Select
+                            sx={{
+                                borderRadius: "8px",
+                                border: "2px solid #274546",
+                                fontWeight: "600",
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                    border: "none",
+                                }
+                            }}
+                            fullWidth
+                            value={form.course || courses[0].title}
+                            id="course"
+                            onChange={handleChange}
+                            name="course"
+                        >
+                            {courses.map((course) => (
+                                <MenuItem
+                                    key={course.id}
+                                    value={course.title}
+                                >
+                                    {course.title}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="desc" className="green-text bold-text">Description</label>
