@@ -119,7 +119,124 @@ const INITIAL_EXAMS = [
         description: "This is a Node.js assignment",
     },
 ];
-
+const INITIAL_MATERIALS =[
+  {
+    id: 1,
+    materialType: 'exam',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. John Doe',
+    title: 'Midterm Exam',
+    startDate: '2024-10-10',
+    endDate: '2024-10-15'
+  },
+  {
+    id: 2,
+    materialType: 'assignment',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Jane Smith',
+    title: 'Assignment 1',
+    startDate: '2024-10-05',
+    endDate: '2024-10-12'
+  },
+  {
+    id: 3,
+    materialType: 'announcement',
+    submitted: false,
+    solve: false,
+    instructorName: 'Prof. Michael Brown',
+    title: "",
+    startDate: '2024-10-01'
+  },
+  {
+    id: 4,
+    materialType: 'exam',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Alice White',
+    title: 'Final Exam',
+    startDate: '2024-12-01',
+    endDate: '2024-12-05'
+  },
+  {
+    id: 5,
+    materialType: 'assignment',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. John Doe',
+    title: 'Assignment 2',
+    startDate: '2024-10-15',
+    endDate: '2024-10-22'
+  },
+  {
+    id: 6,
+    materialType: 'announcement',
+    submitted: false,
+    solve: false,
+    instructorName: 'Prof. Emily Green',
+    title: '',
+    startDate: '2024-10-03'
+  },
+  {
+    id: 7,
+    materialType: 'exam',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Sarah Lee',
+    title: 'Quiz 1',
+    startDate: '2024-11-05',
+    endDate: '2024-11-07'
+  },
+  {
+    id: 8,
+    materialType: 'assignment',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Jane Smith',
+    title: 'Assignment 3',
+    startDate: '2024-11-10',
+    endDate: '2024-11-17'
+  },
+  {
+    id: 9,
+    materialType: 'announcement',
+    submitted: false,
+    solve: false,
+    instructorName: 'Prof. David Black',
+    title: '',
+    startDate: '2024-11-01'
+  },
+  {
+    id: 10,
+    materialType: 'exam',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Alice White',
+    title: 'Midterm Exam 2',
+    startDate: '2024-10-25',
+    endDate: '2024-10-30'
+  },
+  {
+    id: 11,
+    materialType: 'assignment',
+    submitted: false,
+    solve: false,
+    instructorName: 'Dr. Sarah Lee',
+    title: 'Group Project',
+    startDate: '2024-11-20',
+    endDate: '2024-12-01'
+  },
+  {
+    id: 12,
+    materialType: 'announcement',
+    submitted: false,
+    solve: false,
+    instructorName: 'Prof. Michael Brown',
+    title: '',
+    startDate: '2024-11-15'
+  }
+];
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -131,6 +248,7 @@ function App() {
     const [ currentUser, setCurrentUser ] = useState({});
     const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
     const [exams, setExams] = useState(INITIAL_EXAMS)
+    const [materials, setMaterials] = useState(INITIAL_MATERIALS)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
@@ -246,7 +364,7 @@ function App() {
             isAuthenticated, showMessage,
             setIsAuthenticated, courses,
             setCourses, setLoading,
-            setAssignments, setExams
+            setAssignments, setExams,materials
         }}
       >
         <div className="body-container">
@@ -276,7 +394,7 @@ function App() {
                   path="/deadline"
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
                 />
-                <Route path="/CourseDetails/:id" element={<CourseDetails />} />
+                <Route path="/CourseDetails/:id" element={<CourseDetails materials={materials}/>} />
                 <Route path="/StudentsList/:id" element={<StudentList />} />
                 <Route path="/InstructorsList/:id" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />

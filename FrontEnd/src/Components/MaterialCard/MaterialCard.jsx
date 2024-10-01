@@ -1,0 +1,109 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookOpen , faFileAlt ,faBullhorn} from '@fortawesome/free-solid-svg-icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../Components/CourseMaterial/CourseMaterial.css';
+let messagesList = [];
+const MaterialCard = ({material}) => {
+    {/* for testing */}
+    const seeMore=true;
+    const handleSeeMore = () => {
+        if (!messagesList.includes("seeMore")) {
+            toast("See More Coming Soon", {
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: {
+                    userSelect: 'none',
+                    gap: '10px',
+                    padding: '20px',
+                },
+                onClose: () => {
+                    messagesList = messagesList.filter(m => m !== "seeMore");
+                }
+            });
+            messagesList = [...messagesList, "seeMore"];
+        }
+    }
+  return (
+    <>
+    {
+        material.materialType === "exam" ?
+            <div className=" card material-card ">
+                <div className=" material-sub-card">
+                    <FontAwesomeIcon className="material-icon" size="3x" icon={faFileAlt} color="#274546"/>
+                    <div>
+                        <div className="material-title-due">
+                        <h6>
+                            Aly Hany posted a new exam :Exam 1
+                        </h6>
+                        </div>
+                        <h6 className="material-date">
+                            26th Sep 24 - 27th Sep 24
+                        </h6>
+                    </div>
+                    {
+                        !material.solve ?
+                            <button className="material-button blue-text bold-text">Solve</button>
+                        :
+                            <button className="material-button blue-text bold-text">See Grade</button>
+                    }
+                </div>
+            </div>
+    :   material.materialType=== "assignment" ?
+        <div className=" card material-card ">
+            <div className=" material-sub-card">
+                <FontAwesomeIcon className="material-icon" size="3x" icon={faBookOpen} color="#274546"/>
+                <div>
+                    <div className="material-title-due">
+                        <h6>
+                            Aly Hany posted a new assignment :Assignment 1
+                        </h6>
+                    </div>
+                    <h6 className="material-date">
+                        26th Sep 24 - 27th Sep 24
+                    </h6>
+                </div>
+                {
+                   material.submitted?
+                        <h6 className="material-button blue-text bold-text">Submitted</h6>
+                    :
+                        <button className="material-button blue-text bold-text">Submit</button>
+                }
+            </div>
+        </div>
+    :   material.materialType === "announcement" ?
+            <div className="material-card">
+                <div className=" card material-card ">
+                    <div className=" material-sub-card">
+                        <FontAwesomeIcon className="material-icon" size="3x" icon={faBullhorn} color="#274546"/>
+                        <div>
+                            <div className="material-title-due">
+                                <h6>
+                                    Aly Hany posted a new announcement :Due Dates has been postponed to next week b..
+                                </h6>
+                            </div>
+                            <h6 className="material-date">
+                                26th Sep 24
+                            </h6>
+                        </div>
+                        {
+                            seeMore?
+                                <h6 className="material-button blue-text bold-text" onClick={handleSeeMore}>
+                                    See More
+                                </h6>
+                            :
+                                null
+                        }
+                    </div>
+                </div>
+            </div>
+        :
+            null
+    }
+    </>
+  )
+}
+
+export default MaterialCard

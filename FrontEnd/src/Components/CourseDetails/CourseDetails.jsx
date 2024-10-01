@@ -14,7 +14,7 @@ import Placeholder from '../Placeholder/Placeholder';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CaughtUp from '../../assets/Grades.svg';
 import InstructorsList from '../InstructorsList/InstructorsList';
-const CourseDetails = () => {
+const CourseDetails = ({materials}) => {
     const {id} = useParams();
     const navigate = useNavigate();
     const { courses } = useContext(CurrentUserContext);
@@ -107,14 +107,7 @@ const CourseDetails = () => {
                   {
                       ( totalAnnouncements + totalAssignments + totalExams !== 0 ) ?
                           <div className="material-list">
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
-                              <CourseMaterial materialType = {courseMaterialType}/>
+                              <CourseMaterial/>
                           </div> :
                           <Placeholder text="You're all caught up" img={CaughtUp}/>
                   }
