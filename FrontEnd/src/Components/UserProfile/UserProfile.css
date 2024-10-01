@@ -2,6 +2,9 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 5%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .profile-container {
@@ -17,9 +20,10 @@ h1 {
     height: 270px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
 }
 
 .profile-picture p {
@@ -33,6 +37,39 @@ h1 {
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.image-upload {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.image-upload input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 2px;
+    cursor: pointer;
+    background-color: inherit;
+    color: white;
+    border: 1px solid #FAFAEE;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #FAFAEE;
+    color: black;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.file-name {
+    margin-left: 10px;
+    font-size: 14px;
 }
 
 .profile-details {
@@ -81,7 +118,6 @@ h1 {
 .data-input.read-only {
     border: none;
     background-color: inherit;
-    color: #333;
     pointer-events: none;
     cursor: default;
     color: white;
@@ -100,8 +136,13 @@ h1 {
     width: 80px;
     border: none;
     border-radius: 5px;
+    color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
+}
+
+.button-group .edit:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .button-group .change-password {
@@ -110,11 +151,11 @@ h1 {
     width: 200px;
     border: none;
     border-radius: 5px;
+    color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
 }
 
-.button-group .edit:hover,
 .button-group .change-password:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }

@@ -1,15 +1,16 @@
 import { useState, useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../../App';
-import {useLocation, useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./UserProfile.css";
-import {updateCookie} from "../Cookie/Cookie.jsx";
-import {jwtDecode} from "jwt-decode";
+import { updateCookie } from "../Cookie/Cookie.jsx";
+import { jwtDecode } from "jwt-decode";
 import avatar from '../../assets/avatar.jpg';
 
 const UserProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [profileData, setProfileData] = useState({});
+    const [fileName, setFileName] = useState('No file chosen');
     const navigate = useNavigate();
     const { showMessage, currentUser, setLoading, setCurrentUser } = useContext(CurrentUserContext);
 
@@ -18,6 +19,13 @@ const UserProfile = () => {
             setProfileData(currentUser);
         }
     }, [currentUser]);
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setFileName(file.name);
+        }
+    };
 
     const handleChange = (e) => {
         setProfileData({
@@ -42,7 +50,7 @@ const UserProfile = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({...profileData})
+            body: JSON.stringify({ ...profileData })
         })
             .then((res) => res.json())
             .then(async (data) => {
@@ -95,80 +103,77 @@ const UserProfile = () => {
 
     return (
         <>
-            <h1>User Profile</h1>
+            <h1 className="green-bg light-text">User Profile</h1>
             <div className="profile-container">
-              <div className="profile-picture green-bg light-text">
-                <img src={avatar} alt="User" />
-                <p>Student</p>
-              </div>
-              <div className="profile-details">
-                  <div className="user-data-container green-bg">
-                      <div className="user-data">
-                          <label>Name: </label>
-                          <input
-                              className={`data-input ${!isEditing ? 'read-only' : ''}`}
-                              type="text"
-                              name="name"
-                              value={profileData.name || ''}
-                              onChange={handleChange}
-                              readOnly={!isEditing}
-                          />
-                      </div>
+                <div className="profile-picture green-bg light-text">
+                    <img src={avatar} alt="User" />
 
-                    <div className="user-data">
-                      <label>Username: </label>
-                      <input
-                        className={`data-input ${!isEditing ? 'read-only' : ''}`}
-                        type="text"
-                        name="username"
-                        value={profileData.username || ""}
-                        onChange={handleChange}
-                        readOnly={!isEditing}
-                      />
-                    </div>
-
-                    <div className="user-data">
-                      <label>Email: </label>
-                      <input
-                        className={`data-input ${!isEditing ? 'read-only' : ''}`}
-                        type="email"
-                        name="email"
-                        value={profileData.email || ""}
-                        onChange={handleChange}
-                        readOnly={!isEditing}
-                      />
-                    </div>
-
-                    {isChangingPassword && (
-                        <div className='user-data'>
-                            <label>Password: </label>
-                            <input
-                                className='data-input'
-                                type="password"
-                                name="password"
-                                value={profileData.password || ''}
-                                onChange={handleChange}
-                                placeholder="Enter new password"
-                            />
+                    {isEditing && (
+                        <div className="image-upload">
+                            <label className="custom-file-upload">
+                                <input type="file" onChange={handleFileChange} />
+                                Choose File
+                            </label>
+                            <span className="file-name">{fileName}</span>
                         </div>
                     )}
 
-                    <div className='button-group'>
-                        <button className='edit green-bg light-text'
-                                onClick={isEditing? submitEditHandler:toggleEditMode}>
-                            {isEditing ? 'Save' : 'Edit'}
-                        </button>
+                    <p>Student</p>
+                </div>
+                <div className="profile-details">
+                    <div className="user-data-container green-bg">
+                        <div className="user-data">
+                            <label>Name: </label>
+                            <input
+                                className={`data-input ${!isEditing ? 'read-only' : ''}`}
+                                type="text"
+                                name="name"
+                                value={profileData.name || ''}
+                                onChange={handleChange}
+                                readOnly={!isEditing}
+                            />
+                        </div>
 
-                        <button className='change-password green-bg light-text' onClick={changePassword}>
-                            {isChangingPassword ? 'Save Password' : 'Change Password'}
-                        </button>
+                        <div className="user-data">
+                            <label>Username: </label>
+                            <input
+                                className={`data-input ${!isEditing ? 'read-only' : ''}`}
+                                type="text"
+                                name="username"
+                                value={profileData.username || ""}
+                                onChange={handleChange}
+                                readOnly={!isEditing}
+                            />
+                        </div>
+
+                        <div className="user-data">
+                            <label>Email: </label>
+                            <input
+                                className={`data-input ${!isEditing ? 'read-only' : ''}`}
+                                type="email"
+                                name="email"
+                                value={profileData.email || ""}
+                                onChange={handleChange}
+                                readOnly={!isEditing}
+                            />
+                        </div>
+
+                        <div className="button-group">
+                            <button className='edit green-bg light-text' onClick={isEditing ? submitEditHandler : toggleEditMode}>
+                                {isEditing ? 'Save' : 'Edit'}
+                            </button>
+                            <button className='change-password green-bg light-text' onClick={changePassword}>
+                                {isChangingPassword ? 'Save Password' : 'Change Password'}
+                            </button>
+                        </div>
                     </div>
-                  </div>
-              </div>
+                </div>
             </div>
         </>
     );
 };
 
 export default UserProfile;
+
+
 
