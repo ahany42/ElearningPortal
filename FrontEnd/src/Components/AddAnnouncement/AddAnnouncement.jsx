@@ -6,7 +6,7 @@ const AddAnnouncement = () => {
         announcementText: "",
       });
     const handleSubmit = ()=>{
-        toast("Coming Soon");
+        alert("Coming Soon");
     }
   return (
     <div>
