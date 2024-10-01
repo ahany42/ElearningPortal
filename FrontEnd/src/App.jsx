@@ -406,7 +406,7 @@ function App() {
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}
                 />
-                <Route path="/ExamPage" element={<ExamPage />} />
+                <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
                 <Route path="/ViewProgress/:id" element={<StudentProgress/>} />
                 <Route
                   path="*"
