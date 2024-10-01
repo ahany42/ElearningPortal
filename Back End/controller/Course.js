@@ -1,6 +1,7 @@
 const { Course, Student_Course, Instructor_Course, Exam, Assignment, User } = require('../db/Database');
 const multer = require('multer');
 const { v4 } = require('uuid');
+const path = require("path");
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -11,6 +12,20 @@ const storage = multer.diskStorage({
               cb(null, file.originalname); // Naming the file
        }
 });
+
+// File filter to only accept PDFs
+const fileFilter = (req, file, cb) => {
+       // Accept image extensions: jpg, jpeg, png, gif, webp
+       const filetypes = /jpg|jpeg|png|gif|webp/;
+       const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+       const mimetype = filetypes.test(file.mimetype);
+
+       if (mimetype && extname) {
+              return cb(null, true);
+       } else {
+              cb(new Error('Only image files are allowed!'), false);
+       }
+};
 
 const upload = multer({
        storage: storage,

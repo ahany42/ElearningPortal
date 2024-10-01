@@ -33,13 +33,6 @@ const upload = multer({
     limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
 
-// Test code
-const oldDate = new Date();
-oldDate.setTime(oldDate.getTime() + (5 * 60 * 1000));
-const date = new Date();
-date.setTime(oldDate.getTime() + (60 * 60 * 1000));
-console.log(`(${oldDate.toUTCString()})` + "\n" + `(${date.toUTCString()})` )
-
 // Controller for Assignments
 class AssignmentController {
 
