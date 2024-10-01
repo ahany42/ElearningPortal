@@ -282,8 +282,8 @@ function App() {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/AddMaterial/:id" element={<AddMaterial />} />
                 <Route path="/AddExam/:id" element={<AddExam courses={courses}/>} />
-                <Route path="/AddAnnouncement/:id" element={<AddAnnouncement />} />
-                <Route path="/AddAssignment/:id" element={<AddAssignment />} />
+                <Route path="/AddAnnouncement/:id" element={<AddAnnouncement courses={courses}/>} />
+                <Route path="/AddAssignment/:id" element={<AddAssignment courses={courses} />} />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}

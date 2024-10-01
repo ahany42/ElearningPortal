@@ -61,7 +61,7 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
         <TextField label="Course Title"
                    name="courseTitle"
                    readOnly
-                   fullWidth type="text" value={currentCourse.title}
+                   fullWidth type="text" value={currentCourse.title || "Course Not Available"}
                   //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
                   //  onChange={(e) => {
                   //      setFormData({...formData,courseTitle: e.target.value});
