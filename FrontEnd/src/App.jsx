@@ -7,6 +7,8 @@ import SignUp from "./Components/Signup/Signup.jsx";
 import UserProfile from "./Components/UserProfile/UserProfile.jsx";
 import StudentList from "./Components/StudentsList/StudentList.jsx";
 import InstructorsList from "./Components/InstructorsList/InstructorsList.jsx";
+import AddAnnouncement from "./Components/AddAnnouncement/AddAnnouncement.jsx";
+import AddAssignment from "./Components/AddAssignment/AddAssignment.jsx";
 import "./index.css";
 import {
   Routes,
@@ -38,7 +40,7 @@ import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import ENV from "../Front_ENV.jsx"; // To Be Used Later
-
+import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -275,10 +277,13 @@ function App() {
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
                 />
                 <Route path="/CourseDetails/:id" element={<CourseDetails />} />
-                <Route path="/AddExam" element={<AddExam />} />
                 <Route path="/StudentsList/:id" element={<StudentList />} />
                 <Route path="/InstructorsList/:id" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />
+                <Route path="/AddMaterial" element={<AddMaterial />} />
+                <Route path="/AddExam" element={<AddExam />} />
+                <Route path="/AddAnnouncement" element={<AddAnnouncement />} />
+                <Route path="/AddAssignment" element={<AddAssignment />} />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}

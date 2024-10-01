@@ -53,7 +53,9 @@ const CourseDetails = () => {
             return prevState;
         });
     }
-
+    const AddMaterial = ()=>{
+        navigate('./AddMaterial');
+    }
     //for testing
     const isEnrolled = false;
     const StudentsList = ()=>{
@@ -90,7 +92,10 @@ const CourseDetails = () => {
                   }
                   <h5 className="course-description">{course.desc}</h5>
               </div>
-
+            {(currentUser.role==="Instructor")&& <button className="AddButton" onClick={AddMaterial}>
+                         <FontAwesomeIcon icon={faPlus} title="Add Course"/>
+                         Add Material
+                     </button>}
               <div className="course-material card-body">
                   <h5>Added Material:</h5>
                   {
