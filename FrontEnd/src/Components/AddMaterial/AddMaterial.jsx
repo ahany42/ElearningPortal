@@ -1,20 +1,21 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Placeholder from '../Placeholder/Placeholder';
-import { useNavigate } from 'react-router';
+import { useNavigate,useParams } from 'react-router';
 import ExamImg from '../../assets/Grades.svg';
 import AssignmentImg from '../../assets/Student.svg';
 import AnnouncementImg from '../../assets/Announcement.svg';
 import './AddMaterial.css';
 const AddMaterial = () => {
+    const {id} = useParams();
     const navigate = useNavigate();
     const AddAssignment = ()=>{
-     navigate('/AddAssignment');
+     navigate(`/AddAssignment/${id}`);
     }
     const AddExam = ()=>{
-     navigate('/AddExam');
+     navigate(`/AddExam/${id}`);
     }
     const AddAnnouncement = ()=>{
-     navigate('/AddAnnouncement')
+     navigate(`/AddAnnouncement/${id}`)
     }
     //for testing
     const role ="Instructor";

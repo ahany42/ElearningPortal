@@ -55,7 +55,7 @@ const CourseDetails = () => {
         });
     }
     const AddMaterial = ()=>{
-        navigate('/AddMaterial');
+        navigate(`/AddMaterial/${course.id}`);
     }
     //for testing
     const isEnrolled = false;

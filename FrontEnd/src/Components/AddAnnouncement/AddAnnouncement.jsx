@@ -1,7 +1,9 @@
 import {useState} from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, TextField, Box } from "@mui/material";
+import { useParams } from 'react-router';
 const AddAnnouncement = () => {
+    const {id} = useParams();
     const [formData, setFormData] = useState({
         announcementText: "",
       });

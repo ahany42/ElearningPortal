@@ -3,10 +3,11 @@ import './AddAssignment.css';
 import {CurrentUserContext} from "../../App.jsx";
 import {v4} from "uuid";
 import {MenuItem, Select} from "@mui/material";
-
+import { useParams } from 'react-router';
 let errorList = [];
 
 const AddAssignment = ({ addHandler, showFormHandler }) => {
+    const {id} = useParams();
     const [ error, setError ] = useState('');
     const [ form, setForm ] = useState({ title: '', desc: '', due: '', course: '' });
     const { showMessage, setCourses, courses } = useContext(CurrentUserContext);

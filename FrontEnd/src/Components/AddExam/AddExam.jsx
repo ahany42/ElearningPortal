@@ -8,8 +8,10 @@ import {
 const steps = ['Exam Info', 'Add Questions'];
 import AddQuestions from './AddQuestions';
 import ExamInfo from './ExamInfo';
+import { useParams } from 'react-router';
 import './AddExam.css';
 const AddExam = () => {
+   const {id} = useParams();
     const [activeStep, setActiveStep] = useState(0);
     const [formData, setFormData] = useState({});
   
@@ -58,9 +60,9 @@ const AddExam = () => {
   
         <Box sx={{ mt: 2, mb: 2 }}>
           {activeStep === 0 ? (
-            <ExamInfo handleNext={handleNext} formData={formData} setFormData={setFormData} />
+            <ExamInfo handleNext={handleNext} formData={formData} setFormData={setFormData} id={id}/>
           ) : (
-            <AddQuestions handleBack={handleBack} formData={formData} setFormData={setFormData} />
+            <AddQuestions handleBack={handleBack} formData={formData} setFormData={setFormData} id={id}/>
           )}
         </Box>
       </Box>

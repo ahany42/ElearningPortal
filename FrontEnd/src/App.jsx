@@ -280,10 +280,10 @@ function App() {
                 <Route path="/StudentsList/:id" element={<StudentList />} />
                 <Route path="/InstructorsList/:id" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />
-                <Route path="/AddMaterial" element={<AddMaterial />} />
-                <Route path="/AddExam" element={<AddExam />} />
-                <Route path="/AddAnnouncement" element={<AddAnnouncement />} />
-                <Route path="/AddAssignment" element={<AddAssignment />} />
+                <Route path="/AddMaterial/:id" element={<AddMaterial />} />
+                <Route path="/AddExam/:id" element={<AddExam courses={courses}/>} />
+                <Route path="/AddAnnouncement/:id" element={<AddAnnouncement />} />
+                <Route path="/AddAssignment/:id" element={<AddAssignment />} />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}

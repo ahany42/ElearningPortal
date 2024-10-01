@@ -6,11 +6,14 @@ import {
 import { useState } from "react";
 import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { styled } from '@mui/material/styles';
+import { useContext } from "react";
+import { CurrentUserContext } from '../../App';
 import './AddExam.css';
-const ExamInfo = ({ handleNext, formData, setFormData }) => {
+const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
     const [sDate, setSDate] = useState(null);
     const [eDate, setEDate] = useState(null);
+    const { courses } = useContext(CurrentUserContext);
+    const currentCourse = courses.find(course=>course.id===id);
     const handleSubmit = ()=>{
 
     }
@@ -58,7 +61,7 @@ const ExamInfo = ({ handleNext, formData, setFormData }) => {
         <TextField label="Course Title"
                    name="courseTitle"
                    readOnly
-                   fullWidth type="text" value="Hi"
+                   fullWidth type="text" value={currentCourse.title}
                   //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
                   //  onChange={(e) => {
                   //      setFormData({...formData,courseTitle: e.target.value});
