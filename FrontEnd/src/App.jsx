@@ -238,78 +238,104 @@ const INITIAL_MATERIALS =[
     announcement:"Grades are Out!"
   }
 ];
-const INITIAL_STUDENTLIST = [
+const INITIAL_STUDENTS_LIST = [
   {
     id: 1,
     name: "John Doe",
     username: "john_doe1",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 2,
     name: "Emily Smith",
     username: "emily_smi",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 3,
     name: "Michael Johnson",
     username: "michael_j",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 4,
     name: "Sophia Williams",
     username: "sophia_wi",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 5,
     name: "David Brown",
     username: "david_bro",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 6,
     name: "Olivia Garcia",
     username: "olivia_ga",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: "933831c7-41de-4deb-ad57-129d0e9ed3ca",
     name: "Aly Hany",
     username: "alyhany04",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 8,
     name: "Lily Anderson",
     username: "lily_and",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 9,
     name: "James Lee",
     username: "james_lee",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 10,
     name: "Amelia Taylor",
     username: "amelia_ta",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 11,
     name: "Lucas White",
     username: "lucas_whi",
-    imgPath: "ReactImg"
+    imgPath: ""
   },
   {
     id: 12,
     name: "Isabella Harris",
     username: "isabella_",
-    imgPath: "ReactImg"
+    imgPath: ""
+  }
+];
+const INITIAL_INSTRUCTORS_LIST = [
+  {
+    id: 1,
+    name: "Alice Cooper",
+    username: "alice_coo",
+    imgPath: "InstructorImg"
+  },
+  {
+    id: 2,
+    name: "Bob Johnson",
+    username: "bob_johns",
+    imgPath: ""
+  },
+  {
+    id: 3,
+    name: "Charlie Brown",
+    username: "charlie_b",
+    imgPath: ""
+  },
+  {
+    id: 4,
+    name: "Diane Evans",
+    username: "diane_eva",
+    imgPath: ""
   }
 ];
 
@@ -324,7 +350,8 @@ function App() {
     const [ currentUser, setCurrentUser ] = useState({});
     const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
     const [exams, setExams] = useState(INITIAL_EXAMS)
-    const [studentList, setStudentList] = useState(INITIAL_STUDENTLIST)
+    const [studentsList, setStudentsList] = useState(INITIAL_STUDENTS_LIST)
+    const [instructorsList, setInstructorsList] = useState(INITIAL_INSTRUCTORS_LIST)
     const [materials, setMaterials] = useState(INITIAL_MATERIALS)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
@@ -441,7 +468,7 @@ function App() {
             isAuthenticated, showMessage,
             setIsAuthenticated, courses,
             setCourses, setLoading,
-            setAssignments, setExams,materials,studentList
+            setAssignments, setExams,materials,studentsList,instructorsList
         }}
       >
         <div className="body-container">
@@ -472,8 +499,8 @@ function App() {
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
                 />
                 <Route path="/CourseDetails/:id" element={<CourseDetails materials={materials}/>} />
-                <Route path="/StudentsList/:id" element={<StudentList />} />
-                <Route path="/InstructorsList/:id" element={<InstructorsList />} />
+                <Route path="/CourseDetails/:id/StudentsList" element={<StudentList />} />
+                <Route path="/CourseDetails/:id/InstructorsList" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/AddMaterial/:id" element={<AddMaterial />} />
                 <Route path="/AddExam/:id" element={<AddExam courses={courses}/>} />

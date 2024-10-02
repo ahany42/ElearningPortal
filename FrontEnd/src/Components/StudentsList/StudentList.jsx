@@ -5,12 +5,12 @@ import { CurrentUserContext } from "../../App.jsx";
 const StudentList = () => {
   //course id
     const {id} = useParams();
-    const { studentList } = useContext(CurrentUserContext);
+    const { studentsList } = useContext(CurrentUserContext);
   
    return(
     <>
-     <h5 className="sub-title">Enrolled Students: </h5>
-     {studentList.map(student=>(
+     <h5 className="sub-title">{studentsList.length} Enrolled Students: </h5>
+     {studentsList.map(student=>(
       <UserCard isStudent={true} student={student} key={student.id}/>  ))}
     </>
    )

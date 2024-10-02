@@ -60,10 +60,10 @@ const CourseDetails = ({materials}) => {
     //for testing
     const isEnrolled = false;
     const StudentsList = ()=>{
-        navigate(`/StudentsList/${id}`)
+        navigate(`/CourseDetails/${id}/StudentsList`)
     }
     const InstructorsList = ()=>{
-        navigate(`/InstructorsList/${id}`)
+        navigate(`/CourseDetails/${id}/InstructorsList`)
     }
     const course = courses.find(course => course.id === id);
 

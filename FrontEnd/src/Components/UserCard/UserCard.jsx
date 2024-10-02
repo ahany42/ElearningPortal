@@ -6,7 +6,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import { CurrentUserContext } from "../../App.jsx";
 import './UserCard.css';
-const UserCard = ({isStudent , student}) => {
+const UserCard = ({isStudent , student,instructor}) => {
   const { currentUser} = useContext(CurrentUserContext);
   const navigate = useNavigate ();
   const RemoveStudent = ()=>{
@@ -25,11 +25,11 @@ const UserCard = ({isStudent , student}) => {
         <div className="user-details-container">
             <div className="user-details">
             <h6>
-              {isStudent? student.name:null}
+              {isStudent? student.name:instructor.name}
             </h6>
             </div>
             <h6 className="user-name">
-            {isStudent? student.username:null}
+            {isStudent? student.username:instructor.username}
             </h6>
         </div>
         

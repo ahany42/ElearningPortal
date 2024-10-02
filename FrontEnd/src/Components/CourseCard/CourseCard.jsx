@@ -89,7 +89,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     }
 
     const ShowStudentsList= ()=>{
-        navigate(`/StudentsList/${id}`)
+        navigate(`/CourseDetails/${id}/StudentsList`)
     }
     // For testing
     const isEnrolled = false; // Will be included in each course object (After API Implementation)
