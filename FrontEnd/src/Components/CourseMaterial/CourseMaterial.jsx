@@ -14,14 +14,14 @@ const CourseMaterial = () => {
     // const solved = true;
     //for testing
     // const seeMore = true;
-    const materialList = materials.map(material=>{
-        return (
-            <MaterialCard key={material.id} material={material} />
-        );
-    });
+ 
     return (
    <>
-   {materialList}
+    {materials.map(material=>
+        (
+            <MaterialCard key={material.id} material={material} />
+        )
+    )}
    </>
     )
 }
