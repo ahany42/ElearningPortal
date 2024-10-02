@@ -3,7 +3,7 @@ import {
   } from "@mui/material";
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { useState } from 'react';
-const Question = (formData) => {
+const Question = ({formData,setFormData}) => {
     const [value,setValue] = useState(null);
     const handleChange = (event)=>{
         setValue(event.target.value);
@@ -168,10 +168,10 @@ const Question = (formData) => {
         onChange={handleChange}
         sx={{ display: 'flex', flexDirection: 'row' }}
       >
-        <FormControlLabel value="answer1" control={<Radio />} label="Answer 1" />
-        <FormControlLabel value="answer2" control={<Radio />} label="Answer 2" />
-        <FormControlLabel value="answer3" control={<Radio />} label="Answer 3" />
-        <FormControlLabel value="answer4" control={<Radio />} label="Answer 4" />
+        <FormControlLabel value="choice1" control={<Radio />} label="Choice 1" />
+        <FormControlLabel value="choice2" control={<Radio />} label="Choice 2" />
+        <FormControlLabel value="choice3" control={<Radio />} label="Choice 3" />
+        <FormControlLabel value="choice4" control={<Radio />} label="Choice 4" />
       </RadioGroup>
     <hr/>
     </>
