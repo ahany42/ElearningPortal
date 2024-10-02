@@ -338,7 +338,24 @@ const INITIAL_INSTRUCTORS_LIST = [
     imgPath: ""
   }
 ];
-
+const INITIAL_PROGRESS =[{
+  id:1,
+  title:"Exam 1",
+  isExam:true,
+  submissionDate:"30 Sep 9:00",
+  deadline:"1 Oct 9:00",
+  grade:"30",
+  onTime:true,
+} ,{
+  id:2,
+  title:"Assignment 1",
+  isExam:false,
+  submissionDate:"30 Sep 9:00",
+  deadline:"29 Sep 9:00",
+  grade:"",
+  onTime:false,
+}
+]  
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -353,6 +370,7 @@ function App() {
     const [studentsList, setStudentsList] = useState(INITIAL_STUDENTS_LIST)
     const [instructorsList, setInstructorsList] = useState(INITIAL_INSTRUCTORS_LIST)
     const [materials, setMaterials] = useState(INITIAL_MATERIALS)
+    const [progress, setProgress] = useState(INITIAL_PROGRESS)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
@@ -467,7 +485,7 @@ function App() {
             currentUser, setCurrentUser,
             isAuthenticated, showMessage,
             setIsAuthenticated, courses,
-            setCourses, setLoading,
+            setCourses, setLoading,progress,
             setAssignments, setExams,materials,studentsList,instructorsList
         }}
       >
