@@ -435,6 +435,11 @@ function App() {
             return [...prevState, newCourse]
         });
     };
+    const addAssignmentHandler = (newAssignment) => {
+      setAssignments((prevState) => {
+        return [...prevState, newAssignment];
+      });
+    };
 
 
     const showMessage = (msg, error) => {
@@ -482,11 +487,20 @@ function App() {
     return (
       <CurrentUserContext.Provider
         value={{
-            currentUser, setCurrentUser,
-            isAuthenticated, showMessage,
-            setIsAuthenticated, courses,
-            setCourses, setLoading,progress,
-            setAssignments, setExams,materials,studentsList,instructorsList
+          currentUser,
+          setCurrentUser,
+          isAuthenticated,
+          showMessage,
+          setIsAuthenticated,
+          courses,
+          setCourses,
+          setLoading,
+          progress,
+          setAssignments,
+          setExams,
+          materials,
+          studentsList,
+          instructorsList,
         }}
       >
         <div className="body-container">
@@ -514,22 +528,46 @@ function App() {
                 />
                 <Route
                   path="/deadline"
-                  element={<DeadlinesPage assignments={assignments} exams={exams} />}
+                  element={
+                    <DeadlinesPage assignments={assignments} exams={exams} />
+                  }
                 />
-                <Route path="/CourseDetails/:id" element={<CourseDetails materials={materials}/>} />
-                <Route path="/CourseDetails/:id/StudentsList" element={<StudentList />} />
-                <Route path="/CourseDetails/:id/InstructorsList" element={<InstructorsList />} />
+                <Route
+                  path="/CourseDetails/:id"
+                  element={<CourseDetails materials={materials} />}
+                />
+                <Route
+                  path="/CourseDetails/:id/StudentsList"
+                  element={<StudentList />}
+                />
+                <Route
+                  path="/CourseDetails/:id/InstructorsList"
+                  element={<InstructorsList />}
+                />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/AddMaterial/:id" element={<AddMaterial />} />
-                <Route path="/AddExam/:id" element={<AddExam courses={courses}/>} />
-                <Route path="/AddAnnouncement/:id" element={<AddAnnouncement courses={courses}/>} />
-                <Route path="/AddAssignment/:id" element={<AddAssignment courses={courses} />} />
+                <Route
+                  path="/AddExam/:id"
+                  element={<AddExam courses={courses} />}
+                />
+                <Route
+                  path="/AddAnnouncement/:id"
+                  element={<AddAnnouncement courses={courses} />}
+                />
+                <Route
+                  path="/AddAssignment/:id"
+                  element={
+                    <AddAssignment
+                      addHandler={addAssignmentHandler}
+                    />
+                  }
+                />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}
                 />
                 <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
-                <Route path="/ViewProgress/:id" element={<StudentProgress/>} />
+                <Route path="/ViewProgress/:id" element={<StudentProgress />} />
                 <Route
                   path="*"
                   element={
