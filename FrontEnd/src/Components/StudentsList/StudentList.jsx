@@ -1,23 +1,19 @@
 import { useParams } from 'react-router';
 import UserCard from '../UserCard/UserCard';
+import { useContext } from 'react';
+import { CurrentUserContext } from "../../App.jsx";
 const StudentList = () => {
+  //course id
     const {id} = useParams();
-  return (
+    const { studentList } = useContext(CurrentUserContext);
+  
+   return(
     <>
      <h5 className="sub-title">Enrolled Students: </h5>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
-     <UserCard isStudent={true}/>
+     {studentList.map(student=>(
+      <UserCard isStudent={true} student={student} key={student.id}/>  ))}
     </>
-  )
+   )
 }
 
 export default StudentList

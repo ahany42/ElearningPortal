@@ -36,11 +36,11 @@ const MaterialCard = ({material}) => {
                     <div>
                         <div className="material-title-due">
                         <h6>
-                            Aly Hany posted a new exam :Exam 1
+                           {material.instructorName} posted a new exam :{material.title}
                         </h6>
                         </div>
                         <h6 className="material-date">
-                            26th Sep 24 - 27th Sep 24
+                            {material.startDate} - {material.endDate}
                         </h6>
                     </div>
                     {
@@ -58,11 +58,11 @@ const MaterialCard = ({material}) => {
                 <div>
                     <div className="material-title-due">
                         <h6>
-                            Aly Hany posted a new assignment :Assignment 1
+                        {material.instructorName} posted a new assignment :{material.title}
                         </h6>
                     </div>
                     <h6 className="material-date">
-                        26th Sep 24 - 27th Sep 24
+                    {material.startDate} - {material.endDate}
                     </h6>
                 </div>
                 {
@@ -81,11 +81,11 @@ const MaterialCard = ({material}) => {
                         <div>
                             <div className="material-title-due">
                                 <h6>
-                                    Aly Hany posted a new announcement :Due Dates has been postponed to next week b..
+                                {material.instructorName} posted a new announcement :{material.announcement}
                                 </h6>
                             </div>
                             <h6 className="material-date">
-                                26th Sep 24
+                            {material.startDate}
                             </h6>
                         </div>
                         {

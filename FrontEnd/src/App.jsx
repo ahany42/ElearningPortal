@@ -41,6 +41,7 @@ import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
+import { Announcement } from "@mui/icons-material";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -127,8 +128,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. John Doe',
     title: 'Midterm Exam',
-    startDate: '2024-10-10',
-    endDate: '2024-10-15'
+    startDate: '27 Jun 24',
+    endDate: '3 Jul 24'
   },
   {
     id: 2,
@@ -137,8 +138,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Jane Smith',
     title: 'Assignment 1',
-    startDate: '2024-10-05',
-    endDate: '2024-10-12'
+    startDate: '2 Jul 24',
+    endDate: '2 Aug 24'
   },
   {
     id: 3,
@@ -146,8 +147,8 @@ const INITIAL_MATERIALS =[
     submitted: false,
     solve: false,
     instructorName: 'Prof. Michael Brown',
-    title: "",
-    startDate: '2024-10-01'
+    startDate: '3 Jul 24',
+    announcement:"Exam Has Been Postponed to next Tuesday"
   },
   {
     id: 4,
@@ -156,8 +157,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Alice White',
     title: 'Final Exam',
-    startDate: '2024-12-01',
-    endDate: '2024-12-05'
+    startDate: '3 Aug 24',
+    endDate: '3 Sep 24'
   },
   {
     id: 5,
@@ -166,8 +167,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. John Doe',
     title: 'Assignment 2',
-    startDate: '2024-10-15',
-    endDate: '2024-10-22'
+    startDate: '9 Oct 24',
+    endDate: '10 Oct 24'
   },
   {
     id: 6,
@@ -175,8 +176,8 @@ const INITIAL_MATERIALS =[
     submitted: false,
     solve: false,
     instructorName: 'Prof. Emily Green',
-    title: '',
-    startDate: '2024-10-03'
+    startDate: '12 Oct 24',
+     announcement:"Grades are Out!"
   },
   {
     id: 7,
@@ -185,8 +186,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Sarah Lee',
     title: 'Quiz 1',
-    startDate: '2024-11-05',
-    endDate: '2024-11-07'
+    startDate: '10 Nov 24',
+    endDate: '11 Nov 24'
   },
   {
     id: 8,
@@ -195,8 +196,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Jane Smith',
     title: 'Assignment 3',
-    startDate: '2024-11-10',
-    endDate: '2024-11-17'
+    startDate: '21 Nov 24',
+    endDate: '23 Nov 24'
   },
   {
     id: 9,
@@ -204,8 +205,8 @@ const INITIAL_MATERIALS =[
     submitted: false,
     solve: false,
     instructorName: 'Prof. David Black',
-    title: '',
-    startDate: '2024-11-01'
+    startDate: '30 Nov 24',
+     announcement:"Check Your Emails."
   },
   {
     id: 10,
@@ -214,8 +215,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Alice White',
     title: 'Midterm Exam 2',
-    startDate: '2024-10-25',
-    endDate: '2024-10-30'
+    startDate: '11 Dec 24',
+    endDate: '12 Dec 24'
   },
   {
     id: 11,
@@ -224,8 +225,8 @@ const INITIAL_MATERIALS =[
     solve: false,
     instructorName: 'Dr. Sarah Lee',
     title: 'Group Project',
-    startDate: '2024-11-20',
-    endDate: '2024-12-01'
+    startDate: '15 Dec 24',
+    endDate: '30 Dec 24'
   },
   {
     id: 12,
@@ -233,10 +234,85 @@ const INITIAL_MATERIALS =[
     submitted: false,
     solve: false,
     instructorName: 'Prof. Michael Brown',
-    title: '',
-    startDate: '2024-11-15'
+    startDate: '20 Dec 24',
+    announcement:"Grades are Out!"
   }
 ];
+const INITIAL_STUDENTLIST = [
+  {
+    id: 1,
+    name: "John Doe",
+    username: "john_doe1",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 2,
+    name: "Emily Smith",
+    username: "emily_smi",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 3,
+    name: "Michael Johnson",
+    username: "michael_j",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 4,
+    name: "Sophia Williams",
+    username: "sophia_wi",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 5,
+    name: "David Brown",
+    username: "david_bro",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 6,
+    name: "Olivia Garcia",
+    username: "olivia_ga",
+    imgPath: "ReactImg"
+  },
+  {
+    id: "933831c7-41de-4deb-ad57-129d0e9ed3ca",
+    name: "Aly Hany",
+    username: "alyhany04",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 8,
+    name: "Lily Anderson",
+    username: "lily_and",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 9,
+    name: "James Lee",
+    username: "james_lee",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 10,
+    name: "Amelia Taylor",
+    username: "amelia_ta",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 11,
+    name: "Lucas White",
+    username: "lucas_whi",
+    imgPath: "ReactImg"
+  },
+  {
+    id: 12,
+    name: "Isabella Harris",
+    username: "isabella_",
+    imgPath: "ReactImg"
+  }
+];
+
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -248,6 +324,7 @@ function App() {
     const [ currentUser, setCurrentUser ] = useState({});
     const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
     const [exams, setExams] = useState(INITIAL_EXAMS)
+    const [studentList, setStudentList] = useState(INITIAL_STUDENTLIST)
     const [materials, setMaterials] = useState(INITIAL_MATERIALS)
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
@@ -364,7 +441,7 @@ function App() {
             isAuthenticated, showMessage,
             setIsAuthenticated, courses,
             setCourses, setLoading,
-            setAssignments, setExams,materials
+            setAssignments, setExams,materials,studentList
         }}
       >
         <div className="body-container">

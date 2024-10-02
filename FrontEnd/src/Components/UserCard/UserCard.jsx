@@ -6,22 +6,18 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import { CurrentUserContext } from "../../App.jsx";
 import './UserCard.css';
-const UserCard = ({isStudent}) => {
+const UserCard = ({isStudent , student}) => {
+  const { currentUser} = useContext(CurrentUserContext);
   const navigate = useNavigate ();
   const RemoveStudent = ()=>{
-    console.log(currentUser);
     alert("Remove Student coming soon");
   }
   const RemoveInstructor = ()=>{
     alert("Remove Instructor coming soon");
   }
   const ViewProgress = ()=>{
-    navigate(`/ViewProgress/${studentId}`)
+    navigate(`/ViewProgress/${student.id}`)
   }
-  const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
-  //for testing
-  //studnetId to equal current student id in list of students
-  let studentId = 1;
   return (
     <div className=" card user-card ">
     <div className=" user-sub-card">
@@ -29,17 +25,17 @@ const UserCard = ({isStudent}) => {
         <div className="user-details-container">
             <div className="user-details">
             <h6>
-              Aly Hany
+              {isStudent? student.name:null}
             </h6>
             </div>
             <h6 className="user-name">
-                ahany 
+            {isStudent? student.username:null}
             </h6>
         </div>
         
     {((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin"))  && <FontAwesomeIcon className="remove-user-button" icon={faTrash} onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>}
-    {((currentUser.role === "Student") && (currentUser.id === studentId)) && <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> My Progress</button>}
-    {((currentUser.role === "Instructor") || true )&& <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> Progress</button>}
+    {((currentUser.role === "Student") && (currentUser.id === student.id)) && <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> My Progress</button>}
+    {((currentUser.role === "Instructor") )&& <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> Progress</button>}
     </div>
 </div>
   )

@@ -42,8 +42,6 @@
 }
 .user-details{
     display: flex;
-    align-items: center;
-    text-align: center;
 }
 .progress-button{
     position:absolute;
