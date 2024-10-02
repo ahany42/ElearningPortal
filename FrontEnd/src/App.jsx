@@ -121,122 +121,122 @@ const INITIAL_EXAMS = [
     },
 ];
 const INITIAL_MATERIALS =[
-  {
-    id: 1,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. John Doe',
-    title: 'Midterm Exam',
-    startDate: '27 Jun 24',
-    endDate: '3 Jul 24'
-  },
-  {
-    id: 2,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Jane Smith',
-    title: 'Assignment 1',
-    startDate: '2 Jul 24',
-    endDate: '2 Aug 24'
-  },
-  {
-    id: 3,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Michael Brown',
-    startDate: '3 Jul 24',
-    announcement:"Exam Has Been Postponed to next Tuesday"
-  },
-  {
-    id: 4,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Alice White',
-    title: 'Final Exam',
-    startDate: '3 Aug 24',
-    endDate: '3 Sep 24'
-  },
-  {
-    id: 5,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. John Doe',
-    title: 'Assignment 2',
-    startDate: '9 Oct 24',
-    endDate: '10 Oct 24'
-  },
-  {
-    id: 6,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Emily Green',
-    startDate: '12 Oct 24',
-     announcement:"Grades are Out!"
-  },
-  {
-    id: 7,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Sarah Lee',
-    title: 'Quiz 1',
-    startDate: '10 Nov 24',
-    endDate: '11 Nov 24'
-  },
-  {
-    id: 8,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Jane Smith',
-    title: 'Assignment 3',
-    startDate: '21 Nov 24',
-    endDate: '23 Nov 24'
-  },
-  {
-    id: 9,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. David Black',
-    startDate: '30 Nov 24',
-     announcement:"Check Your Emails."
-  },
-  {
-    id: 10,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Alice White',
-    title: 'Midterm Exam 2',
-    startDate: '11 Dec 24',
-    endDate: '12 Dec 24'
-  },
-  {
-    id: 11,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Sarah Lee',
-    title: 'Group Project',
-    startDate: '15 Dec 24',
-    endDate: '30 Dec 24'
-  },
-  {
-    id: 12,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Michael Brown',
-    startDate: '20 Dec 24',
-    announcement:"Grades are Out!"
-  }
+  // {
+  //   id: 1,
+  //   materialType: 'exam',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. John Doe',
+  //   title: 'Midterm Exam',
+  //   startDate: '27 Jun 24',
+  //   endDate: '3 Jul 24'
+  // },
+  // {
+  //   id: 2,
+  //   materialType: 'assignment',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Jane Smith',
+  //   title: 'Assignment 1',
+  //   startDate: '2 Jul 24',
+  //   endDate: '2 Aug 24'
+  // },
+  // {
+  //   id: 3,
+  //   materialType: 'announcement',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Prof. Michael Brown',
+  //   startDate: '3 Jul 24',
+  //   announcement:"Exam Has Been Postponed to next Tuesday"
+  // },
+  // {
+  //   id: 4,
+  //   materialType: 'exam',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Alice White',
+  //   title: 'Final Exam',
+  //   startDate: '3 Aug 24',
+  //   endDate: '3 Sep 24'
+  // },
+  // {
+  //   id: 5,
+  //   materialType: 'assignment',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. John Doe',
+  //   title: 'Assignment 2',
+  //   startDate: '9 Oct 24',
+  //   endDate: '10 Oct 24'
+  // },
+  // {
+  //   id: 6,
+  //   materialType: 'announcement',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Prof. Emily Green',
+  //   startDate: '12 Oct 24',
+  //    announcement:"Grades are Out!"
+  // },
+  // {
+  //   id: 7,
+  //   materialType: 'exam',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Sarah Lee',
+  //   title: 'Quiz 1',
+  //   startDate: '10 Nov 24',
+  //   endDate: '11 Nov 24'
+  // },
+  // {
+  //   id: 8,
+  //   materialType: 'assignment',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Jane Smith',
+  //   title: 'Assignment 3',
+  //   startDate: '21 Nov 24',
+  //   endDate: '23 Nov 24'
+  // },
+  // {
+  //   id: 9,
+  //   materialType: 'announcement',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Prof. David Black',
+  //   startDate: '30 Nov 24',
+  //    announcement:"Check Your Emails."
+  // },
+  // {
+  //   id: 10,
+  //   materialType: 'exam',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Alice White',
+  //   title: 'Midterm Exam 2',
+  //   startDate: '11 Dec 24',
+  //   endDate: '12 Dec 24'
+  // },
+  // {
+  //   id: 11,
+  //   materialType: 'assignment',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Dr. Sarah Lee',
+  //   title: 'Group Project',
+  //   startDate: '15 Dec 24',
+  //   endDate: '30 Dec 24'
+  // },
+  // {
+  //   id: 12,
+  //   materialType: 'announcement',
+  //   submitted: false,
+  //   solve: false,
+  //   instructorName: 'Prof. Michael Brown',
+  //   startDate: '20 Dec 24',
+  //   announcement:"Grades are Out!"
+  // }
 ];
 const INITIAL_STUDENTS_LIST = [
   {
@@ -559,6 +559,7 @@ function App() {
                   element={
                     <AddAssignment
                       addHandler={addAssignmentHandler}
+                      assignments={assignments}
                     />
                   }
                 />
