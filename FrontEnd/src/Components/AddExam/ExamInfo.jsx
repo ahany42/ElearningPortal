@@ -198,7 +198,7 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
     </Box>
       </form>
 
-        <Button variant="contained" onClick={handleNext} className="stepper-button">
+        <Button variant="contained" onClick={handleNext} className="stepper-button pascalCase-text">
             Next
         </Button>
     </Box>

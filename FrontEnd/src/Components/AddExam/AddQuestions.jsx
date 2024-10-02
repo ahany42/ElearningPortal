@@ -2,14 +2,15 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { useContext} from "react";
+import { useContext } from "react";
 import Question from "../Question/Question";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CurrentUserContext } from '../../App';
 import './AddExam.css';
 const AddQuestions = ({ handleBack, formData, setFormData,id }) => {
   const { courses } = useContext(CurrentUserContext);
   const currentCourse = courses.find(course=>course.id===id);
-  
   const handleSubmit = ()=>{
 
   }
@@ -21,10 +22,14 @@ const AddQuestions = ({ handleBack, formData, setFormData,id }) => {
       <form onSubmit={handleSubmit}>
        <Question formData={formData} setFormData={setFormData} />
           </form>
-        <Button variant="contained" className="stepper-button stepper-back-button" onClick={handleBack}>
+          <button className="add-question-button AddButton">
+            <FontAwesomeIcon icon={faPlus} title="Add Question"/>
+             Add Question
+            </button>
+        <Button variant="contained" className="stepper-button stepper-back-button pascalCase-text" onClick={handleBack}>
           Back
         </Button>
-        <Button variant="contained" className="stepper-button" >
+        <Button variant="contained" className="stepper-button pascalCase-text" >
           Submit
         </Button>
       </Box>
