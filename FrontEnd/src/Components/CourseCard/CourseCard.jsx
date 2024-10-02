@@ -129,7 +129,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                            <div className="alignCenter stats-button" onClick={ShowStudentsList}>
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>

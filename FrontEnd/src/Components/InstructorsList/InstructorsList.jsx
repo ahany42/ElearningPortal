@@ -8,9 +8,9 @@ const InstructorsList = () => {
     const {id} = useParams();
     return (
     <>
-     <h5 className="sub-title">Course Instructors: </h5>
+     <h5 className="sub-title">{instructorsList.length} Course Instructors: </h5>
      {instructorsList.map(instructor=>(
-      <UserCard instructor={instructor}/>
+      <UserCard isStudent={false} instructor={instructor} key={instructor.id} student={false}/>
      ))}
     </>
   )

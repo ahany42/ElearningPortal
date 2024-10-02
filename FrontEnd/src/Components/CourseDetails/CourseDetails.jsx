@@ -84,9 +84,9 @@ const CourseDetails = ({materials}) => {
                   <img src={ReactImg} alt="Course Photo"/>
                   <div className="course-stats">
                       <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
-                      <h6 className="stats" onClick={StudentsList}>20 <FontAwesomeIcon icon={faUser}/></h6>
-                      <h6 className="stats" onClick={InstructorsList}>3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
-                      <h6 className="stats">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
+                      <h6 className="stats stats-button" onClick={StudentsList}>20 <FontAwesomeIcon icon={faUser}/></h6>
+                      <h6 className="stats stats-button" onClick={InstructorsList}>3 <FontAwesomeIcon icon={faChalkboardTeacher}/></h6>
+                      <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                   </div>
                   {
                       ( currentUser.role==="Student" || currentUser.role === "Instructor" || currentUser.role === "" ) ?

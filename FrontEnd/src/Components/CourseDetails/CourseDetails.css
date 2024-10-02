@@ -51,3 +51,6 @@
 .add-material-button-container{
     width: 90%;
 }
+.stats-button:hover{
+    color:#1330BE ;
+}
