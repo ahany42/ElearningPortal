@@ -1,13 +1,13 @@
-import React, {useContext, useState} from "react";
-import './AddAssignment.css';
-import {CurrentUserContext} from "../../App.jsx";
-import {v4} from "uuid";
-import {MenuItem, Select} from "@mui/material";
-import {  useNavigate, useParams } from "react-router";
+import React, { useContext, useState } from "react";
+import "./AddAssignment.css";
+import { CurrentUserContext } from "../../App.jsx";
+import { v4 } from "uuid";
+import { MenuItem, Select } from "@mui/material";
+import { useNavigate, useParams } from "react-router";
 
 let errorList = [];
 
-const AddAssignment = ({ addHandler }) => {
+const AddAssignment = ({ addHandler, showFormHandler }) => {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     title: "",
@@ -15,10 +15,9 @@ const AddAssignment = ({ addHandler }) => {
     due: "",
     course: "",
   });
-  const {id}=useParams();
-  const navigate=useNavigate(null)
-  const [showForm, setShowForm] = useState(false);
-  const { showMessage } = useContext(CurrentUserContext);
+  const { id } = useParams();
+  const navigate = useNavigate(null);
+  const { showMessage, courses } = useContext(CurrentUserContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,26 +44,35 @@ const AddAssignment = ({ addHandler }) => {
       }
     }
   };
-  const showFormHandler = () => {
-    setShowForm(!showForm);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!e.target.checkValidity()) return;
     if (errorList.length) return;
 
-    const { title, desc, due } = e.target;
-    addHandler({
+    if (id) {
+      const { title, desc, due } = e.target;
+      addHandler({
         title: title.value,
-      description: desc.value,
-      id: v4(),
-      dueDate: due.value,
-      courseID:id
-    });
-    showMessage("Course added successfully", false);
-    showFormHandler();
-    navigate(`/CourseDetails/${id}`);
+        description: desc.value,
+        id: v4(),
+        dueDate: due.value,
+        courseID: id,
+      });
+      showMessage("Course added successfully", false);
+      navigate(`/CourseDetails/${id}`);
+    } else {
+      const { title, desc, due, course } = e.target;
+      addHandler({
+        title: title.value,
+        description: desc.value,
+        id: v4(),
+        dueDate: due.value,
+        courseID: courses.find((c) => c.title === course.value).id,
+      });
+      showMessage("Course added successfully", false);
+      showFormHandler();
+    }
   };
 
   return (
@@ -95,7 +103,7 @@ const AddAssignment = ({ addHandler }) => {
             required
           />
         </div>
-        <div>
+        <div className={!id ? "d-flex justify-content-between gap-3" : ""}>
           <div className="form-group justify-content-between">
             <label htmlFor="due" className="green-text bold-text">
               Due Date
@@ -110,33 +118,34 @@ const AddAssignment = ({ addHandler }) => {
               required
             />
           </div>
-          {/* <div className="form-group flex-grow-1">
-                        <label htmlFor="course" className="green-text bold-text">Course</label>
-                        <Select
-                            sx={{
-                                borderRadius: "8px",
-                                border: "2px solid #274546",
-                                fontWeight: "600",
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    border: "none",
-                                }
-                            }}
-                            fullWidth
-                            value={form.course || courses[0].title}
-                            id="course"
-                            onChange={handleChange}
-                            name="course"
-                        >
-                            {courses.map((course) => (
-                                <MenuItem
-                                    key={course.id}
-                                    value={course.title}
-                                >
-                                    {course.title}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </div> */}
+          {!id && (
+            <div className="form-group flex-grow-1">
+              <label htmlFor="course" className="green-text bold-text">
+                Course
+              </label>
+              <Select
+                sx={{
+                  borderRadius: "8px",
+                  border: "2px solid #274546",
+                  fontWeight: "600",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                }}
+                fullWidth
+                value={form.course || courses[0].title}
+                id="course"
+                onChange={handleChange}
+                name="course"
+              >
+                {courses.map((course) => (
+                  <MenuItem key={course.id} value={course.title}>
+                    {course.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          )}
         </div>
         <div className="form-group">
           <label htmlFor="desc" className="green-text bold-text">
@@ -160,13 +169,12 @@ const AddAssignment = ({ addHandler }) => {
           <button
             className="btn btn-outline-danger CancelButton"
             onClick={() => {
-                if(id){
-                    navigate(`/AddMaterial/${id}`);
-                }
-                else{
-                    showFormHandler();
-                    errorList = [];
-                }
+              if (id) {
+                navigate(`/AddMaterial/${id}`);
+              } else {
+                showFormHandler();
+                errorList = [];
+              }
             }}
             type="button"
           >
