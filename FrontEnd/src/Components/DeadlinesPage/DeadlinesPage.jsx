@@ -7,6 +7,9 @@ import { useNavigate } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import NoAssignmentImg from '../../assets/Student.svg';
+import NoExamImg from '../../assets/Student.svg';
+import Placeholder from "../Placeholder/Placeholder";
 import AddAssignment from "../AddAssignment/AddAssignment";
 const DeadlinesPage = ({ assignments, exams }) => {
   const [activeTab, setActiveTab] = useState("assignments");
@@ -139,7 +142,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
               ) : (
                 <tr>
                   <td colSpan="5" style={{ textAlign: "center" }}>
-                    No Assignments Available
+                    <Placeholder
+                      img={NoAssignmentImg}
+                      text="No Assignment available. Add one now!"
+                    />
                   </td>
                 </tr>
               )
@@ -178,7 +184,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
             ) : (
               <tr>
                 <td colSpan="5" style={{ textAlign: "center" }}>
-                  No Exams Available
+                  <Placeholder
+                    img={NoExamImg}
+                    text="No Exam available. Add one now!"
+                  />
                 </td>
               </tr>
             )}
