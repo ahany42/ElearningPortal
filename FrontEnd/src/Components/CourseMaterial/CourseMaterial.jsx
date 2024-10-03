@@ -1,11 +1,10 @@
-
 import './CourseMaterial.css';
-import { toast } from 'react-toastify';
 import MaterialCard from '../MaterialCard/MaterialCard';
 import { useContext } from 'react'; 
 import {CurrentUserContext} from "../../App.jsx";
 import Placeholder from '../Placeholder/Placeholder.jsx';
 import NoMaterialsImg from "../../assets/Student.svg";
+
 const CourseMaterial = () => {
   const { materials } = useContext(CurrentUserContext);
 

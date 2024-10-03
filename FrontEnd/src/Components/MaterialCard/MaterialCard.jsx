@@ -1,30 +1,17 @@
+import { useContext } from 'react';
+import { CurrentUserContext } from '../../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen , faFileAlt ,faBullhorn} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Components/CourseMaterial/CourseMaterial.css';
-let messagesList = [];
+
 const MaterialCard = ({material}) => {
+    const { showMessage } = useContext(CurrentUserContext);
+
     {/* for testing */}
     const seeMore=true;
     const handleSeeMore = () => {
-        if (!messagesList.includes("seeMore")) {
-            toast("See More Coming Soon", {
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: {
-                    userSelect: 'none',
-                    gap: '10px',
-                    padding: '20px',
-                },
-                onClose: () => {
-                    messagesList = messagesList.filter(m => m !== "seeMore");
-                }
-            });
-            messagesList = [...messagesList, "seeMore"];
-        }
+        showMessage("See More Coming Soon", null);
     }
   return (
     <>

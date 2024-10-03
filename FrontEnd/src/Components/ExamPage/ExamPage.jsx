@@ -95,7 +95,7 @@ const ExamPage = ({ exams }) => {
       <Card elevation={3} style={{ padding: "1.5rem", position: "relative" }}>
         <CardContent>
           {/* Exam Title */}
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" sx={{marginBottom: "15px"}}>
             {isEditing ? (
               <TextField
                 fullWidth
@@ -252,7 +252,7 @@ const ExamPage = ({ exams }) => {
                 </Button>
                 <Button
                   variant="contained"
-                  style={{ backgroundColor: "#2196f3" }} 
+                  style={{ backgroundColor: "#2196f3" }}
                   onClick={solveExamHandler}
                 >
                   Solve

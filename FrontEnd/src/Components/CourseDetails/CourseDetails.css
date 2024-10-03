@@ -1,6 +1,6 @@
 .course-details{
-    width:90%;
-    margin:50px auto 50px auto;
+    width: 90%;
+    margin: 80px auto;
     position: relative; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
@@ -46,11 +46,48 @@
     height: fit-content !important;
 }
 .add-material{
-    top: 10px;
+    top: 30px;
+    right: 57px;
 }
 .add-material-button-container{
     width: 90%;
 }
+.stats-button {
+    cursor: pointer;
+}
 .stats-button:hover{
     color:#1330BE ;
+}
+
+.goBackBtn {
+    position: absolute;
+    top: 0;
+    left: 57px;
+    display: flex;
+    height: 3em;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    transition: all 0.2s linear;
+    border: none;
+    background: #d8d7d1;
+}
+
+.goBackBtn > svg {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 20px;
+    transition: all 0.4s ease-in;
+}
+
+.goBackBtn:hover > svg {
+    font-size: 1.2em;
+    transform: translateX(-5px);
+}
+
+.goBackBtn:hover {
+    background: #fb8928;
+    transform: translateY(-2px);
 }

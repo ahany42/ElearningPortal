@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import "./UserProfile.css";
-import { updateCookie } from "../Cookie/Cookie.jsx";
+import {getCookie, updateCookie} from "../Cookie/Cookie.jsx";
 import { jwtDecode } from "jwt-decode";
 import avatar from '../../assets/avatar.jpg';
 
@@ -48,7 +48,8 @@ const UserProfile = () => {
         await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'authorization': `${getCookie('token')}`
             },
             body: JSON.stringify({ ...profileData })
         })

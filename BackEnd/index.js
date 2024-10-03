@@ -20,14 +20,25 @@ const cors = require("cors");
 
 // Middleware to allow requests from other origins
 app.use(
-  cors({
-    origin: ENV.Front_Origin,
-    credentials: true,
-  })
+    cors({
+        origin: ENV.Front_Origin,  // Allow all origins during development
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
 );
 
 // Serve the static folder (e.g., 'static/courses' where the images are stored)
+
+
 app.use('/static', express.static(path.join(__dirname, 'static')));
+
+app.use((req, res, next) => {
+    if (req.url.endsWith('.pdf')) {
+        res.setHeader('Content-Type', 'application/pdf');
+    }
+    next();
+});
 
 // Importing routers
 const UserRouter = require("./router/UserRouter");

@@ -69,14 +69,6 @@ module.exports.login = async (req, res, next) => {
         Secret_Key,
         { expiresIn: "1h" }
       );
-      await Session.deleteMany();
-      await Session.insertMany([
-        {
-          token,
-          createDate: Date.now(),
-        },
-      ]);
-
       res.status(201).json({ message: `Welcome ${user.name}`, data: token });
     }
   } catch (error) {
@@ -87,7 +79,6 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.logout = async (req, res, next) => {
   try {
-    await Session.deleteOne();
     res.status(201).json({ message: "Logged out successfully" });
   } catch (err) {
     res.status(200).json({ error: "Unexpected Error Occured" });

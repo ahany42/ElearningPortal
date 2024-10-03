@@ -9,12 +9,9 @@ router.post('/solveAssignment', verifyToken("Student"), uploadAssignmentAnswerDo
 router.delete('/deleteAssignmentSolution/:id', verifyToken("Student"), Controller.deleteAssignmentAnswer);
 router.post('/gradeAssignment', verifyToken("Instructor"), Controller.gradeAssignment);
 router.put('/updateAssignment/:id', verifyToken("Instructor"), uploadAssignmentDoc, Controller.updateAssignment);
+router.put('/updateAssignmentAnswer/:id', verifyToken(), uploadAssignmentAnswerDoc, Controller.updateAssignmentAnswer);
 router.get('/getAssignments', verifyToken(), Controller.getAllAssignments);
 router.get('/getAssignment/:id', verifyToken(), Controller.getAssignmentById);
 router.delete('/deleteAssignment/:id', verifyToken("Instructor"), Controller.deleteAssignment);
 
 module.exports = router;
-
-
-
-

@@ -18,6 +18,7 @@
 }
 
 .CarouselContainer {
+    margin-top: 80px;
     width: 40%;
     max-width: 355px;
     max-height: fit-content;

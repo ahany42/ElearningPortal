@@ -382,18 +382,12 @@ class AssignmentController {
                 return deleteAssociateFiles(document, "All fields are required", res, next);
             }
 
-            if (document) {
-                // Get the path to the assignment document (file)
-                const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
-
-                // If a document is associated with the assignment, delete the file from the file system
-                if (filePath) {
-                    fs.unlink(filePath, async (err) => {
-                        if (err) {
-                            return deleteAssociateFiles(document, "Error updating assignment", res, next);
-                        }
-                    });
-                }
+            if (assignment.document) {
+                fs.unlink(assignment.document, (err) => {
+                    if (err) {
+                        return deleteAssociateFiles(document, "Error updating assignment", res, next);
+                    }
+                });
             }
 
             // Update assignment fields
@@ -404,6 +398,61 @@ class AssignmentController {
             // Save the updated assignment
             const updatedAssignment = await assignment.save();
             return res.status(201).json({ message: "Assignment updated successfully", data: updatedAssignment });
+        } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occurred" });
+            next(`ERROR IN: Update Assignment Function => ${err}`);
+        }
+    }
+
+    // Update an existing assignment solution
+    async updateAssignmentAnswer(req, res, next) {
+        try {
+            const assignmentID = req.params.id; // assignmentID as v4 uuid
+            const document = req.file ? req.file.path : null; // Store document path from multer
+
+            if (req.user.role.toLowerCase() === "student") {
+                // Find the assignment
+                const assignment = await Assignment.findOne({ id: assignmentID });
+
+                if (!assignment) {
+                    return deleteAssociateFiles(document, "Assignment not found", res, next);
+                }
+
+                const student = await User.findOne({ id: req.user.id });
+
+                if (!student) {
+                    return deleteAssociateFiles(document, "Student not found", res, next);
+                }
+
+                if (!document) {
+                    return deleteAssociateFiles(document, "All fields are required", res, next);
+                }
+
+                const assignmentAnswer =
+                    await AssignmentAnswer.findOne({ assignmentID: assignment._id, studentID: student._id});
+
+                if (!assignmentAnswer) {
+                    return deleteAssociateFiles(document, "Assignment answer not found", res, next);
+                }
+
+                if (assignmentAnswer.document) {
+                    fs.unlink(assignmentAnswer.document, (err) => {
+                        if (err) {
+                            return deleteAssociateFiles(document, "Error updating assignment answer", res, next);
+                        }
+                    });
+                }
+
+                // Update assignment answer document (For both Instructor and Student)
+                assignmentAnswer.document = document;
+
+                // Save the updated assignment
+                const updatedAssignmentAnswer = await assignmentAnswer.save();
+                return res.status(201).json(
+                    { message: "Assignment answer updated successfully", data: updatedAssignmentAnswer });
+            } else {
+                return deleteAssociateFiles(document, "You are not authorised", res, next);
+            }
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Update Assignment Function => ${err}`);
