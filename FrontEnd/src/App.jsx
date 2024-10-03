@@ -41,7 +41,7 @@ import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
-import { Announcement } from "@mui/icons-material";
+
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -60,302 +60,6 @@ const pathsNotRequireAuthentication = [
     '/ResetPassword',
 ];
 
-const INITIAL_COURSES = [
-  {
-    id: "e55d8be9-d517-4fdb-a813-7314410d920f",
-    title: "html&css",
-    desc: "basics of frontend",
-    hours: 2,
-  },
-  {
-    id: "6ad77ebe-1397-4903-8360-ad58a9d18679",
-    title: "js",
-    desc: "javascript content",
-    hours: 3,
-  },
-  {
-    id: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-    title: "react",
-    desc: "important of react",
-    hours: 4,
-  },
-  {
-    id: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-    title: "node.js",
-    desc: "basics of backend",
-    hours: 5,
-  },
-];
-
-const INITIAL_ASSIGNMENTS = [
-  {
-    id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
-    title: "Assignment 1",
-    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-    dueDate: "2024-09-30",
-    description: "This is a React assignment",
-  },
-  {
-    id: "263b8b3d-9b82-4512-8392-5b1971fdba39",
-    title: "Assignment 2",
-    courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-    dueDate: "2024-10-05",
-    description: "This is a Node.js assignment",
-  },
-];
-
-const INITIAL_EXAMS = [
-    {
-        id: "994dd950-6315-4351-b4f9-01b446613dec",
-        title: "Midterm Exam",
-        courseID: "6ad77ebe-1397-4903-8360-ad58a9d18679",
-        dueDate: "2024-09-30",
-        description: "This is a React assignment",
-    },
-    {
-        id: "a6bc188c-0cac-4407-9ac7-da47f1b66d4c",
-        title: "Final Exam",
-        courseID: "e55d8be9-d517-4fdb-a813-7314410d920f",
-        dueDate: "2024-10-05",
-        description: "This is a Node.js assignment",
-    },
-];
-const INITIAL_MATERIALS =[
-  {
-    id: 1,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. John Doe',
-    title: 'Midterm Exam',
-    startDate: '27 Jun 24',
-    endDate: '3 Jul 24'
-  },
-  {
-    id: 2,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Jane Smith',
-    title: 'Assignment 1',
-    startDate: '2 Jul 24',
-    endDate: '2 Aug 24'
-  },
-  {
-    id: 3,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Michael Brown',
-    startDate: '3 Jul 24',
-    announcement:"Exam Has Been Postponed to next Tuesday"
-  },
-  {
-    id: 4,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Alice White',
-    title: 'Final Exam',
-    startDate: '3 Aug 24',
-    endDate: '3 Sep 24'
-  },
-  {
-    id: 5,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. John Doe',
-    title: 'Assignment 2',
-    startDate: '9 Oct 24',
-    endDate: '10 Oct 24'
-  },
-  {
-    id: 6,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Emily Green',
-    startDate: '12 Oct 24',
-     announcement:"Grades are Out!"
-  },
-  {
-    id: 7,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Sarah Lee',
-    title: 'Quiz 1',
-    startDate: '10 Nov 24',
-    endDate: '11 Nov 24'
-  },
-  {
-    id: 8,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Jane Smith',
-    title: 'Assignment 3',
-    startDate: '21 Nov 24',
-    endDate: '23 Nov 24'
-  },
-  {
-    id: 9,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. David Black',
-    startDate: '30 Nov 24',
-     announcement:"Check Your Emails."
-  },
-  {
-    id: 10,
-    materialType: 'exam',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Alice White',
-    title: 'Midterm Exam 2',
-    startDate: '11 Dec 24',
-    endDate: '12 Dec 24'
-  },
-  {
-    id: 11,
-    materialType: 'assignment',
-    submitted: false,
-    solve: false,
-    instructorName: 'Dr. Sarah Lee',
-    title: 'Group Project',
-    startDate: '15 Dec 24',
-    endDate: '30 Dec 24'
-  },
-  {
-    id: 12,
-    materialType: 'announcement',
-    submitted: false,
-    solve: false,
-    instructorName: 'Prof. Michael Brown',
-    startDate: '20 Dec 24',
-    announcement:"Grades are Out!"
-  }
-];
-const INITIAL_STUDENTS_LIST = [
-  {
-    id: 1,
-    name: "John Doe",
-    username: "john_doe1",
-    imgPath: ""
-  },
-  {
-    id: 2,
-    name: "Emily Smith",
-    username: "emily_smi",
-    imgPath: ""
-  },
-  {
-    id: 3,
-    name: "Michael Johnson",
-    username: "michael_j",
-    imgPath: ""
-  },
-  {
-    id: 4,
-    name: "Sophia Williams",
-    username: "sophia_wi",
-    imgPath: ""
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    username: "david_bro",
-    imgPath: ""
-  },
-  {
-    id: 6,
-    name: "Olivia Garcia",
-    username: "olivia_ga",
-    imgPath: ""
-  },
-  {
-    id: "933831c7-41de-4deb-ad57-129d0e9ed3ca",
-    name: "Aly Hany",
-    username: "alyhany04",
-    imgPath: ""
-  },
-  {
-    id: 8,
-    name: "Lily Anderson",
-    username: "lily_and",
-    imgPath: ""
-  },
-  {
-    id: 9,
-    name: "James Lee",
-    username: "james_lee",
-    imgPath: ""
-  },
-  {
-    id: 10,
-    name: "Amelia Taylor",
-    username: "amelia_ta",
-    imgPath: ""
-  },
-  {
-    id: 11,
-    name: "Lucas White",
-    username: "lucas_whi",
-    imgPath: ""
-  },
-  {
-    id: 12,
-    name: "Isabella Harris",
-    username: "isabella_",
-    imgPath: ""
-  }
-];
-const INITIAL_INSTRUCTORS_LIST = [
-  {
-    id: 1,
-    name: "Alice Cooper",
-    username: "alice_coo",
-    imgPath: "InstructorImg"
-  },
-  {
-    id: 2,
-    name: "Bob Johnson",
-    username: "bob_johns",
-    imgPath: ""
-  },
-  {
-    id: 3,
-    name: "Charlie Brown",
-    username: "charlie_b",
-    imgPath: ""
-  },
-  {
-    id: 4,
-    name: "Diane Evans",
-    username: "diane_eva",
-    imgPath: ""
-  }
-];
-const INITIAL_PROGRESS =[{
-  id:1,
-  title:"Exam 1",
-  isExam:true,
-  submissionDate:"30 Sep 9:00",
-  deadline:"1 Oct 9:00",
-  grade:"30",
-  onTime:true,
-} ,{
-  id:2,
-  title:"Assignment 1",
-  isExam:false,
-  submissionDate:"30 Sep 9:00",
-  deadline:"29 Sep 9:00",
-  grade:"",
-  onTime:false,
-}
-]  
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -555,5 +259,307 @@ function App() {
       </CurrentUserContext.Provider>
     );
 }
+
+const INITIAL_COURSES = [
+    {
+        id: "e55d8be9-d517-4fdb-a813-7314410d920f",
+        title: "html&css",
+        desc: "basics of frontend",
+        hours: 2,
+    },
+    {
+        id: "6ad77ebe-1397-4903-8360-ad58a9d18679",
+        title: "js",
+        desc: "javascript content",
+        hours: 3,
+    },
+    {
+        id: "ae1ebe8c-143d-460a-9452-50597ff2a790",
+        title: "react",
+        desc: "important of react",
+        hours: 4,
+    },
+    {
+        id: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
+        title: "node.js",
+        desc: "basics of backend",
+        hours: 5,
+    },
+];
+
+const INITIAL_ASSIGNMENTS = [
+    {
+        id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
+        title: "Assignment 1",
+        courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
+        dueDate: "2024-09-30",
+        description: "This is a React assignment",
+    },
+    {
+        id: "263b8b3d-9b82-4512-8392-5b1971fdba39",
+        title: "Assignment 2",
+        courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
+        dueDate: "2024-10-05",
+        description: "This is a Node.js assignment",
+    },
+];
+
+const INITIAL_EXAMS = [
+    {
+        id: "994dd950-6315-4351-b4f9-01b446613dec",
+        title: "Midterm Exam",
+        courseID: "6ad77ebe-1397-4903-8360-ad58a9d18679",
+        dueDate: "2024-09-30",
+        description: "This is a React assignment",
+    },
+    {
+        id: "a6bc188c-0cac-4407-9ac7-da47f1b66d4c",
+        title: "Final Exam",
+        courseID: "e55d8be9-d517-4fdb-a813-7314410d920f",
+        dueDate: "2024-10-05",
+        description: "This is a Node.js assignment",
+    },
+];
+
+const INITIAL_MATERIALS =[
+    {
+        id: 1,
+        materialType: 'exam',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. John Doe',
+        title: 'Midterm Exam',
+        startDate: '27 Jun 24',
+        endDate: '3 Jul 24'
+    },
+    {
+        id: 2,
+        materialType: 'assignment',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Jane Smith',
+        title: 'Assignment 1',
+        startDate: '2 Jul 24',
+        endDate: '2 Aug 24'
+    },
+    {
+        id: 3,
+        materialType: 'announcement',
+        submitted: false,
+        solve: false,
+        instructorName: 'Prof. Michael Brown',
+        startDate: '3 Jul 24',
+        announcement:"Exam Has Been Postponed to next Tuesday"
+    },
+    {
+        id: 4,
+        materialType: 'exam',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Alice White',
+        title: 'Final Exam',
+        startDate: '3 Aug 24',
+        endDate: '3 Sep 24'
+    },
+    {
+        id: 5,
+        materialType: 'assignment',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. John Doe',
+        title: 'Assignment 2',
+        startDate: '9 Oct 24',
+        endDate: '10 Oct 24'
+    },
+    {
+        id: 6,
+        materialType: 'announcement',
+        submitted: false,
+        solve: false,
+        instructorName: 'Prof. Emily Green',
+        startDate: '12 Oct 24',
+        announcement:"Grades are Out!"
+    },
+    {
+        id: 7,
+        materialType: 'exam',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Sarah Lee',
+        title: 'Quiz 1',
+        startDate: '10 Nov 24',
+        endDate: '11 Nov 24'
+    },
+    {
+        id: 8,
+        materialType: 'assignment',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Jane Smith',
+        title: 'Assignment 3',
+        startDate: '21 Nov 24',
+        endDate: '23 Nov 24'
+    },
+    {
+        id: 9,
+        materialType: 'announcement',
+        submitted: false,
+        solve: false,
+        instructorName: 'Prof. David Black',
+        startDate: '30 Nov 24',
+        announcement:"Check Your Emails."
+    },
+    {
+        id: 10,
+        materialType: 'exam',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Alice White',
+        title: 'Midterm Exam 2',
+        startDate: '11 Dec 24',
+        endDate: '12 Dec 24'
+    },
+    {
+        id: 11,
+        materialType: 'assignment',
+        submitted: false,
+        solve: false,
+        instructorName: 'Dr. Sarah Lee',
+        title: 'Group Project',
+        startDate: '15 Dec 24',
+        endDate: '30 Dec 24'
+    },
+    {
+        id: 12,
+        materialType: 'announcement',
+        submitted: false,
+        solve: false,
+        instructorName: 'Prof. Michael Brown',
+        startDate: '20 Dec 24',
+        announcement:"Grades are Out!"
+    }
+];
+
+const INITIAL_STUDENTS_LIST = [
+    {
+        id: 1,
+        name: "John Doe",
+        username: "john_doe1",
+        imgPath: ""
+    },
+    {
+        id: 2,
+        name: "Emily Smith",
+        username: "emily_smi",
+        imgPath: ""
+    },
+    {
+        id: 3,
+        name: "Michael Johnson",
+        username: "michael_j",
+        imgPath: ""
+    },
+    {
+        id: 4,
+        name: "Sophia Williams",
+        username: "sophia_wi",
+        imgPath: ""
+    },
+    {
+        id: 5,
+        name: "David Brown",
+        username: "david_bro",
+        imgPath: ""
+    },
+    {
+        id: 6,
+        name: "Olivia Garcia",
+        username: "olivia_ga",
+        imgPath: ""
+    },
+    {
+        id: "933831c7-41de-4deb-ad57-129d0e9ed3ca",
+        name: "Aly Hany",
+        username: "alyhany04",
+        imgPath: ""
+    },
+    {
+        id: 8,
+        name: "Lily Anderson",
+        username: "lily_and",
+        imgPath: ""
+    },
+    {
+        id: 9,
+        name: "James Lee",
+        username: "james_lee",
+        imgPath: ""
+    },
+    {
+        id: 10,
+        name: "Amelia Taylor",
+        username: "amelia_ta",
+        imgPath: ""
+    },
+    {
+        id: 11,
+        name: "Lucas White",
+        username: "lucas_whi",
+        imgPath: ""
+    },
+    {
+        id: 12,
+        name: "Isabella Harris",
+        username: "isabella_",
+        imgPath: ""
+    }
+];
+
+const INITIAL_INSTRUCTORS_LIST = [
+    {
+        id: 1,
+        name: "Alice Cooper",
+        username: "alice_coo",
+        imgPath: "InstructorImg"
+    },
+    {
+        id: 2,
+        name: "Bob Johnson",
+        username: "bob_johns",
+        imgPath: ""
+    },
+    {
+        id: 3,
+        name: "Charlie Brown",
+        username: "charlie_b",
+        imgPath: ""
+    },
+    {
+        id: 4,
+        name: "Diane Evans",
+        username: "diane_eva",
+        imgPath: ""
+    }
+];
+
+const INITIAL_PROGRESS = [
+    {
+        id:1,
+        title:"Exam 1",
+        isExam:true,
+        submissionDate:"30 Sep 9:00",
+        deadline:"1 Oct 9:00",
+        grade:"30",
+        onTime:true,
+    } ,{
+        id:2,
+        title:"Assignment 1",
+        isExam:false,
+        submissionDate:"30 Sep 9:00",
+        deadline:"29 Sep 9:00",
+        grade:"",
+        onTime:false,
+    }
+]
 
 export default App;

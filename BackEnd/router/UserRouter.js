@@ -4,7 +4,7 @@ const verifyToken = require("../controller/VerifyToken");
 const router = Router();
 
 router.post("/login", Controller.login);
-router.post("/logout", verifyToken(), Controller.logout);
+router.post("/logout", Controller.logout);
 router.post("/register", Controller.register);
 router.get("/getUser", verifyToken("Admin"), Controller.getUser); // for admin
 router.get("/getUsers", verifyToken("Admin"), Controller.getUsers);

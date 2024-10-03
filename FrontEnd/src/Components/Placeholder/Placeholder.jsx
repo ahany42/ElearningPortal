@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import './Placeholder.css'
-const Placeholder = ({img,text,buttonText,buttonRoute}) => {
+
+const Placeholder = ({ img, text, buttonText, buttonRoute }) => {
   return (
     <>
      <div className="page-component d-flex flex-column align-items-center gap-4 container ">
