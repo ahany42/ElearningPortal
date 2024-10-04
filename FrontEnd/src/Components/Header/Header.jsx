@@ -121,8 +121,8 @@ const Header = () => {
               onClick={handleOpenNavMenu}
               color="inherit"
           >
-            <MenuIcon />
-          </MuiIconButton>
+          <MenuIcon sx={{ color: 'white', fontSize: "40px" }} />
+</MuiIconButton>
           <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}

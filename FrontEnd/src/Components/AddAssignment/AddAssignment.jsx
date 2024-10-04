@@ -5,11 +5,13 @@ import { v4 } from "uuid";
 import { MenuItem, Select } from "@mui/material";
 import { useNavigate, useParams } from "react-router";
 
+
 let errorList = [];
 
-const AddAssignment = ({ addHandler, showFormHandler }) => {
+const AddAssignment = ({ addHandler, showFormHandler}) => {
     const { id } = useParams(); const navigate = useNavigate(null);
     const { showMessage, courses } = useContext(CurrentUserContext);
+    const currentCourse = courses.find(course=>course.id===id);
     const [form, setForm] = useState({
         title: "",
         desc: "",
@@ -54,6 +56,7 @@ const AddAssignment = ({ addHandler, showFormHandler }) => {
               id: v4(),
               dueDate: due.value,
               courseID: id,
+              courseTitle:currentCourse.title,
             });
             showMessage("Assignemnt added successfully", false);
             navigate(`/CourseDetails/${id}`);
@@ -111,6 +114,12 @@ const AddAssignment = ({ addHandler, showFormHandler }) => {
                                    style={{height: "57px"}}
                                    type="date" id="due" name="due" required/>
                         </div>
+                        {id &&
+                        <div className="form-group">
+                                <label htmlFor="courseTitle" className="green-text bold-text">Course Title</label>
+                              <input name="courseTitle" readOnly value={currentCourse.title || "Course Not Available"}/>
+                         </div>
+                        }
                         {!id &&
                             <div className="form-group flex-grow-1">
                                 <label htmlFor="course" className="green-text bold-text">Course</label>
