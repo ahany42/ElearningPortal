@@ -255,12 +255,12 @@ const AssignmentPage = ({ assignments }) => {
               ) : (
                 <>
                   <Button
-                      variant="contained"
-                      onClick={() => navigate(-1)}
-                      style={{ backgroundColor: "#ff7043" }}
-                  >
-                    Back
-                  </Button>
+                  variant="contained"
+                  onClick={() => navigate(-1)}
+                   className="pascalCase-text dark-bg light-text"
+                >
+                  Back
+                </Button>
                 </>
               )
             }

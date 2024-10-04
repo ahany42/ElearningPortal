@@ -14,11 +14,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const pages = [
     { name: 'Courses', to: '/courses'}, // This is the only page that is not protected (logged in or not)
-    { auth: true, name: 'Deadline', to: '/deadline'}, // This page is protected (must be logged in)
+    { auth: true, name: 'My Courses', to: '/MyCourses'}, // This page is protected (must be logged in)
+    { auth: true, name: 'Deadlines', to: '/deadline'}, // This page is protected (must be logged in)
 ];
 
 const burgerListPages = [
     { name: 'Courses', to: '/courses'},
+    { auth: true, name: 'My Courses', to: '/MyCourses'},
     { auth: true, name: 'Deadline', to: '/deadline'},
     { auth: false, name: 'Login', to: '/login' },
     { auth: false, name: 'Register', to: '/SignUp' },

@@ -245,18 +245,19 @@ const ExamPage = ({ exams }) => {
               <div className="d-flex justify-content-center gap-5">
                 <Button
                   variant="contained"
-                  style={{ backgroundColor: "#ff7043" }}
                   onClick={() => navigate(-1)}
+                   className="pascalCase-text dark-bg light-text"
                 >
                   Back
                 </Button>
-                <Button
+                {(currentUser.role==="Student") && <Button
                   variant="contained"
                   style={{ backgroundColor: "#2196f3" }}
                   onClick={solveExamHandler}
+                  className="pascalCase-text green-bg"
                 >
                   Solve
-                </Button>
+                </Button>}
               </div>
             )}
           </div>

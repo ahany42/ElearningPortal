@@ -3,7 +3,6 @@ import './Placeholder.css'
 
 const Placeholder = ({ img, text, buttonText, buttonRoute }) => {
   return (
-    <>
      <div className="page-component d-flex flex-column align-items-center gap-4 container ">
          <img draggable='false' src={img} className="PlaceholderImage" alt="Placeholder"/>
          <div className="TextContainer">
@@ -13,7 +12,6 @@ const Placeholder = ({ img, text, buttonText, buttonRoute }) => {
           <NavLink to={buttonRoute} className="green-bg light-text placeholder-button">{buttonText}</NavLink>
           </div>}
      </div>
-    </>
   )
 }
 
