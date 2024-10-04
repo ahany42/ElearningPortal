@@ -382,6 +382,7 @@ class AssignmentController {
                 return deleteAssociateFiles(document, "All fields are required", res, next);
             }
 
+            // Delete the old assignment document (file) from the file system (if it exists)
             if (assignment.document) {
                 fs.unlink(assignment.document, (err) => {
                     if (err) {

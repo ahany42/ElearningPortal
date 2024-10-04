@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import React, {useContext} from 'react';
 import { useParams,useNavigate} from "react-router";
 import ReactImg from '../../assets/React.png';
 import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,7 @@ import NotFoundImg from '../../assets/404.svg';
 import Placeholder from '../Placeholder/Placeholder';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CaughtUp from '../../assets/Grades.svg';
+
 const CourseDetails = () => {
     const {id} = useParams();
     const navigate = useNavigate();
@@ -54,6 +55,14 @@ const CourseDetails = () => {
                       </button>
                   </div>
               }
+              <button className="goBackBtn" style={{top: "12px", left: "60px"}}
+                      onClick={() => navigate(`/courses`)}>
+                  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
+                      <path
+                          d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
+                  </svg>
+                  <span>Back</span>
+              </button>
               <div className="card course-details card-shadow">
                   {/* check if instructor is teaching this course */}
                   <div className="card-header details-header">
@@ -67,7 +76,7 @@ const CourseDetails = () => {
                           <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                       </div>
                       {
-                          (currentUser.role === "Student" || currentUser.role === "Instructor" || currentUser.role === "") ?
+                          (currentUser.role === "Student" || currentUser.role === "Instructor" || !currentUser.role) ?
                               !isEnrolled ?
                                   <button className="enroll-button-courseDetails bold-text blue-text"
                                           onClick={() => EnrollCourse(course.id)}>
@@ -80,16 +89,19 @@ const CourseDetails = () => {
                       }
                       <h5 className="course-description">{course.desc}</h5>
                   </div>
-                  <div className="course-material card-body">
-                      <h5>Added Material:</h5>
-                      {
-                          (totalAnnouncements + totalAssignments + totalExams !== 0) ?
-                              <div className="material-list">
-                                  <CourseMaterial/>
-                              </div> :
-                              <Placeholder text="You're all caught up" img={CaughtUp}/>
-                      }
-                  </div>
+                  {
+                      currentUser.role &&
+                          <div className="course-material card-body">
+                              <h5>Added Material:</h5>
+                              {
+                                  (totalAnnouncements + totalAssignments + totalExams !== 0) ?
+                                      <div className="material-list">
+                                          <CourseMaterial/>
+                                      </div> :
+                                      <Placeholder text="You're all caught up" img={CaughtUp}/>
+                              }
+                          </div>
+                  }
               </div>
           </>
           :

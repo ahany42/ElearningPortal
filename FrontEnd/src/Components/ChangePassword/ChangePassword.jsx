@@ -14,11 +14,13 @@ const ChangePassword = () => {
   const token = searchParams.get("token");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword3, setShowPassword3] = useState(false);
     const [update, setUpdate] = useState(false);
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [activeErrors, setActiveErrors] = useState([]);
   const [formData, setFormData] = useState({
+    oldpassword: "",
     password: "",
     confirmpassword: ""
   });
@@ -74,6 +76,7 @@ const ChangePassword = () => {
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowPassword2 = () => setShowPassword2(!showPassword2);
+  const handleClickShowPassword3 = () => setShowPassword3(!showPassword3);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   // Handle keypress for Enter key navigation
@@ -87,7 +90,7 @@ const ChangePassword = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({...formData, mode: "ChangePassword"}),
         }
       );
 
@@ -129,6 +132,61 @@ const ChangePassword = () => {
           )
         }
         <form onSubmit={handleSubmit}>
+          {/* Old Password Field */}
+          <FormControl
+              variant="outlined"
+              fullWidth
+              sx={{
+                my: 2,
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "grey",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#274546",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#274546",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#274546 !important",
+                  },
+                },
+              }}
+          >
+            <InputLabel>Old Password</InputLabel>
+            <OutlinedInput
+                name="oldpassword"
+                required
+                value={formData.oldpassword}
+                onChange={(e) => {
+                  setFormData({ ...formData, oldpassword: e.target.value });
+                  if (e.target.value === "" && formData.confirmpassword === "") {
+                    setPasswordError("");
+                  }
+                }}
+                type={showPassword3 ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
+                      <IconButton edge="end">
+                        <InfoOutlined />
+                      </IconButton>
+                    </Tooltip>
+                    <IconButton
+                        onClick={handleClickShowPassword3}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                    >
+                      {showPassword3 ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Old Password"
+            />
+          </FormControl>
           {/* Password Field */}
           <FormControl
             variant="outlined"

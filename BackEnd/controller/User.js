@@ -220,7 +220,7 @@ module.exports.verifyResetToken = async (req, res, next) => {
 module.exports.resetPassword = async (req, res, next) => {
   try {
     const { token } = req.params;
-    const { password } = req.body;
+    const { oldpassword, password, mode } = req.body;
 
     // Find the user by the reset token and ensure the token hasn't expired
     const user = await User.findOne({
@@ -232,6 +232,14 @@ module.exports.resetPassword = async (req, res, next) => {
       return res
         .status(200)
         .json({ error: "Password reset token is invalid or has expired" });
+    }
+
+    if (mode === "ChangePassword") { // Validate the old password ONLY
+      console.warn(oldpassword + ", " + user.password)
+        const isValidOldPassword = await bcrypt.compare(oldpassword, user.password);
+        if (!isValidOldPassword) {
+          return res.status(200).json({error: "Invalid old password provided"});
+        }
     }
 
     // Hash the new password

@@ -2,6 +2,7 @@ const { Course, Student_Course, Instructor_Course, Exam, Assignment, User } = re
 const multer = require('multer');
 const { v4 } = require('uuid');
 const path = require("path");
+const fs = require("fs");
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
@@ -9,7 +10,7 @@ const storage = multer.diskStorage({
               cb(null, 'static/courses'); // Folder where images will be stored
        },
        filename: function (req, file, cb) {
-              cb(null, file.originalname); // Naming the file
+              cb(null, `${Date.now()}_${file.originalname}`); // Naming the file
        }
 });
 
@@ -36,6 +37,7 @@ const upload = multer({
 /*
     Functions to be implemented:
     - createCourse: (Done)
+    - updateCourse: (Done)
     - enrollCourse
     - getCourse
     - getStudentCourses
@@ -59,12 +61,12 @@ class CourseController {
               const user =
                   await User.findOne({ id: instructorId });
 
-              if (!title || !desc || !hours || !user) {
-                     return res.status(200).json({ error: "All fields are required" });
+              if (!title || !desc || !hours) {
+                     return deleteAssociateFiles(image, "All fields are required", res, next);
               }
 
-              if (user.role.toLowerCase() !== "instructor") {
-                     return res.status(200).json({error: "Invalid role of instructorId"});
+              if (user && user.role.toLowerCase() !== "instructor") {
+                     return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
               }
 
               try {
@@ -76,17 +78,81 @@ class CourseController {
                             image
                      });
 
-                     // Optionally, create an Instructor_Course association
-                     await Instructor_Course.create({
-                            instructorID: user._id,
-                            courseID: course._id,
-                            duration: hours
-                     });
+                     if (user)
+                            // Optional create an Instructor_Course association
+                            await Instructor_Course.create({
+                                   instructorID: user._id,
+                                   courseID: course._id,
+                                   duration: hours
+                            });
 
                      res.status(201).json({data: course, message: `Course (${title}) created successfully`});
               } catch (error) {
                      res.status(200).json({ error: error.message });
-                     next(`ERROR IN: login function => ${error.message}`);
+                     next(`ERROR IN: Create Course function => ${error.message}`);
+              }
+       }
+
+       async updateCourse(req, res, next) {
+              // Image handling added here
+              const { title, desc, hours, instructorId } = req.body;
+              const { courseId } = req.params;
+              const image = req.file ? req.file.path : null; // Store image path from multer
+
+              const course = await Course.findOne({ id: courseId });
+              if (!course) {
+                     return deleteAssociateFiles(image, "Invalid Course", res, next);
+              }
+
+              const user =
+                  await User.findOne({ id: instructorId });
+
+              if (!title || !desc || !hours) {
+                     return deleteAssociateFiles(image, "All fields are required", res, next);
+              }
+
+              if ( isNaN(hours) || (!isNaN(hours) && (hours < 0) )) {
+                     return deleteAssociateFiles(image, "Invalid hours", res, next);
+              }
+
+              if (user && user.role.toLowerCase() !== "instructor") {
+                     return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
+              }
+
+              // Delete the old course image (file) from the file system (if it exists)
+              if (course.image) {
+                     fs.unlink(course.image, (err) => {
+                            if (err) {
+                                   return deleteAssociateFiles(course.image, "Error updating course image", res, next);
+                            }
+                     });
+              }
+
+              try {
+                       const updatedCourse = await Course.findOne({ _id: course._id });
+
+                       updatedCourse.title = title; updatedCourse.desc = desc;
+                       updatedCourse.hours = hours; updatedCourse.image = image;
+
+
+                       if (user) {
+                              // Optional create an Instructor_Course association
+                              await Instructor_Course.findOneAndUpdate({courseID: updatedCourse._id}, {
+                                     instructorID: user._id,
+                                     courseID: updatedCourse._id,
+                                     duration: hours
+                              });
+                       } else {
+                                // If no instructor is provided, remove the Instructor_Course association
+                                await Instructor_Course.findOneAndDelete({courseID: updatedCourse._id});
+                       }
+
+                       updatedCourse.save();
+
+                       res.status(201).json({data: updatedCourse, message: `Course (${title}) updated successfully`});
+              } catch (error) {
+                       res.status(200).json({ error: error.message });
+                       next(`ERROR IN: Update Course function => ${error.message}`);
               }
        }
 
@@ -170,6 +236,19 @@ class CourseController {
                      res.status(400).json({ error: error.message });
               }
        }
+}
+
+// Function to delete associated files if error
+function deleteAssociateFiles(document, errMsg, res, next) {
+       if (document) {
+              fs.unlink(document, (err) => {
+                     if (err) {
+                            next(`WARNING IN: Delete Course Image Function => ${err}`);
+                            return res.status(200).json({ error: errMsg });
+                     }
+              });
+       }
+       return res.status(200).json({ error: errMsg });
 }
 
 // Middleware to handle the file upload

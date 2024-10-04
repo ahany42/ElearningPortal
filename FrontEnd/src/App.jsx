@@ -32,6 +32,7 @@ import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import "./App.css";
+
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -50,6 +51,38 @@ const pathsNotRequireAuthentication = [
     '/ResetPassword',
 ];
 
+// Paths that require specific roles (From URL)
+const pathsRoleBased = [
+    {
+        path: /^\/deadline$/,
+        roles: "student, admin, superadmin",
+    },
+    {
+        path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/InstructorsList$/,
+        roles: "instructor, admin, superadmin",
+    },
+    {
+        path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/StudentsList$/,
+        roles: "instructor, admin, superadmin",
+    },
+    {
+        path: /^\/AddAssignment\/[a-zA-Z0-9\-]+$/,
+        roles: "instructor, admin, superadmin",
+    },
+    {
+        path: /^\/AddAnnouncement\/[a-zA-Z0-9\-]+$/,
+        roles: "instructor, admin, superadmin",
+    },
+    {
+        path: /^\/AddExam\/[a-zA-Z0-9\-]+$/,
+        roles: "instructor, admin, superadmin",
+    },
+    {
+        path: /^\/AddMaterial\/[a-zA-Z0-9\-]+$/,
+        roles: "instructor, admin, superadmin",
+    },
+]
+
 export const CurrentUserContext = createContext();
 
 let messagesList = [];
@@ -58,7 +91,8 @@ function App() {
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
     const [ courses, setCourses ] = useState(INITIAL_COURSES);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
-    const [ currentUser, setCurrentUser ] = useState({});
+    const [ currentUser, setCurrentUser ] =
+        useState(getCookie('token') ? jwtDecode(getCookie('token')) : {});
     const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
     const [exams, setExams] = useState(INITIAL_EXAMS)
     const [studentsList, setStudentsList] = useState(INITIAL_STUDENTS_LIST)
@@ -75,6 +109,7 @@ function App() {
             setCurrentUser(jwtDecode(getCookie('token')));
             interval = setInterval(async () => {
                 if (!getCookie('token')) {
+                    console.log(1)
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     clearInterval(interval);
@@ -83,6 +118,7 @@ function App() {
                     return;
                 }
                 if (checkCookieExpiry('token')) {
+                    console.log(2)
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     await axios.post('http://localhost:3008/logout');
@@ -91,8 +127,6 @@ function App() {
                 }
             }, 1000);
         } else {
-            setCurrentUser({})
-            axios.post('http://localhost:3008/logout');
             clearInterval(interval);
         }
         return () => clearInterval(interval);
@@ -102,6 +136,15 @@ function App() {
 
         // Disable loader when the page is loaded
         setLoading(false);
+
+        // Limit access to specific routes based on user role
+        const pathRole =
+            pathsRoleBased.find((e) => e.path.test(routes.pathname));
+
+        if (currentUser.role && pathRole && !pathRole.roles.includes(currentUser.role.toLowerCase())) {
+            showMessage("You are not authorized to access this page", true);
+            navigate("/");
+        }
 
         // Redirect to previous route if the user is already authenticated
         if (pathsNotRequireAuthentication.includes(routes.pathname) && isAuthenticated) {
@@ -233,10 +276,10 @@ function App() {
                   path="*"
                   element={
                     <Placeholder
-                      text="Page Not Found"
-                      img={NotFoundImg}
-                      buttonText="Back To Home"
-                      buttonRoute="/"
+                        text="Page Not Found"
+                        img={NotFoundImg}
+                        buttonText="Back To Home"
+                        buttonRoute="/"
                     />
                   }
                 />

@@ -41,12 +41,6 @@ img {
   min-height: 620px;
 }
 
-.page-component{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 .card-shadow{
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 

@@ -16,11 +16,10 @@
 
 
 .navbar {
-    /*padding: 10px 30px !important;*/
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #274546;
+    background: #2D3480;
     padding: 20px 40px !important;
     border-radius: 30px;
 }
@@ -32,7 +31,7 @@
     gap: 30px;
 }
 
-.icon-button {
+.nav-icon-buttons {
     background-color: #f1f1f1;
     color: #000000;
     padding: 10px 20px;
@@ -42,9 +41,9 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.icon-button:hover {
-  background-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+.nav-icon-buttons:hover {
+    background-color: #fb8928;
+    box-shadow: 0 0 6px 2px rgb(241 241 241 / 34%);
 }
 
 @media (max-width: 850px) {

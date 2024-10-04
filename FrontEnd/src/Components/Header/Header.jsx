@@ -14,14 +14,16 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const pages = [
     { name: 'Courses', to: '/courses'}, // This is the only page that is not protected (logged in or not)
-    { auth: true, name: 'My Courses', to: '/MyCourses'}, // This page is protected (must be logged in)
-    { auth: true, name: 'Deadlines', to: '/deadline'}, // This page is protected (must be logged in)
+    { auth: true, name: 'My Courses', to: '/MyCourses', role: ["student", "instructor"]}, // This page is protected (must be
+    // logged in)
+    { auth: true, name: 'Deadlines', to: '/deadline', role: ["student", "admin", "superadmin"]}, // This page is protected (must be
+    // logged in)
 ];
 
 const burgerListPages = [
     { name: 'Courses', to: '/courses'},
-    { auth: true, name: 'My Courses', to: '/MyCourses'},
-    { auth: true, name: 'Deadline', to: '/deadline'},
+    { auth: true, name: 'My Courses', to: '/MyCourses', role: ["student", "instructor"]},
+    { auth: true, name: 'Deadline', to: '/deadline', role: ["student", "admin", "superadmin"]},
     { auth: false, name: 'Login', to: '/login' },
     { auth: false, name: 'Register', to: '/SignUp' },
     { auth: true, name: 'Profile', to: '/profile' },
@@ -31,7 +33,7 @@ const burgerListPages = [
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElProfile, setAnchorElProfile] = useState(null);
-  const { isAuthenticated } = useContext(CurrentUserContext);
+  const { isAuthenticated, currentUser } = useContext(CurrentUserContext);
   const route = useLocation().pathname;
 
   const profileOptions = isAuthenticated ? [
@@ -61,7 +63,8 @@ const Header = () => {
   return (
     <header className="header"
             style={route === "/"? {position: "absolute", top: 0, zIndex: "100"} : {}}>
-      <nav className="navbar">
+      <nav className="navbar"
+           style={route === "/"? {boxShadow: "0 0 20px 2px #00000052", background: "#3d673400"} : {}}>
           <NavLink to='/' style={{textDecoration: 'none'}}
                    onDragStart={(e) => e.preventDefault()}>
               <div className="logo">E-Learning</div>
@@ -69,11 +72,20 @@ const Header = () => {
         <div className="icon-group">
             {
                 pages.map((page) => (
-                    page.auth === undefined ? (
-                        <IconButton key={page.name} label={page.name} to={page.to} />
-                    ) : page.auth === isAuthenticated && (
-                        <IconButton key={page.name} label={page.name} to={page.to} />
-                    )
+                    currentUser.role && page.role && page.role.includes(currentUser.role.toLowerCase())?
+                        page.auth === undefined ? (
+                            <IconButton key={page.name} label={page.name} to={page.to} className="nav-icon-buttons" />
+                        ) : page.auth === isAuthenticated && (
+                            <IconButton key={page.name} label={page.name} to={page.to} className="nav-icon-buttons" />
+                        )
+                    : !page.role ?
+                            page.auth === undefined ? (
+                                <IconButton key={page.name} label={page.name} to={page.to} className="nav-icon-buttons" />
+                            ) : page.auth === isAuthenticated && (
+                                <IconButton key={page.name} label={page.name} to={page.to} className="nav-icon-buttons" />
+                            )
+                        :
+                            null
                 ))
             }
 
@@ -143,26 +155,50 @@ const Header = () => {
                       { display: 'block' }, '@media (min-width: 769px)': { display: 'none' } } }}
           >
             {burgerListPages.map((page) => (
-                page.auth === undefined ? (
-                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
-                             onDragStart={(e) => e.preventDefault()}>
-                        <MenuItem onClick={handleCloseNavMenu}>
-                            <Typography sx={{ textAlign: 'center' }}>
-                                {page.name}
-                            </Typography>
-                        </MenuItem>
-                    </NavLink>
-                ) : (
-                    isAuthenticated === page.auth &&
-                    <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
-                             onDragStart={(e) => e.preventDefault()}>
-                        <MenuItem onClick={handleCloseNavMenu}>
-                            <Typography sx={{ textAlign: 'center' }}>
-                                {page.name}
-                            </Typography>
-                        </MenuItem>
-                    </NavLink>
-                )
+                currentUser.role && page.role && page.role.includes(currentUser.role.toLowerCase())?
+                    page.auth === undefined ? (
+                        <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                                 onDragStart={(e) => e.preventDefault()}>
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <Typography sx={{ textAlign: 'center' }}>
+                                    {page.name}
+                                </Typography>
+                            </MenuItem>
+                        </NavLink>
+                    ) : (
+                        isAuthenticated === page.auth &&
+                        <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                                 onDragStart={(e) => e.preventDefault()}>
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <Typography sx={{ textAlign: 'center' }}>
+                                    {page.name}
+                                </Typography>
+                            </MenuItem>
+                        </NavLink>
+                    )
+                : !page.role ?
+                        page.auth === undefined ? (
+                            <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                                     onDragStart={(e) => e.preventDefault()}>
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography sx={{ textAlign: 'center' }}>
+                                        {page.name}
+                                    </Typography>
+                                </MenuItem>
+                            </NavLink>
+                        ) : (
+                            isAuthenticated === page.auth &&
+                            <NavLink key={v4()} to={page.to} style={{textDecoration: 'none'}}
+                                     onDragStart={(e) => e.preventDefault()}>
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography sx={{ textAlign: 'center' }}>
+                                        {page.name}
+                                    </Typography>
+                                </MenuItem>
+                            </NavLink>
+                        )
+                :
+                    null
             ))}
           </Menu>
         </Box>

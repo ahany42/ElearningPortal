@@ -143,8 +143,9 @@ const DeadlinesPage = ({ assignments, exams }) => {
                 <tr>
                   <td colSpan="5" style={{ textAlign: "center" }}>
                     <Placeholder
-                      img={NoAssignmentImg}
-                      text="No Assignment available. Add one now!"
+                        style={{margin: "1em auto"}}
+                        img={NoAssignmentImg}
+                        text="No Assignment available. Add one now!"
                     />
                   </td>
                 </tr>
