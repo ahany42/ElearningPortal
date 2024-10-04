@@ -97,7 +97,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
-                <div className="card course-card" key={id}>
+                <div className="card course-card card-shadow" key={id}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -139,7 +139,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         } 
         else if (currentUser.role === "Instructor") {
             return (
-                <div className="card course-card" key={id}>
+                <div className="card course-card card-shadow" key={id}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -180,7 +180,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         }
         // SuperAdmin and Admin
         else return (
-          <div className="card course-card" key={id}>
+          <div className="card course-card card-shadow" key={id}>
             <div className="card-header position-relative">
               <img src={ReactImg || CoursePlaceholder} alt="Course" />
               <div className="course-icons admin-icons">
@@ -220,7 +220,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     } else { // Guest User View (currentUser = {})
         return (
-            <div className="card course-card" key={id}>
+            <div className="card course-card card-shadow" key={id}>
                 <div className="card-header">
                     <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 </div>

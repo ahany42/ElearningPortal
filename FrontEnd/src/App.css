@@ -26,7 +26,7 @@ img {
 }
 
 .body-container{
-  background-color:#fbfdff ;
+  background-color:#f1f1f1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -47,7 +47,10 @@ img {
   justify-content: center;
   align-items: center;
 }
+.card-shadow{
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 
+}
 /* Font Size */
 h1 {
   font-size:2.5em !important;

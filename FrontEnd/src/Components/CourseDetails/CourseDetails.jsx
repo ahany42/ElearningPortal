@@ -58,7 +58,7 @@ const CourseDetails = ({ materials }) => {
                       </button>
                   </div>
               }
-              <div className="card course-details">
+              <div className="card course-details card-shadow">
                   {/* check if instructor is teaching this course */}
                   <div className="card-header details-header">
                       <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>

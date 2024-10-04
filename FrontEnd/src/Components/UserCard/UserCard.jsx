@@ -19,7 +19,7 @@ const UserCard = ({isStudent , student,instructor}) => {
     navigate(`/ViewProgress/${student.id}`)
   }
   return (
-    <div className=" card user-card ">
+    <div className=" card user-card card-shadow ">
     <div className=" user-sub-card">
       <img src={ReactImg} alt="user" className="user-list-user-avatar"/>
         <div className="user-details-container">
