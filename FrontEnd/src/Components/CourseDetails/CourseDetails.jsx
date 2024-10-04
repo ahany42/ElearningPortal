@@ -1,24 +1,20 @@
-import { useEffect, useContext, useState } from 'react';
+import {useContext} from 'react';
 import { useParams,useNavigate} from "react-router";
 import ReactImg from '../../assets/React.png';
 import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseDetails.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { CurrentUserContext } from '../../App';
 import CourseMaterial from '../CourseMaterial/CourseMaterial';
 import NotFoundImg from '../../assets/404.svg';
 import Placeholder from '../Placeholder/Placeholder';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CaughtUp from '../../assets/Grades.svg';
-import InstructorsList from '../InstructorsList/InstructorsList';
-const CourseDetails = ({ materials }) => {
+const CourseDetails = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const { currentUser, showMessage, courses } = useContext(CurrentUserContext);
-    //for testing
-    const courseMaterialType = "announcement";
     //for testing
     const totalExams = 0;
     //for testing

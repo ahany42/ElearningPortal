@@ -7,14 +7,6 @@ import NoMaterialsImg from "../../assets/Student.svg";
 
 const CourseMaterial = () => {
   const { materials } = useContext(CurrentUserContext);
-
-  //for testing
-  // const submitted = false;
-  //for testing
-  // const solved = true;
-  //for testing
-  // const seeMore = true;
-
   return(
     <>
       {materials.length > 0 ? (
@@ -24,7 +16,7 @@ const CourseMaterial = () => {
       ) : (
         <Placeholder
           img={NoMaterialsImg}
-          text="No materials available. Add one now!"
+          text="No materials available."
         />
       )}
     </>

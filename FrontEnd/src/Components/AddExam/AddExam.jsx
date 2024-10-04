@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  Stepper,
-  Step,
-  StepLabel,
-  Box,
-} from '@mui/material';
+import {Stepper,Step,StepLabel,Box,} from '@mui/material';
 import { useNavigate } from 'react-router';
 const steps = ['Exam Info', 'Add Questions'];
 import AddQuestions from './AddQuestions';

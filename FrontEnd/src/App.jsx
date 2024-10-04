@@ -9,23 +9,13 @@ import StudentList from "./Components/StudentsList/StudentList.jsx";
 import InstructorsList from "./Components/InstructorsList/InstructorsList.jsx";
 import AddAnnouncement from "./Components/AddAnnouncement/AddAnnouncement.jsx";
 import AddAssignment from "./Components/AddAssignment/AddAssignment.jsx";
-import "./index.css";
-import {
-  Routes,
-  Route,
-  useLocation,
-  useNavigate
-} from "react-router-dom";
+import {Routes,Route,useLocation,useNavigate} from "react-router-dom";
 import NotFoundImg from "./assets/404.svg";
 import Placeholder from "./Components/Placeholder/Placeholder.jsx";
-import "./App.css";
 import Header from "./Components/Header/Header.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./Components/Footer/Footer.jsx";
-import {
-  checkCookieExpiry,
-  getCookie,
-} from "./Components/Cookie/Cookie.jsx";
+import {checkCookieExpiry,getCookie} from "./Components/Cookie/Cookie.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -41,7 +31,7 @@ import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
-
+import "./App.css";
 const pathsWithNoHeaderAndFooter = [
     // "/ForgetPassword",
 ];
@@ -225,7 +215,7 @@ function App() {
                   path="/deadline"
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
                 />
-                <Route path="/CourseDetails/:id" element={<CourseDetails materials={materials}/>} />
+                <Route path="/CourseDetails/:id" element={<CourseDetails/>} />
                 <Route path="/CourseDetails/:id/StudentsList" element={<StudentList />} />
                 <Route path="/CourseDetails/:id/InstructorsList" element={<InstructorsList />} />
                 <Route path="/logout" element={<Logout />} />

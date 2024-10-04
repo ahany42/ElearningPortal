@@ -62,12 +62,6 @@ const AddAnnouncement = ({courses}) => {
                            name="courseTitle"
                            readOnly
                            fullWidth type="text" value={currentCourse.title || "Course Not Available"}
-                    //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
-                    //  onChange={(e) => {
-                    //      setFormData({...formData,courseTitle: e.target.value});
-                    //      setError('');
-                    //      toast.dismiss();
-                    //  }}
                            InputProps={{
                                readOnly: true,
                            }}

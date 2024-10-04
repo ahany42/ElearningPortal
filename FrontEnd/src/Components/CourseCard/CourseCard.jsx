@@ -1,6 +1,5 @@
-import {useContext, useEffect, useState} from 'react';
+import {useContext} from 'react';
 import { CurrentUserContext } from "../../App.jsx";
-import './CourseCard.css'
 import ReactImg from '../../assets/React.png';
 import CoursePlaceholder from '../../assets/Student.svg';
 import { faEdit,faTrash,faUser } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +8,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './CourseCard.css'
 
 let messagesList = [];
 let errorList = [];
