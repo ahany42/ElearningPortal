@@ -84,7 +84,7 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleOpenProfileMenu}
                 color="inherit">
-                <AccountCircleIcon fontSize="large" />
+                <AccountCircleIcon fontSize="large" sx={{ color: '#f1f1f1' }}/>
             </MuiIconButton>
             <Menu
                 id="profile-menu"
