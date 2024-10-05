@@ -34,6 +34,9 @@ const ExamInfo = ({ handleNext,id}) => {
       else if(isNaN(formData.duration)){
         showMessage("Invalid Duration",true);
       }
+      else if(formData.duration<=0){
+        showMessage("Invalid Duration",true);
+      }
       else{
         showMessage("Step 1 Added Successfully",false);
         handleNext();
