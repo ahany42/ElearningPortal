@@ -1,33 +1,41 @@
 import {Button,TextField,Box} from "@mui/material";
-import { useState } from "react";
 import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import { CurrentUserContext } from '../../App';
 import './AddExam.css';
-const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
+const ExamInfo = ({ handleNext,id}) => {
     const [sDate, setSDate] = useState(null);
     const [eDate, setEDate] = useState(null);
-    const { courses } = useContext(CurrentUserContext);
+    const { courses,showMessage } = useContext(CurrentUserContext);
     const currentCourse = courses.find(course=>course.id===id);
-    const handleSubmit = ()=>{
+    const [formData,setFormData] = useState({
+      title:'',
+      courseTitle:'',
+      duration:'',
+      sDate:null,
+      eDate:null
 
-    }
-    const handleStartDateChange = ()=>{
-
-    }
-    const handleEndDateChange = ()=>{
-
+    })
+    const handleExamInfo = ()=>{
+     if(formData.title && formData.courseTitle && formData.duration && formData.sDate && formData.eDate){
+      showMessage("Step 1 Added Successfully",false);
+      handleNext();
+     }
+     else{
+      console.log(eDate)
+      showMessage("Please Fill All Fields",true);
+     }
     }
     return (
         <div>
        <Box sx={{width: '80%', margin: '80px auto'}}>
         <h4 className="mb-3">Exam Info</h4>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleExamInfo}>
         <TextField label="Exam Title"
                    name="title"
                    fullWidth type="text" value={formData.title}
-                   onKeyDown={(e) => handleKeyPress(e, 'title')}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,title: e.target.value});
                        setError('');
@@ -90,7 +98,7 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
         <TextField label="Duration"
                    name="duration"
                    fullWidth type="number" value={formData.duration}
-                   onKeyDown={(e) => handleKeyPress(e, 'duration')}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'duration')}
                    onChange={(e) => {
                        setFormData({...formData,duration: e.target.value});
                        setError('');
@@ -129,7 +137,9 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
       <DateTimePicker
         label="Select Start Date"
         value={sDate}
-        onChange={handleStartDateChange}
+        onChange={(newDate) => {
+          setFormData({...formData, sDate: newDate});
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -162,7 +172,9 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
       <DateTimePicker
         label="Select End Date"
         value={eDate}
-        onChange={handleEndDateChange}
+        onChange={(newDate) => {
+          setFormData({...formData, eDate: newDate});
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -192,9 +204,8 @@ const ExamInfo = ({ handleNext, formData, setFormData,id}) => {
       />
     </LocalizationProvider>
     </Box>
-      </form>
-
-        <Button variant="contained" onClick={handleNext} className="stepper-button pascalCase-text">
+</form>
+        <Button variant="contained" onClick={handleExamInfo} className="stepper-button pascalCase-text">
             Next
         </Button>
     </Box>
