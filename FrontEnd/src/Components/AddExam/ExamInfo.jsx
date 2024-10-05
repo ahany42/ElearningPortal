@@ -11,19 +11,32 @@ const ExamInfo = ({ handleNext,id}) => {
     const currentCourse = courses.find(course=>course.id===id);
     const [formData,setFormData] = useState({
       title:'',
-      courseTitle:'',
+      courseTitle:currentCourse.title,
       duration:'',
       sDate:null,
       eDate:null
 
     })
     const handleExamInfo = ()=>{
-     if(formData.title && formData.courseTitle && formData.duration && formData.sDate && formData.eDate){
-      showMessage("Step 1 Added Successfully",false);
-      handleNext();
+      const selectedDate = new Date(formData.sDate).getTime(); 
+      const currentDate = new Date().getTime(); 
+     if(formData.title && formData.duration && formData.sDate && formData.eDate){
+      if(new Date(formData.sDate) > new Date(formData.eDate)){
+      showMessage("End date Should be after start date",true);
+      console.log(formData)
+      }
+      else if(selectedDate < currentDate){
+        showMessage("The date must be today or later",true);
+      }
+      else if(isNaN(formData.duration)){
+        showMessage("Invalid Duration",true);
+      }
+      else{
+        showMessage("Step 1 Added Successfully",false);
+        handleNext();
+      }
      }
      else{
-      console.log(eDate)
       showMessage("Please Fill All Fields",true);
      }
     }
@@ -38,8 +51,6 @@ const ExamInfo = ({ handleNext,id}) => {
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,title: e.target.value});
-                       setError('');
-                       toast.dismiss();
                    }}
                    required
             sx={{
@@ -101,8 +112,6 @@ const ExamInfo = ({ handleNext,id}) => {
                   //  onKeyDown={(e) => handleKeyPress(e, 'duration')}
                    onChange={(e) => {
                        setFormData({...formData,duration: e.target.value});
-                       setError('');
-                       toast.dismiss();
                    }}
                    required
             sx={{
