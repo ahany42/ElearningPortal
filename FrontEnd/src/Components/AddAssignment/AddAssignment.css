@@ -50,7 +50,7 @@
     font-weight: 600;
     font-family: inherit;
     background-color: transparent;
-    border: 2px solid #274546;
+    border: 2px solid #2d3480;
 }
 
 .form-container-addAssignment .form-group textarea {
@@ -61,7 +61,7 @@
     resize: none;
     font-weight: 600;
     height: 96px;
-    border: 2px solid #274546;
+    border: 2px solid #2d3480;
     background-color: transparent;
     font-family: inherit;
 }
@@ -95,14 +95,14 @@
 
 .AddCourseButton{
     margin-bottom: 20px;
-    border: 2px solid #274546 !important;
-    background: #274546 !important;
+    border: 2px solid #2d3480 !important;
+    background: #2d3480 !important;
     transition: all 0.15s ease;
     color: white;
 }
 
 .AddCourseButton:active {
-    background: #274546 !important;
+    background: #2d3480 !important;
     color: white !important;
 }
 
