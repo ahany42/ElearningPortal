@@ -150,46 +150,48 @@ const SignUp = () => {
             }}
           />
           <TextField
-              label="User Name"
-              name="username"
-              fullWidth
-              type="text"
-              value={formData.username}
-              onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-              }
-              required
-              InputProps={{
-                endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title="Username must be at least 4 characters, all lowercase, allow only an underscore as
-                       a special character, can include numbers.">
-                        <IconButton edge="end">
-                          <InfoOutlined />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                ),
-              }}
-              sx={{
-                my: 2,
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "grey",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#274546",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#274546",
-                  },
+            label="User Name"
+            name="username"
+            fullWidth
+            type="text"
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Tooltip
+                    title="Username must be at least 4 characters, all lowercase, allow only an underscore as
+                       a special character, can include numbers."
+                  >
+                    <IconButton edge="end">
+                      <InfoOutlined />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              my: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey",
                 },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#274546 !important",
-                  },
+                "&:hover fieldset": {
+                  borderColor: "#274546",
                 },
-              }}
+                "&.Mui-focused fieldset": {
+                  borderColor: "#274546",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                "&.Mui-focused": {
+                  color: "#274546 !important",
+                },
+              },
+            }}
           />
           {/* Email Field */}
           <TextField
@@ -224,102 +226,102 @@ const SignUp = () => {
           />
           {/* Password Field with Info Icon */}
           <FormControl
-              variant="outlined"
-              fullWidth
-              sx={{
-                my: 2,
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "grey",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#274546",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#274546",
-                  },
+            variant="outlined"
+            fullWidth
+            sx={{
+              my: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey",
                 },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#274546 !important",
-                  },
+                "&:hover fieldset": {
+                  borderColor: "#274546",
                 },
-              }}
+                "&.Mui-focused fieldset": {
+                  borderColor: "#274546",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                "&.Mui-focused": {
+                  color: "#274546 !important",
+                },
+              },
+            }}
           >
             <InputLabel>Password</InputLabel>
             <OutlinedInput
-                name="password"
-                required
-                value={formData.password}
-                onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                }
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
-                      <IconButton edge="end">
-                        <InfoOutlined />
-                      </IconButton>
-                    </Tooltip>
-                    <IconButton
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+              name="password"
+              required
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
+                    <IconButton edge="end">
+                      <InfoOutlined />
                     </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
+                  </Tooltip>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
             />
           </FormControl>
 
           {/* Confirm Password Field */}
           <FormControl
-              variant="outlined"
-              fullWidth
-              sx={{
-                my: 2,
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "grey",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#274546",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#274546",
-                  },
+            variant="outlined"
+            fullWidth
+            sx={{
+              my: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey",
                 },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#274546 !important",
-                  },
+                "&:hover fieldset": {
+                  borderColor: "#274546",
                 },
-              }}
+                "&.Mui-focused fieldset": {
+                  borderColor: "#274546",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                "&.Mui-focused": {
+                  color: "#274546 !important",
+                },
+              },
+            }}
           >
             <InputLabel>Confirm Password</InputLabel>
             <OutlinedInput
-                name="confirmpassword"
-                required
-                value={formData.confirmpassword}
-                onChange={(e) =>
-                    setFormData({ ...formData, confirmpassword: e.target.value })
-                }
-                type={showPassword2 ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                        onClick={handleClickShowPassword2}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                    >
-                      {showPassword2 ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Confirm Password"
+              name="confirmpassword"
+              required
+              value={formData.confirmpassword}
+              onChange={(e) =>
+                setFormData({ ...formData, confirmpassword: e.target.value })
+              }
+              type={showPassword2 ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword2}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Confirm Password"
             />
           </FormControl>
           <FormControl>
@@ -343,7 +345,8 @@ const SignUp = () => {
           <Button
             type="submit"
             variant="contained"
-            className="green-bg pascalCase-text"
+            className="extraBold-text pascalCase-text"
+            style={{ backgroundColor: "#fb8928", color: "#2d3480" }}
             fullWidth
             sx={{ my: 2 }}
           >
