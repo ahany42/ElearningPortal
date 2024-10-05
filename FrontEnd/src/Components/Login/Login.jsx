@@ -104,7 +104,7 @@ const Login = () => {
 
   return (
     <>
-      <Box sx={{ width: "80%", margin: "80px auto" }}>
+      <Box sx={{ width: "700px", margin: "80px auto" }}>
         <h4 className="mb-3">Login to your account</h4>
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
@@ -197,7 +197,7 @@ const Login = () => {
             type="submit"
             variant="contained"
             className="extraBold-text pascalCase-text"
-            style={{ backgroundColor: "#fb8928", color: "#2d3480" }}
+            style={{ backgroundColor: "#fb8928", color: "black" }}
             fullWidth
             sx={{ my: 2 }}
           >

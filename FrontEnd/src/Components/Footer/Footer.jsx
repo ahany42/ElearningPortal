@@ -7,9 +7,9 @@ const Footer = () => {
   return (
     <footer
       className="footer"
-      style={route !== "/" ? { background: "#f1f1f1" } : {}}
+      style={route === "/" ? { background: "#3ea2b2" } : {}}
     >
-      <p>
+      <p style={route !== "/"? {textShadow: "1px 1px 2px rgb(0 0 0)", color: "#fb8928"} : {}}>
         All Rights Reserved &copy; {new Date().getFullYear()}
       </p>
     </footer>

@@ -118,7 +118,7 @@ const SignUp = () => {
 
   return (
     <>
-      <Box sx={{ width: "80%", margin: "100px auto" }}>
+      <Box sx={{ width: "700px", margin: "100px auto" }}>
         <h4 className="mb-3">Create New Account</h4>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -346,7 +346,7 @@ const SignUp = () => {
             type="submit"
             variant="contained"
             className="extraBold-text pascalCase-text"
-            style={{ backgroundColor: "#fb8928", color: "#2d3480" }}
+            style={{ backgroundColor: "#fb8928", color: "black" }}
             fullWidth
             sx={{ my: 2 }}
           >

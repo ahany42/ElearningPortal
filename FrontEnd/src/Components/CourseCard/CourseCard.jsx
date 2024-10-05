@@ -127,7 +127,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter stats-button" onClick={ShowStudentsList}>
+                            <div className="alignCenter stats-button">
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -168,7 +168,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                            <div className="alignCenter-text">
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -208,7 +208,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text" onClick={() => ShowStudentsList(id)}>
+                    <div className="alignCenter-text">
                         20 <FontAwesomeIcon icon={faUser} />
                     </div>
                 </div>
@@ -241,7 +241,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <p>{desc}</p>
                     <div className="card-bottom">
                         <div>{hours} Hours</div>
-                        <div className="alignCenter-text" onClick={ShowStudentsList}>
+                        <div className="alignCenter-text">
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                     </div>

@@ -103,4 +103,7 @@
   .course-card {
     min-height: auto;
   }
+  .card-header-container-admin {
+    bottom: unset;
+  }
 }

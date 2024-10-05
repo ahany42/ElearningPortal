@@ -21,6 +21,10 @@ button, a {
   user-select: none;
 }
 
+a {
+  width: fit-content;
+}
+
 img {
   -webkit-user-drag: none;
 }

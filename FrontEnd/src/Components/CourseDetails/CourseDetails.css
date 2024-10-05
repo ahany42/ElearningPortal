@@ -16,6 +16,7 @@
     top: 10px; 
 }
 .course-stats{
+    user-select: none;
     right:10px;
     bottom:10px;
     display: flex;
