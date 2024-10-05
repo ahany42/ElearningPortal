@@ -79,7 +79,8 @@ const ForgotPassword = () => {
           <Button
             type="submit"
             variant="contained"
-            className="green-bg pascalCase-text"
+            className=" extraBold-text pascalCase-text"
+            style={{ backgroundColor: "#fb8928", color: "#2d3480" }}
             fullWidth
             sx={{ my: 2 }}
           >
