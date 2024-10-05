@@ -5,7 +5,7 @@ const Question = ({formData,setFormData}) => {
     <>
        <TextField label="Question Title"
                    name="title"
-                   fullWidth type="text" value={formData.title}
+                   fullWidth type="text" value={formData.title || ''}
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,title: e.target.value});
@@ -35,7 +35,7 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 1"
                    name="answer1"
-                   fullWidth type="text" value={formData.answer1}
+                   fullWidth type="text" value={formData.answer1 || ''}
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,answer1: e.target.value});
@@ -65,7 +65,7 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 2"
                    name="answer2"
-                   fullWidth type="text" value={formData.answer2}
+                   fullWidth type="text" value={formData.answer2 || ''}
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,answer2: e.target.value});
@@ -95,7 +95,7 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 3"
                    name="answer3"
-                   fullWidth type="text" value={formData.answer3}
+                   fullWidth type="text" value={formData.answer3 || ''}
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,answer3: e.target.value});
@@ -125,7 +125,7 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 4"
                    name="answer4"
-                   fullWidth type="text" value={formData.answer4}
+                   fullWidth type="text" value={formData.answer4 ||''}
                   //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,answer4: e.target.value});
@@ -157,14 +157,14 @@ const Question = ({formData,setFormData}) => {
        <RadioGroup
         aria-label="mcq"
         name="mcq"
-        value={formData.correctAnswer}
+        value={formData.correctAnswer || ''}
         onChange={(e) => setFormData({...formData, correctAnswer: e.target.value})}
         sx={{ display: 'flex', flexDirection: 'row' }}
       >
-        <FormControlLabel value="Answer 1" control={<Radio />} label="Choice 1" />
-        <FormControlLabel value="Answer 2" control={<Radio />} label="Choice 2" />
-        <FormControlLabel value="Answer 3"control={<Radio />} label="Choice 3" />
-        <FormControlLabel value="Answer 4"control={<Radio />} label="Choice 4" />
+        <FormControlLabel value="answer1" control={<Radio />} label="Choice 1" />
+        <FormControlLabel value="answer2" control={<Radio />} label="Choice 2" />
+        <FormControlLabel value="answer3"control={<Radio />} label="Choice 3" />
+        <FormControlLabel value="answer4"control={<Radio />} label="Choice 4" />
       </RadioGroup>
     </>
   )

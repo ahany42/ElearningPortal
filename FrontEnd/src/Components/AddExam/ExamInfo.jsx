@@ -31,6 +31,9 @@ const ExamInfo = ({ handleNext,id}) => {
       else if(isNaN(formData.duration)){
         showMessage("Invalid Duration",true);
       }
+      else if(formData.duration<=0){
+        showMessage("Invalid Duration",true);
+      }
       else{
         showMessage("Step 1 Added Successfully",false);
         handleNext();
@@ -77,12 +80,6 @@ const ExamInfo = ({ handleNext,id}) => {
                    name="courseTitle"
                    readOnly
                    fullWidth type="text" value={currentCourse.title || "Course Not Available"}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
-                  //  onChange={(e) => {
-                  //      setFormData({...formData,courseTitle: e.target.value});
-                  //      setError('');
-                  //      toast.dismiss();
-                  //  }}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -106,10 +103,9 @@ const ExamInfo = ({ handleNext,id}) => {
               },
             }}
           />
-        <TextField label="Duration"
+        <TextField label="Duration in Minutes"
                    name="duration"
                    fullWidth type="number" value={formData.duration}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'duration')}
                    onChange={(e) => {
                        setFormData({...formData,duration: e.target.value});
                    }}

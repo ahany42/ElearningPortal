@@ -7,6 +7,7 @@ import { CurrentUserContext } from '../../App';
 import './AddExam.css';
 const AddQuestions = ({ handleBack,id }) => {
   const { courses,showMessage } = useContext(CurrentUserContext);
+  const [questionsList,setQuestionsList] = useState([]);
   const currentCourse = courses.find(course=>course.id===id);
   const handleSubmit = ()=>{
 
@@ -16,14 +17,16 @@ const AddQuestions = ({ handleBack,id }) => {
     const uniqueChoices = new Set(choices); 
     return uniqueChoices.size === choices.length; 
   }
-  const handleAddQuestion = ()=>{
+  const handleAddQuestion = (formData)=>{
     if(formData.title && formData.answer1 && formData.answer2 && formData.answer3 && formData.answer4 && formData.correctAnswer){
       const allUnique = areChoicesUnique(formData.answer1,formData.answer2,formData.answer3,formData.answer4);
       if (!allUnique) {
         showMessage("Choices Are Not Unique",true);
       } else {
-        showMessage("Choices Are Unique add Question coming soon",false);
-
+        setQuestionsList(prevState=>[...prevState,formData]);
+        setFormData("");
+        console.log(questionsList)
+        showMessage("Question Added Successfully",false);
       }
     
     }
@@ -40,21 +43,18 @@ const AddQuestions = ({ handleBack,id }) => {
     answer4:'',
     correctAnswer:null
   })
- 
+
     return (
       <>
       <Box sx={{width: '80%', margin: '80px auto'}}>
       <h4 className="mb-3">Exam Questions</h4>
       <form onSubmit={handleSubmit}>
-       <Question formData={formData} setFormData={setFormData} />
+       <Question formData={formData} setFormData={setFormData}/>
           </form>
-          <button className="add-question-button AddButton" onClick={handleAddQuestion}>
+          <button className="add-question-button AddButton" onClick={()=>handleAddQuestion (formData)}>
             <FontAwesomeIcon icon={faPlus} title="Add Question"/>
              Add Question
             </button>
-        <Button variant="contained" className="stepper-button stepper-back-button pascalCase-text" onClick={handleBack}>
-          Back
-        </Button>
         <Button variant="contained" className="stepper-button pascalCase-text" >
           Submit
         </Button>
