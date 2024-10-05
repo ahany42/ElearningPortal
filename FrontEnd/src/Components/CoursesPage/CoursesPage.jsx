@@ -4,7 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import {toast} from "react-toastify";
 
-const CoursesPage = ({ courses, addCourseHandler, filterHandler, setFilter }) => {
+const CoursesPage = ({ courses, addCourseHandler, filterHandler, setFilter,enrolled }) => {
     // const [coursesList, setCoursesList] = useState([]);
     // const { currentUser } = useContext(CurrentUserContext);
     const [_, setErrorList] = useState([]); // List of errors to show only once (NOT EDITABLE)
@@ -69,7 +69,7 @@ const CoursesPage = ({ courses, addCourseHandler, filterHandler, setFilter }) =>
     return (
       <>
           <CoursesCards courses={courses} addCourseHandler={addCourseHandler}
-                        filterHandler={filterHandler} setFilter={setFilter}
+                        filterHandler={filterHandler} setFilter={setFilter} enrolled={enrolled}
           />
       </>
     )

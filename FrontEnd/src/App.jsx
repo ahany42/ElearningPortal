@@ -90,6 +90,7 @@ let messagesList = [];
 function App() {
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
     const [ courses, setCourses ] = useState(INITIAL_COURSES);
+    const [ myCourses, setMyCourses ] = useState(INITIAL_MY_COURSES);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] =
         useState(getCookie('token') ? jwtDecode(getCookie('token')) : {});
@@ -245,15 +246,8 @@ function App() {
                 <Route path="/ResetPassword" element={<ChangePassword />} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Profile" element={<UserProfile />} />
-                <Route
-                  path="/courses"
-                  element={
-                    <CoursesPage
-                      courses={courses}
-                      addCourseHandler={addCourseHandler}
-                    />
-                  }
-                />
+                <Route path="/courses" element={ <CoursesPage courses={courses} addCourseHandler={addCourseHandler} enrolled={false}/>}/>
+                <Route path="/MyCourses" element={ <CoursesPage courses={myCourses} addCourseHandler={addCourseHandler} enrolled={true}/>}/>
                 <Route
                   path="/deadline"
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
@@ -318,6 +312,14 @@ const INITIAL_COURSES = [
         desc: "basics of backend",
         hours: 5,
     },
+];
+const INITIAL_MY_COURSES = [
+    {
+        id: "e55d8be9-d517-4fdb-a813-7314410d920f",
+        title: "html&css",
+        desc: "basics of frontend",
+        hours: 2,
+    }
 ];
 
 const INITIAL_ASSIGNMENTS = [

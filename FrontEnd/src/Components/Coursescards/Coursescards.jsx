@@ -13,7 +13,7 @@ import EditCourseForm from "../EditCourseForm/EditCourseForm.jsx";
 import ENV from "../../../Front_ENV.jsx";
 import PDFViewer from "../PDFViewer/PDFViewer.jsx";
 
-const CoursesCards = ({ courses, addCourseHandler}) => {
+const CoursesCards = ({ courses, addCourseHandler,enrolled}) => {
     const [showForm, setShowForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
@@ -91,7 +91,7 @@ const CoursesCards = ({ courses, addCourseHandler}) => {
                   {
                       coursesList.map(course => (
                         <CourseCard setCourseEdit={setCourseEdit} showEditFormHandler={showEditFormHandler}
-                                    showFormHandler={showFormHandler} key={v4()} {...course} />
+                                    showFormHandler={showFormHandler} key={v4()} {...course} enrolled={enrolled}/>
                       ))
                   }
               </div>

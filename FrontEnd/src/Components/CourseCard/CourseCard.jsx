@@ -13,7 +13,7 @@ import './CourseCard.css'
 let messagesList = [];
 let errorList = [];
 
-const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit }) => {
+const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit,enrolled }) => {
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
 
@@ -91,8 +91,6 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     const ShowStudentsList= ()=>{
         navigate(`/CourseDetails/${id}/StudentsList`)
     }
-    // For testing
-    const isEnrolled = false; // Will be included in each course object (After API Implementation)
 
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
@@ -101,9 +99,9 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
-                    <div className="card-body" style={isEnrolled? {position: 'unset'} : {position: 'relative'}}>
+                    <div className="card-body" style={enrolled? {position: 'unset'} : {position: 'relative'}}>
                         <div className="card-header-container"
-                             style={isEnrolled? {left: '50%', transform: 'translateX(-50%)'} : {}}>
+                             style={enrolled? {left: '50%', transform: 'translateX(-50%)'} : {}}>
                             <div className="cardButton-container">
                                 <button className="enroll-button bold-text"
                                         onClick={CourseDetails}>
@@ -111,9 +109,9 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                                 </button>
                             </div>
                         </div>
-                        <div className="course-icons" style={isEnrolled? {top:0, left:0} : {}}>
+                        <div className="course-icons" style={enrolled? {top:0, left:0} : {}}>
                             {
-                                isEnrolled ? (
+                                enrolled ? (
                                     <span className="enroll-text enroll-button bold-text blue-text">
                                         Enrolled
                                     </span>
@@ -155,7 +153,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         </div>
                         <div className="course-icons" style={{top: 0, left: 0}}>
                             {
-                                isEnrolled ? (
+                                enrolled ? (
                                     <span className="enroll-text enroll-button bold-text blue-text">
                                     Teaching
                                 </span>
