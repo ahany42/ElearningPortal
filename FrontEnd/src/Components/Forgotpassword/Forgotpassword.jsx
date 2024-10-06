@@ -41,7 +41,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <Box sx={{ width: "80%", margin: "80px auto" }}>
+      <Box sx={{ width: "700px", margin: "80px auto" }}>
         <h4 className="mb-3">Reset your password</h4>
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
@@ -79,8 +79,8 @@ const ForgotPassword = () => {
           <Button
             type="submit"
             variant="contained"
-            className=" extraBold-text pascalCase-text"
-            style={{ backgroundColor: "#fb8928", color: "#2d3480" }}
+            className="extraBold-text pascalCase-text"
+            style={{ backgroundColor: "#fb8928", color: "black" }}
             fullWidth
             sx={{ my: 2 }}
           >

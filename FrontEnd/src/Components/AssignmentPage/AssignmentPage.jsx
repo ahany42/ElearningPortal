@@ -7,6 +7,7 @@ import { CurrentUserContext } from "../../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./AssignmentPage.css";
 
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
@@ -247,10 +248,10 @@ const AssignmentPage = ({ assignments }) => {
               ) : (
                 <>
                   <Button
-                  variant="contained"
-                  onClick={() => navigate(-1)}
-                   className="pascalCase-text dark-bg light-text"
-                >
+                      variant="contained"
+                      onClick={() => navigate(-1)}
+                      className="pascalCase-text dark-bg light-text backButton-AssignmentPage"
+                  >
                   Back
                 </Button>
                 </>

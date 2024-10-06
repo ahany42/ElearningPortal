@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { CurrentUserContext } from "../../App";
 import { useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,6 +45,7 @@ const ChangePassword = () => {
       }
     } catch (error) {
       showMessage("Something went wrong, please try again", true);
+      navigate("/");
     }
   }
 
@@ -53,7 +54,7 @@ const ChangePassword = () => {
     if (token !== null) {
       const interval = setInterval(() => {
         setUpdate(prevState => !prevState);
-      }, 1000);
+      }, 5000);
       return () => clearInterval(interval);
     }
   }, []);
@@ -117,214 +118,226 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <Box sx={{ width: "80%", margin: "80px auto" }}>
-        {
-          passwordError? (
+      <>
+        <button className="goBackBtn" style={{top: "12px", left: "90px"}}
+                onClick={() => navigate(`/profile`)}>
+          <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
+            <path
+                d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
+          </svg>
+          <span>Back</span>
+        </button>
+        <Box sx={{width: "700px", margin: "80px auto"}}>
+          {
+            passwordError ? (
                 <>
                   <h4>Set your new password</h4>
                   <Alert severity="error" sx={{my: 2}}>
                     {passwordError}
                   </Alert>
                 </>
-          ) : (
-                <h4 className="mb-3">Set your new password</h4>
-          )
-        }
-        <form onSubmit={handleSubmit}>
-          {/* Old Password Field */}
-          <FormControl
-              variant="outlined"
-              fullWidth
-              sx={{
-                my: 2,
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "grey",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#274546",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#274546",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#274546 !important",
-                  },
-                },
-              }}
-          >
-            <InputLabel>Old Password</InputLabel>
-            <OutlinedInput
-                name="oldpassword"
-                required
-                value={formData.oldpassword}
-                onChange={(e) => {
-                  setFormData({ ...formData, oldpassword: e.target.value });
-                  if (e.target.value === "" && formData.confirmpassword === "") {
-                    setPasswordError("");
-                  }
-                }}
-                type={showPassword3 ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
-                      <IconButton edge="end">
-                        <InfoOutlined />
-                      </IconButton>
-                    </Tooltip>
-                    <IconButton
-                        onClick={handleClickShowPassword3}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                    >
-                      {showPassword3 ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Old Password"
-            />
-          </FormControl>
-          {/* Password Field */}
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{
-              my: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "grey",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#274546",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#274546",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                "&.Mui-focused": {
-                  color: "#274546 !important",
-                },
-              },
-            }}
-          >
-            <InputLabel>Password</InputLabel>
-            <OutlinedInput
-              name="password"
-              required
-              value={formData.password}
-              onChange={(e) => {
-                setFormData({ ...formData, password: e.target.value });
-                if (e.target.value === "" && formData.confirmpassword === "") {
-                  setPasswordError("");
-                }
-              }}
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <Tooltip title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
-                    <IconButton edge="end">
-                      <InfoOutlined />
-                    </IconButton>
-                  </Tooltip>
-                  <IconButton
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-            />
-          </FormControl>
-
-          {/* Confirm Password Field */}
-          <FormControl
-            variant="outlined"
-            fullWidth
-            sx={{
-              my: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "grey",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#274546",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#274546",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                "&.Mui-focused": {
-                  color: "#274546 !important",
-                },
-              },
-            }}
-          >
-            <InputLabel>Confirm Password</InputLabel>
-            <OutlinedInput
-              name="confirmpassword"
-              required
-              value={formData.confirmpassword}
-              onChange={(e) => {
-                  setFormData({ ...formData, confirmpassword: e.target.value });
-                  if (formData.password !== e.target.value) {
-                      setPasswordError("Passwords do not match");
-                  } else {
-                    setPasswordError("");
-                  }
-              }}
-              type={showPassword2 ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={handleClickShowPassword2}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword2 ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Confirm Password"
-            />
-          </FormControl>
-
-          {/* Sign In Button */}
-          {
-            passwordError? (
-                <Button
-                    type="submit"
-                    disabled
-                    variant="contained"
-                    className="green-bg pascalCase-text"
-                    style={{ cursor: "not-allowed", color: "white", opacity: 0.7 }}
-                    fullWidth
-                    sx={{ my: 2 }}
-                >
-                  Submit
-                </Button>
             ) : (
-                <Button
-                    type="submit"
-                    variant="contained"
-                    className="green-bg pascalCase-text"
-                    fullWidth
-                    sx={{ my: 2 }}
-                >
-                  Submit
-                </Button>
+                <h4 className="mb-3">Set your new password</h4>
             )
           }
-        </form>
-      </Box>
-    </>
+          <form onSubmit={handleSubmit}>
+            {/* Old Password Field */}
+            <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{
+                  my: 2,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "grey",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#274546",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#274546",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    "&.Mui-focused": {
+                      color: "#274546 !important",
+                    },
+                  },
+                }}
+            >
+              <InputLabel>Old Password</InputLabel>
+              <OutlinedInput
+                  name="oldpassword"
+                  required
+                  value={formData.oldpassword}
+                  onChange={(e) => {
+                    setFormData({...formData, oldpassword: e.target.value});
+                    if (e.target.value === "" && formData.confirmpassword === "") {
+                      setPasswordError("");
+                    }
+                  }}
+                  type={showPassword3 ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                          onClick={handleClickShowPassword3}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          sx={{padding: "12px"}}
+                      >
+                        {showPassword3 ? <VisibilityOff/> : <Visibility/>}
+                      </IconButton>
+                      <Tooltip
+                          title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
+                        <IconButton edge="end">
+                          <InfoOutlined/>
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  }
+                  label="Old Password"
+              />
+            </FormControl>
+            {/* Password Field */}
+            <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{
+                  my: 2,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "grey",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#274546",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#274546",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    "&.Mui-focused": {
+                      color: "#274546 !important",
+                    },
+                  },
+                }}
+            >
+              <InputLabel>Password</InputLabel>
+              <OutlinedInput
+                  name="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => {
+                    setFormData({...formData, password: e.target.value});
+                    if (e.target.value === "" && formData.confirmpassword === "") {
+                      setPasswordError("");
+                    }
+                  }}
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          sx={{padding: "12px"}}
+                      >
+                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                      </IconButton>
+                      <Tooltip
+                          title="Password must be at least 8 characters long, include a number, a special character, an uppercase letter and a lowercase letter.">
+                        <IconButton edge="end">
+                          <InfoOutlined/>
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  }
+                  label="Password"
+              />
+            </FormControl>
+
+            {/* Confirm Password Field */}
+            <FormControl
+                variant="outlined"
+                fullWidth
+                sx={{
+                  my: 2,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "grey",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#274546",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#274546",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    "&.Mui-focused": {
+                      color: "#274546 !important",
+                    },
+                  },
+                }}
+            >
+              <InputLabel>Confirm Password</InputLabel>
+              <OutlinedInput
+                  name="confirmpassword"
+                  required
+                  value={formData.confirmpassword}
+                  onChange={(e) => {
+                    setFormData({...formData, confirmpassword: e.target.value});
+                    if (formData.password !== e.target.value) {
+                      setPasswordError("Passwords do not match");
+                    } else {
+                      setPasswordError("");
+                    }
+                  }}
+                  type={showPassword2 ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                          onClick={handleClickShowPassword2}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                      >
+                        {showPassword2 ? <VisibilityOff/> : <Visibility/>}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Confirm Password"
+              />
+            </FormControl>
+
+            {/* Sign In Button */}
+            {
+              passwordError ? (
+                  <Button
+                      type="submit"
+                      disabled
+                      variant="contained"
+                      className="extraBold-text pascalCase-text"
+                      style={{cursor: "not-allowed", opacity: 0.7}}
+                      fullWidth
+                      sx={{my: 2, backgroundColor: "#fb8928", color: "black"}}
+                  >
+                    Submit
+                  </Button>
+              ) : (
+                  <Button
+                      type="submit"
+                      variant="contained"
+                      className="extraBold-text pascalCase-text"
+                      fullWidth
+                      sx={{my: 2, backgroundColor: "#fb8928", color: "black"}}
+                  >
+                    Submit
+                  </Button>
+              )
+            }
+          </form>
+        </Box>
+      </>
   );
 };
 

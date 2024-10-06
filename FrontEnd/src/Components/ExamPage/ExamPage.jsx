@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../App";
+import "./ExamPage.css";
 
 const ExamPage = ({ exams }) => {
   const navigate = useNavigate();
@@ -238,7 +239,7 @@ const ExamPage = ({ exams }) => {
                 <Button
                   variant="contained"
                   onClick={() => navigate(-1)}
-                   className="pascalCase-text dark-bg light-text"
+                   className="pascalCase-text dark-bg light-text backButton-ExamPage"
                 >
                   Back
                 </Button>
