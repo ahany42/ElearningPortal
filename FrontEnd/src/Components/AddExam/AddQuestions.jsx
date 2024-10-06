@@ -5,14 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CurrentUserContext } from '../../App';
 import './AddExam.css';
-const AddQuestions = ({id }) => {
+const AddQuestions = ({id}) => {
   const { courses,showMessage } = useContext(CurrentUserContext);
   const currentCourse = courses.find(course=>course.id===id);
   const [questionsList,setQuestionsList] = useState({
     courseTitle:currentCourse.title,
-    questions:[],
+    questions:[]
   }
   );
+  const [questionCount,setQuestionCount] = useState(1);
   const areChoicesUnique = (choice1, choice2, choice3, choice4) => {
     const choices = [choice1, choice2, choice3, choice4];
     const uniqueChoices = new Set(choices); 
@@ -25,7 +26,13 @@ const AddQuestions = ({id }) => {
         showMessage("Choices Are Not Unique",true);
         return false;
       } else {
-        showMessage("Add Question Coming soon",false);
+        setQuestionsList(prevState => ({
+          ...prevState, 
+          questions: [...prevState.questions, formData], 
+        }));
+        setQuestionCount(prevState=>(prevState+=1));
+        showMessage("Question Added SuccessFully",false)  ;
+        setFormData("");
         return true;
       }
     
@@ -52,7 +59,7 @@ const AddQuestions = ({id }) => {
       <Box sx={{width: '80%', margin: '80px auto'}}>
       <h4 className="mb-3">Exam Questions</h4>
       <form onSubmit={handleSubmit}>
-       <Question formData={formData} setFormData={setFormData}/>
+       <Question formData={formData} setFormData={setFormData} questionCount={questionCount}/>
           </form>
           <button className="add-question-button AddButton" onClick={()=>handleAddQuestion (formData)}>
             <FontAwesomeIcon icon={faPlus} title="Add Question"/>
