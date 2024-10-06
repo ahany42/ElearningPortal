@@ -3,6 +3,7 @@ import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useContext,useState } from "react";
 import { CurrentUserContext } from '../../App';
+import {deleteCookie, getCookie} from "../Cookie/Cookie.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './AddExam.css';
@@ -41,7 +42,8 @@ const ExamInfo = ({ handleNext,id}) => {
         fetch('http://localhost:3008/createExam',{
           method:'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            authorization:getCookie("token")
           },
           body: JSON.stringify(formData)
          }
