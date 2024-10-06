@@ -13,9 +13,8 @@ const AddExam = () => {
     const [examTitleValue,setExamTitleValue] = useState();
     const navigate = useNavigate();
     const handleNext = (examTitle) => {
-     setExamTitleValue(examTitle);
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      
+        setExamTitleValue(examTitle);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
   
     const handleBack = () => {

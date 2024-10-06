@@ -115,6 +115,7 @@ const Exam = mongoose.model(
       startDate: { type: Date, required: true },
       duration: { type: Number, required: true }, // Duration in minutes
       endDate: { type: Date, required: true },
+      description: { type: String },
     },
     { timestamps: true }
   )
@@ -152,6 +153,7 @@ const Assignment = mongoose.model(
       duration: { type: Number, required: true }, // Duration in hours
       endDate: { type: Date, required: true },
       title: { type: String, required: true },
+      description: { type: String },
       document: { type: String },
     },
     { timestamps: true }

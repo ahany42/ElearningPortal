@@ -13,9 +13,10 @@ import './CourseCard.css'
 let messagesList = [];
 let errorList = [];
 
-const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit,enrolled }) => {
+const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
+    const enrolled = mode? true : isEnrolled;
 
     const showErrors = (error) => {
         if (!errorList.includes(error)) {
@@ -95,7 +96,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
-                <div className="card course-card card-shadow" key={id}>
+                <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -111,7 +112,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         </div>
                         <div className="course-icons" style={enrolled? {top:0, left:0} : {}}>
                             {
-                                enrolled ? (
+                                enrolled ? !mode && (
                                     <span className="enroll-text enroll-button bold-text blue-text">
                                         Enrolled
                                     </span>
@@ -218,7 +219,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     } else { // Guest User View (currentUser = {})
         return (
-            <div className="card course-card card-shadow" key={id}>
+            <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                 <div className="card-header">
                     <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 </div>
