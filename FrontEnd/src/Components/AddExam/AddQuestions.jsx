@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CurrentUserContext } from '../../App';
+import {getCookie} from "../Cookie/Cookie.jsx";
 import './AddExam.css';
 const AddQuestions = ({id , examTitle}) => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const AddQuestions = ({id , examTitle}) => {
     return uniqueChoices.size === choices.length; 
   }
   const handleAddQuestion = (formData)=>{
-    if(formData.title && formData.answers[0] && formData.answers[1] && formData.answers[2] && formData.answers[3] && formData.correctAnswer){
+    if(formData.title && formData.answers[0] && formData.answers[1] && formData.answers[2] && formData.answers[3] && formData.indexOfCorrectAnswer){
       const allUnique = areChoicesUnique(formData.answers[0],formData.answers[1],formData.answers[2],formData.answers[3]);
       if (!allUnique) {
         showMessage("Choices Are Not Unique",true);
@@ -33,14 +34,12 @@ const AddQuestions = ({id , examTitle}) => {
           questions: [...prevState.questions, formData], 
         }));
         setQuestionCount(prevState=>(prevState+=1));
-        showMessage("Question Added SuccessFully",false)  ;
         setFormData("");
         return true;
       }
     
     }
     else{
-      showMessage("Please fill all fields",true);
       return false;
 
     }
@@ -49,15 +48,41 @@ const AddQuestions = ({id , examTitle}) => {
    if(handleAddQuestion(formData)){
      showMessage("Save Form Coming soon",false);
      console.log(questionsList);
+     fetch('http://localhost:3008/addQuestions',{
+      method:'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization:getCookie("token")
+      },
+      body: JSON.stringify(questionsList)
+     }
+    )
+    .then(response => {
+      return response.json().then(data => {
+        if (response.status === 201) {
+          showMessage(data.message, false); 
+          return data;
+        } else {
+          showMessage(data.error, true); 
+          throw new Error('Failed to create exam');
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error); 
+    });
      navigate(`/CourseDetails/${id}`);
+
    }
   }
   const [formData,setFormData] = useState({
     title:'',
     answers:['','','',''],
-    correctAnswer:'',
+    indexOfCorrectAnswer:'',
   })
-
+  const debug=()=>{
+    console.log(questionsList)
+  }
     return (
       <>
       <Box sx={{width: '80%', margin: '80px auto'}}>
@@ -66,7 +91,7 @@ const AddQuestions = ({id , examTitle}) => {
        <Question formData={formData} setFormData={setFormData} questionCount={questionCount}/>
           </form>
           <button className="add-question-button AddButton" onClick={()=>handleAddQuestion (formData)}>
-            <FontAwesomeIcon icon={faPlus} title="Add Question"/>
+            <FontAwesomeIcon icon={faPlus} title="Add Question" onClick={debug}/>
              Another Question
             </button>
         <Button variant="contained" className="stepper-button pascalCase-text" onClick = {()=>handleSubmit(formData)} >

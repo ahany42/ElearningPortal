@@ -151,8 +151,8 @@ const Question = ({formData,setFormData,questionCount}) => {
        <RadioGroup
         aria-label="mcq"
         name="mcq"
-        value={formData.correctAnswer || ''}
-        onChange={(e) => setFormData({...formData, correctAnswer: e.target.value})}
+        value={formData.indexOfCorrectAnswer || ''}
+        onChange={(e) => setFormData({...formData, indexOfCorrectAnswer: e.target.value})}
         sx={{ display: 'flex', flexDirection: 'row' }}
       >
         <FormControlLabel value="0" control={<Radio />} label={formData.answers?.[0] ||"Choice 1"} />

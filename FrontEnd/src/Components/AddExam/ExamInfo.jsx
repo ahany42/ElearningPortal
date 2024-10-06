@@ -3,7 +3,7 @@ import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useContext,useState } from "react";
 import { CurrentUserContext } from '../../App';
-import {deleteCookie, getCookie} from "../Cookie/Cookie.jsx";
+import {getCookie} from "../Cookie/Cookie.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './AddExam.css';
@@ -52,6 +52,7 @@ const ExamInfo = ({ handleNext,id}) => {
           return response.json().then(data => {
             if (response.status === 201) {
               showMessage(data.message, false); 
+              handleNext(examTitle);
               return data;
             } else {
               showMessage(data.error, true); 
