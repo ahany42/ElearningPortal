@@ -38,7 +38,6 @@ const ExamInfo = ({ handleNext,id}) => {
         showMessage("Invalid Duration",true);
       }
       else{
-        showMessage("Step 1 Added Successfully",false);
         fetch('http://localhost:3008/createExam',{
           method:'POST',
           headers: {
@@ -47,11 +46,20 @@ const ExamInfo = ({ handleNext,id}) => {
           body: JSON.stringify(formData)
          }
         )
-         .then(response => response.json())
-         .then(data => console.log('Success:', data))
-         .catch(error => console.error('Error:', error));
-         console.log(formData)
-        handleNext(examTitle);
+        .then(response => {
+          return response.json().then(data => {
+            if (response.status === 201) {
+              showMessage(data.message, false); 
+              return data;
+            } else {
+              showMessage(data.error, true); 
+              throw new Error('Failed to create exam');
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error); 
+        });
       }
      }
      else{
