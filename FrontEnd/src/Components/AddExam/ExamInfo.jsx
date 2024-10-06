@@ -39,6 +39,18 @@ const ExamInfo = ({ handleNext,id}) => {
       }
       else{
         showMessage("Step 1 Added Successfully",false);
+        fetch('http://localhost:3008/createExam',{
+          method:'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+         }
+        )
+         .then(response => response.json())
+         .then(data => console.log('Success:', data))
+         .catch(error => console.error('Error:', error));
+         console.log(formData)
         handleNext(examTitle);
       }
      }

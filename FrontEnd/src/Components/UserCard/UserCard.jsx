@@ -35,7 +35,7 @@ const UserCard = ({isStudent , student,instructor}) => {
         
     {((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin"))  && <FontAwesomeIcon className="remove-user-button" icon={faTrash} onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>}
     {((currentUser.role === "Student") && (currentUser.id === student.id)) && <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> My Progress</button>}
-    {((currentUser.role === "Instructor") )&& <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> Progress</button>}
+    {((currentUser.role === "Instructor") && isStudent )&& <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> Progress</button>}
     </div>
 </div>
   )

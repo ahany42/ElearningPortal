@@ -127,8 +127,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter stats-button">
-                                20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                            20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -168,8 +168,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text">
-                                20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                            20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text">
+                    <div className="alignCenter-text" onClick={ShowStudentsList}>
                         20 <FontAwesomeIcon icon={faUser} />
                     </div>
                 </div>
@@ -242,7 +242,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <div className="card-bottom">
                         <div>{hours} Hours</div>
                         <div className="alignCenter-text">
-                                20 <FontAwesomeIcon icon={faUser} />
+                        20 <FontAwesomeIcon icon={faUser} />
                             </div>
                     </div>
                 </div>
