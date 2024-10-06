@@ -6,12 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CurrentUserContext } from '../../App';
 import './AddExam.css';
-const AddQuestions = ({id}) => {
+const AddQuestions = ({id , examTitle}) => {
   const navigate = useNavigate();
   const { courses,showMessage } = useContext(CurrentUserContext);
   const currentCourse = courses.find(course=>course.id===id);
   const [questionsList,setQuestionsList] = useState({
-    courseTitle:currentCourse.title,
+    examTitle:examTitle,
     questions:[]
   }
   );
@@ -48,6 +48,7 @@ const AddQuestions = ({id}) => {
   const handleSubmit = (formData)=>{
    if(handleAddQuestion(formData)){
      showMessage("Save Form Coming soon",false);
+     console.log(questionsList);
      navigate(`/CourseDetails/${id}`);
    }
   }
@@ -66,7 +67,7 @@ const AddQuestions = ({id}) => {
           </form>
           <button className="add-question-button AddButton" onClick={()=>handleAddQuestion (formData)}>
             <FontAwesomeIcon icon={faPlus} title="Add Question"/>
-             Add Question
+             Another Question
             </button>
         <Button variant="contained" className="stepper-button pascalCase-text" onClick = {()=>handleSubmit(formData)} >
           Submit

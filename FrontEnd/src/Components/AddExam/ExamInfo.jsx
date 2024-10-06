@@ -20,7 +20,7 @@ const ExamInfo = ({ handleNext,id}) => {
       eDate:null
 
     })
-    const handleExamInfo = ()=>{
+    const handleExamInfo = (examTitle)=>{
       const selectedDate = new Date(formData.sDate).getTime();
       const currentDate = new Date().getTime();
      if(formData.title && formData.duration && formData.sDate && formData.eDate){
@@ -29,7 +29,7 @@ const ExamInfo = ({ handleNext,id}) => {
       console.log(formData)
       }
       else if(selectedDate < currentDate){
-        showMessage("The date must be today or later",true);
+        showMessage("The date must be now or later",true);
       }
       else if(isNaN(formData.duration)){
         showMessage("Invalid Duration",true);
@@ -39,7 +39,7 @@ const ExamInfo = ({ handleNext,id}) => {
       }
       else{
         showMessage("Step 1 Added Successfully",false);
-        handleNext();
+        handleNext(examTitle);
       }
      }
      else{
@@ -57,7 +57,6 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="text"
               value={formData.title}
-              //  onKeyDown={(e) => handleKeyPress(e, 'title')}
               onChange={(e) => {
                 setFormData({ ...formData, title: e.target.value })
                 toast.dismiss();
@@ -226,7 +225,7 @@ const ExamInfo = ({ handleNext,id}) => {
           </form>
           <Button
             variant="contained"
-            onClick={handleExamInfo}
+            onClick={()=>handleExamInfo(formData.title)}
             className="stepper-button pascalCase-text"
             style={{ background: "#2d3480 !important" }}
           >
