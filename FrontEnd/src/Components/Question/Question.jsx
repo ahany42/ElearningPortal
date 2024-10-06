@@ -6,11 +6,8 @@ const Question = ({formData,setFormData}) => {
        <TextField label="Question Title"
                    name="title"
                    fullWidth type="text" value={formData.title || ''}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,title: e.target.value});
-                      //  setError('');
-                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -35,12 +32,11 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 1"
                    name="answer1"
-                   fullWidth type="text" value={formData.answer1 || ''}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
+                   fullWidth type="text" value={formData.answers?.[0] || ''}
                    onChange={(e) => {
-                       setFormData({...formData,answer1: e.target.value});
-                      //  setError('');
-                      //  toast.dismiss();
+                    const updatedAnswers = [...formData.answers]; 
+                    updatedAnswers[0] = e.target.value;         
+                    setFormData({...formData, answers: updatedAnswers}); 
                    }}
                    required
             sx={{
@@ -65,12 +61,11 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 2"
                    name="answer2"
-                   fullWidth type="text" value={formData.answer2 || ''}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
+                   fullWidth type="text" value={formData.answers?.[1] || ''}
                    onChange={(e) => {
-                       setFormData({...formData,answer2: e.target.value});
-                      //  setError('');
-                      //  toast.dismiss();
+                    const updatedAnswers = [...formData.answers]; 
+                    updatedAnswers[1] = e.target.value;         
+                    setFormData({...formData, answers: updatedAnswers}); 
                    }}
                    required
             sx={{
@@ -95,12 +90,11 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 3"
                    name="answer3"
-                   fullWidth type="text" value={formData.answer3 || ''}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
+                   fullWidth type="text" value={formData.answers?.[2] || ''}
                    onChange={(e) => {
-                       setFormData({...formData,answer3: e.target.value});
-                      //  setError('');
-                      //  toast.dismiss();
+                    const updatedAnswers = [...formData.answers]; 
+                    updatedAnswers[2] = e.target.value;         
+                    setFormData({...formData, answers: updatedAnswers}); 
                    }}
                    required
             sx={{
@@ -125,12 +119,11 @@ const Question = ({formData,setFormData}) => {
           />
           <TextField label="Choice 4"
                    name="answer4"
-                   fullWidth type="text" value={formData.answer4 ||''}
-                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
+                   fullWidth type="text" value={formData.answers?.[3] ||''}
                    onChange={(e) => {
-                       setFormData({...formData,answer4: e.target.value});
-                      //  setError('');
-                      //  toast.dismiss();
+                    const updatedAnswers = [...formData.answers]; 
+                    updatedAnswers[3] = e.target.value;         
+                    setFormData({...formData, answers: updatedAnswers}); 
                    }}
                    required
             sx={{
@@ -161,10 +154,10 @@ const Question = ({formData,setFormData}) => {
         onChange={(e) => setFormData({...formData, correctAnswer: e.target.value})}
         sx={{ display: 'flex', flexDirection: 'row' }}
       >
-        <FormControlLabel value="answer1" control={<Radio />} label="Choice 1" />
-        <FormControlLabel value="answer2" control={<Radio />} label="Choice 2" />
-        <FormControlLabel value="answer3"control={<Radio />} label="Choice 3" />
-        <FormControlLabel value="answer4"control={<Radio />} label="Choice 4" />
+        <FormControlLabel value="0" control={<Radio />} label={formData.answers[0] ||"Choice 1"} />
+        <FormControlLabel value="1" control={<Radio />} label={formData.answers[1] || "Choice 2"} />
+        <FormControlLabel value="2" control={<Radio />} label={formData.answers[2] || "Choice 3"} />
+        <FormControlLabel value="3" control={<Radio />} label={formData.answers[3] ||"Choice 4"} />
       </RadioGroup>
     </>
   )
