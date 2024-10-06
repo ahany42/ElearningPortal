@@ -14,23 +14,23 @@ const User = mongoose.model(
   "User",
   new mongoose.Schema(
     {
-        name: { type: String, required: true },
-        id: { type: String, required: true },
-        gender: {
-          type: String,
-          enum: ["Male", "Female"],
-          required: true,
-        },
-        email: { type: String, required: true },
-        username: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
-        role: {
-          type: String,
-          enum: ["SuperAdmin", "Admin", "Instructor", "Student"],
-          required: true,
-        },
-        resetPasswordToken: String,
-        resetPasswordExpires: Date,
+      name: { type: String, required: true },
+      id: { type: String, required: true },
+      gender: {
+        type: String,
+        enum: ["Male", "Female"],
+        required: true,
+      },
+      email: { type: String, required: true },
+      username: { type: String, required: true, unique: true },
+      password: { type: String, required: true },
+      role: {
+        type: String,
+        enum: ["SuperAdmin", "Admin", "Instructor", "Student"],
+        required: true,
+      },
+      resetPasswordToken: String,
+      resetPasswordExpires: Date,
     },
     { timestamps: true }
   )
@@ -40,11 +40,11 @@ const Course = mongoose.model(
   "Course",
   new mongoose.Schema(
     {
-        title: { type: String, required: true, unique: true },
-        desc: { type: String, required: true },
-        id: { type: String, required: true, unique: true },
-        hours: { type: Number, required: true },
-        image: { type: String },
+      title: { type: String, required: true, unique: true },
+      desc: { type: String, required: true },
+      id: { type: String, required: true, unique: true },
+      hours: { type: Number, required: true },
+      image: { type: String },
     },
     { timestamps: true }
   )
@@ -182,12 +182,12 @@ const StudentExam = mongoose.model(
   new mongoose.Schema(
     {
       examID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "Exam",
         required: true,
       },
       studentID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "User",
         required: true,
       },
@@ -200,14 +200,14 @@ const StudentExam = mongoose.model(
 //--------------------------------------------
 
 module.exports = {
-    User,
-    Course,
-    Student_Course,
-    Instructor_Course,
-    Session,
-    Exam,
-    StudentExam,
-    Assignment,
-    AssignmentAnswer,
-    Question,
+  User,
+  Course,
+  Student_Course,
+  Instructor_Course,
+  Session,
+  Exam,
+  StudentExam,
+  Assignment,
+  AssignmentAnswer,
+  Question,
 };
