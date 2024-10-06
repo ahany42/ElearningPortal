@@ -15,8 +15,8 @@ const ExamInfo = ({ handleNext,id}) => {
     const [formData,setFormData] = useState({
       title:'',
       courseTitle:currentCourse.title,
-      duration:'',
       sDate:null,
+      duration:'',
       eDate:null
 
     })
@@ -90,12 +90,6 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="text"
               value={currentCourse.title || "Course Not Available"}
-              //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
-              //  onChange={(e) => {
-              //      setFormData({...formData,courseTitle: e.target.value});
-              //      setError('');
-              //      toast.dismiss();
-              //  }}
               InputProps={{
                 readOnly: true,
               }}
@@ -125,7 +119,6 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="number"
               value={formData.duration}
-              //  onKeyDown={(e) => handleKeyPress(e, 'duration')}
               onChange={(e) => {
                 setFormData({ ...formData, duration: e.target.value });
                 toast.dismiss();

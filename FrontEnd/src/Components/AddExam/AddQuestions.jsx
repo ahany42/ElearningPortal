@@ -1,11 +1,13 @@
 import {Button,Box} from "@mui/material";
 import { useContext,useState } from "react";
 import Question from "../Question/Question";
+import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CurrentUserContext } from '../../App';
 import './AddExam.css';
 const AddQuestions = ({id}) => {
+  const navigate = useNavigate();
   const { courses,showMessage } = useContext(CurrentUserContext);
   const currentCourse = courses.find(course=>course.id===id);
   const [questionsList,setQuestionsList] = useState({
@@ -45,7 +47,8 @@ const AddQuestions = ({id}) => {
   }
   const handleSubmit = (formData)=>{
    if(handleAddQuestion(formData)){
-     showMessage("Save Form Coming soon",false)
+     showMessage("Save Form Coming soon",false);
+     navigate(`/CourseDetails/${id}`);
    }
   }
   const [formData,setFormData] = useState({
