@@ -62,6 +62,7 @@ const AddQuestions = ({id , examTitle}) => {
       return response.json().then(data => {
         if (response.status === 201) {
           showMessage(data.message, false); 
+          navigate(`/CourseDetails/${id}`);
           return data;
         } else {
           showMessage(data.error, true); 
@@ -72,8 +73,7 @@ const AddQuestions = ({id , examTitle}) => {
     .catch(error => {
       console.error('Error:', error); 
     });
-     navigate(`/CourseDetails/${id}`);
-
+   
    }
   }
   const [formData,setFormData] = useState({
