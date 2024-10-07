@@ -13,10 +13,9 @@ import './CourseCard.css'
 let messagesList = [];
 let errorList = [];
 
-const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit, isEnrolled, mode }) => {
+const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit,enrolled }) => {
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
-    const enrolled = mode? true : isEnrolled;
 
     const showErrors = (error) => {
         if (!errorList.includes(error)) {
@@ -96,7 +95,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
-                <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
+                <div className="card course-card card-shadow" key={id}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -112,7 +111,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         </div>
                         <div className="course-icons" style={enrolled? {top:0, left:0} : {}}>
                             {
-                                enrolled ? !mode && (
+                                enrolled ? (
                                     <span className="enroll-text enroll-button bold-text blue-text">
                                         Enrolled
                                     </span>
@@ -128,8 +127,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
-                            20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter stats-button">
+                                20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -169,8 +168,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
-                            20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text">
+                                20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -209,7 +208,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                             </button>
                         </div>
                     </div>
-                    <div className="alignCenter-text" onClick={ShowStudentsList}>
+                    <div className="alignCenter-text">
                         20 <FontAwesomeIcon icon={faUser} />
                     </div>
                 </div>
@@ -219,7 +218,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     } else { // Guest User View (currentUser = {})
         return (
-            <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
+            <div className="card course-card card-shadow" key={id}>
                 <div className="card-header">
                     <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 </div>
@@ -243,7 +242,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <div className="card-bottom">
                         <div>{hours} Hours</div>
                         <div className="alignCenter-text">
-                        20 <FontAwesomeIcon icon={faUser} />
+                                20 <FontAwesomeIcon icon={faUser} />
                             </div>
                     </div>
                 </div>

@@ -10,11 +10,10 @@ const AddExam = () => {
     const {id} = useParams();
     const [activeStep, setActiveStep] = useState(0);
     const [formData, setFormData] = useState({});
-    const [examTitleValue,setExamTitleValue] = useState();
     const navigate = useNavigate();
-    const handleNext = (examTitle) => {
-        setExamTitleValue(examTitle);
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  
+    const handleNext = () => {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
   
     const handleBack = () => {
@@ -86,7 +85,6 @@ const AddExam = () => {
               formData={formData}
               setFormData={setFormData}
               id={id}
-              examTitle={examTitleValue}
             />
           )}
         </Box>

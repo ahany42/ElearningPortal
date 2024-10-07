@@ -87,13 +87,6 @@ h6 {
   font-weight: 600 !important;
 }
 
-input[type="datetime-local"]:disabled {
-  background: #b1b1b1 !important;
-  color: black !important;
-  font-weight: unset !important;
-  opacity: 0.7 !important;
-}
-
 .extraBold-text {
   font-weight: 800 !important;
 }

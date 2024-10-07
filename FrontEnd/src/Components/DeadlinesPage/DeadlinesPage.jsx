@@ -32,14 +32,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
 
   useEffect(() => {
     if (showForm) {
-      window.scrollBy(0, 228)
-      CardsContainer.current.style.height = "950px";
       CardsContainer.current.style.opacity = "0.3";
       CardsContainer.current.style.pointerEvents = "none";
       CardsContainer.current.style.userSelect = "none";
     } else {
-      document.body.scrollIntoView({ behavior: "smooth" });
-      CardsContainer.current.style.height = "";
       CardsContainer.current.style.opacity = "1";
       CardsContainer.current.style.pointerEvents = "";
       CardsContainer.current.style.userSelect = "";

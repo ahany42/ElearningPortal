@@ -1,14 +1,16 @@
 import {TextField} from "@mui/material";
 import { FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-const Question = ({formData,setFormData,questionCount}) => {
+const Question = ({formData,setFormData}) => {
   return (
     <>
-    <h4>Question : {questionCount}</h4>
        <TextField label="Question Title"
                    name="title"
                    fullWidth type="text" value={formData.title || ''}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
                        setFormData({...formData,title: e.target.value});
+                      //  setError('');
+                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -33,11 +35,12 @@ const Question = ({formData,setFormData,questionCount}) => {
           />
           <TextField label="Choice 1"
                    name="answer1"
-                   fullWidth type="text" value={formData.answers?.[0] || ''}
+                   fullWidth type="text" value={formData.answer1 || ''}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
-                    const updatedAnswers =  [...(formData.answers || [])]; 
-                    updatedAnswers[0] = e.target.value;         
-                    setFormData({...formData, answers: updatedAnswers}); 
+                       setFormData({...formData,answer1: e.target.value});
+                      //  setError('');
+                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -62,11 +65,12 @@ const Question = ({formData,setFormData,questionCount}) => {
           />
           <TextField label="Choice 2"
                    name="answer2"
-                   fullWidth type="text" value={formData.answers?.[1] || ''}
+                   fullWidth type="text" value={formData.answer2 || ''}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
-                    const updatedAnswers = [...(formData.answers || [])]; 
-                    updatedAnswers[1] = e.target.value;         
-                    setFormData({...formData, answers: updatedAnswers}); 
+                       setFormData({...formData,answer2: e.target.value});
+                      //  setError('');
+                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -91,11 +95,12 @@ const Question = ({formData,setFormData,questionCount}) => {
           />
           <TextField label="Choice 3"
                    name="answer3"
-                   fullWidth type="text" value={formData.answers?.[2] || ''}
+                   fullWidth type="text" value={formData.answer3 || ''}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
-                    const updatedAnswers =  [...(formData.answers || [])]; 
-                    updatedAnswers[2] = e.target.value;         
-                    setFormData({...formData, answers: updatedAnswers}); 
+                       setFormData({...formData,answer3: e.target.value});
+                      //  setError('');
+                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -120,11 +125,12 @@ const Question = ({formData,setFormData,questionCount}) => {
           />
           <TextField label="Choice 4"
                    name="answer4"
-                   fullWidth type="text" value={formData.answers?.[3] ||''}
+                   fullWidth type="text" value={formData.answer4 ||''}
+                  //  onKeyDown={(e) => handleKeyPress(e, 'title')}
                    onChange={(e) => {
-                    const updatedAnswers =  [...(formData.answers || [])]; 
-                    updatedAnswers[3] = e.target.value;         
-                    setFormData({...formData, answers: updatedAnswers}); 
+                       setFormData({...formData,answer4: e.target.value});
+                      //  setError('');
+                      //  toast.dismiss();
                    }}
                    required
             sx={{
@@ -151,14 +157,14 @@ const Question = ({formData,setFormData,questionCount}) => {
        <RadioGroup
         aria-label="mcq"
         name="mcq"
-        value={formData.indexOfCorrectAnswer || ''}
-        onChange={(e) => setFormData({...formData, indexOfCorrectAnswer: e.target.value})}
+        value={formData.correctAnswer || ''}
+        onChange={(e) => setFormData({...formData, correctAnswer: e.target.value})}
         sx={{ display: 'flex', flexDirection: 'row' }}
       >
-        <FormControlLabel value="0" control={<Radio />} label={formData.answers?.[0] ||"Choice 1"} />
-        <FormControlLabel value="1" control={<Radio />} label={formData.answers?.[1] || "Choice 2"} />
-        <FormControlLabel value="2" control={<Radio />} label={formData.answers?.[2] || "Choice 3"} />
-        <FormControlLabel value="3" control={<Radio />} label={formData.answers?.[3] ||"Choice 4"} />
+        <FormControlLabel value="answer1" control={<Radio />} label="Choice 1" />
+        <FormControlLabel value="answer2" control={<Radio />} label="Choice 2" />
+        <FormControlLabel value="answer3"control={<Radio />} label="Choice 3" />
+        <FormControlLabel value="answer4"control={<Radio />} label="Choice 4" />
       </RadioGroup>
     </>
   )
