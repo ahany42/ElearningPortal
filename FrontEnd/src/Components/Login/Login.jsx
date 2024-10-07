@@ -107,7 +107,7 @@ const Login = () => {
       <Box sx={{ width: "700px", margin: "80px auto" }}>
         <h4 className="mb-3">Login to your account</h4>
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
+          {/* Username Field */}
           <TextField
             label="Username"
             name="username"

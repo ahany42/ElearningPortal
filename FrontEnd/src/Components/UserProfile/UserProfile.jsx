@@ -11,6 +11,7 @@ import {
   MDBBreadcrumb,
   MDBBreadcrumbItem,
 } from "mdb-react-ui-kit";
+import {TextField} from '@mui/material' ;
 import { CurrentUserContext } from "../../App";
 import { getCookie, updateCookie } from "../Cookie/Cookie.jsx";
 import {jwtDecode} from "jwt-decode";
@@ -43,68 +44,71 @@ const UserProfile = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  const submitEditHandler = async () => {
-    if (!profileData.name || !profileData.username || !profileData.email) {
-      showMessage("Please fill in all the required fields.", true);
-      return;
-    }
+ const submitEditHandler = async () => {
+   if (currentUser === profileData) {
+     showMessage("No changes made", null);
+     setIsEditing(false);
+     return;
+   }
+   setLoading(true);
+   await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {
+     method: "PUT",
+     headers: {
+       "Content-Type": "application/json",
+       authorization: `${getCookie("token")}`,
+     },
+     body: JSON.stringify({ ...profileData }),
+   })
+     .then((res) => res.json())
+     .then(async (data) => {
+       setTimeout(() => {
+         setLoading(false);
+         if (!data.error) {
+           showMessage("Profile updated successfully", false);
+           updateCookie("token", data.data);
+           setCurrentUser(jwtDecode(data.data));
+           setIsEditing(false);
+         } else {
+           showMessage(data.error, true);
+         }
+       }, 1400);
+     })
+     .catch((err) => {
+       console.clear();
+       setTimeout(() => {
+         showMessage(err.message, true);
+         setLoading(false);
+       }, 1400);
+     });
+ };
+
+  const changePassword = async () => {
     setLoading(true);
-    await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {
-      method: "PUT",
+    await fetch("http://localhost:3008/forgotPassword", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: `${getCookie("token")}`,
       },
-      body: JSON.stringify({ ...profileData }),
+      body: JSON.stringify({
+        email: profileData.email,
+        isedit: true,
+      }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        if (!data.error) {
-          showMessage("Profile updated successfully", false);
-          updateCookie("token", data.data);
-          setCurrentUser(jwtDecode(data.data)); 
-          setIsEditing(false);
-        } else {
-          showMessage(data.error, true);
-        }
-      })
-      .catch((err) => {
-        showMessage(err.message, true);
-        setLoading(false);
+      .then(async (data) => {
+        setTimeout(() => {
+          setLoading(false);
+          if (!data.error) {
+            const token = data.data.resetToken;
+            navigate(`/resetPassword?token=${token}`, {
+              state: { edit: true },
+            });
+          } else {
+            showMessage(data.error, true);
+          }
+        }, 1400);
       });
   };
-
-  const submitPasswordChangeHandler = async () => {
-    if (!password) {
-      showMessage("Password cannot be empty", true);
-      return;
-    }
-    setLoading(true);
-    await fetch(`http://localhost:3008/updatePassword/${currentUser.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `${getCookie("token")}`,
-      },
-      body: JSON.stringify({ password }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        if (!data.error) {
-          showMessage("Password updated successfully", false);
-          setPassword(""); 
-        } else {
-          showMessage(data.error, true);
-        }
-      })
-      .catch((err) => {
-        showMessage(err.message, true);
-        setLoading(false);
-      });
-  };
-
   return (
     <section style={{ backgroundColor: "#eee" }}>
       <MDBContainer className="py-5">
@@ -168,7 +172,7 @@ const UserProfile = () => {
                     <MDBCardText>Username:</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <input
+                    {/* <input
                       className="text-muted data-input"
                       type="text"
                       name="username"
@@ -176,6 +180,35 @@ const UserProfile = () => {
                       onChange={handleChange}
                       readOnly={!isEditing}
                       style={{ width: "100%" }}
+                    /> */}
+                    <TextField
+                      label="Username"
+                      name="username"
+                      fullWidth
+                      type="text"
+                      value={profileData.username || ""}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                      required
+                      sx={{
+                        my: 2,
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "grey",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#274546",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#274546",
+                          },
+                        },
+                        "& .MuiInputLabel-root": {
+                          "&.Mui-focused": {
+                            color: "#274546 !important",
+                          },
+                        },
+                      }}
                     />
                   </MDBCol>
                 </MDBRow>
@@ -201,7 +234,7 @@ const UserProfile = () => {
                   <MDBCol sm="3">
                     <MDBCardText>Password:</MDBCardText>
                   </MDBCol>
-                  <MDBCol sm="9" >
+                  <MDBCol sm="9">
                     <input
                       className="text-muted data-input"
                       type={isEditing ? "password" : "text"}
@@ -212,8 +245,8 @@ const UserProfile = () => {
                     />
                     {isEditing && (
                       <MDBBtn
-                      onClick={submitPasswordChangeHandler}
-                        style={{marginTop:"25px "}}
+                        onClick={changePassword}
+                        style={{ marginTop: "25px " }}
                       >
                         Change Password
                       </MDBBtn>
