@@ -13,7 +13,7 @@ import EditCourseForm from "../EditCourseForm/EditCourseForm.jsx";
 import ENV from "../../../Front_ENV.jsx";
 import PDFViewer from "../PDFViewer/PDFViewer.jsx";
 
-const CoursesCards = ({ courses, addCourseHandler, mode}) => {
+const CoursesCards = ({ courses, addCourseHandler,enrolled}) => {
     const [showForm, setShowForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [coursesList, setCoursesList] = useState([]);
@@ -41,12 +41,10 @@ const CoursesCards = ({ courses, addCourseHandler, mode}) => {
 
     useEffect(() => {
         if (showForm || showEditForm) {
-            window.scrollBy(0, 200)
             CardsContainer.current.style.opacity = '0.3';
             CardsContainer.current.style.pointerEvents = 'none';
             CardsContainer.current.style.userSelect = 'none';
         } else {
-            document.body.scrollIntoView({ behavior: 'smooth' });
             CardsContainer.current.style.opacity = '1';
             CardsContainer.current.style.pointerEvents = '';
             CardsContainer.current.style.userSelect = '';
@@ -54,7 +52,7 @@ const CoursesCards = ({ courses, addCourseHandler, mode}) => {
     }, [showForm, showEditForm]);
 
     const showFormHandler = () => {
-        setShowForm(!showForm);
+      setShowForm(!showForm);
     };
 
     const showEditFormHandler = () => {
@@ -75,7 +73,7 @@ const CoursesCards = ({ courses, addCourseHandler, mode}) => {
                                showEditFormHandler={showEditFormHandler} />
             )
         }
-          <span ref={CardsContainer} style={{transition: "all 0.3s ease-in-out"}}>
+          <span ref={CardsContainer}>
               <div className="courses-buttons-container">
                  <SearchBar setFilter={setFilter}/>
                  {
@@ -93,7 +91,7 @@ const CoursesCards = ({ courses, addCourseHandler, mode}) => {
                   {
                       coursesList.map(course => (
                         <CourseCard setCourseEdit={setCourseEdit} showEditFormHandler={showEditFormHandler}
-                                    showFormHandler={showFormHandler} key={v4()} {...course} mode={mode}/>
+                                    showFormHandler={showFormHandler} key={v4()} {...course} enrolled={enrolled}/>
                       ))
                   }
               </div>

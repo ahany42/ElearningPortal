@@ -15,25 +15,22 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
     const [form, setForm] = useState({
         title: "",
         desc: "",
-        startDate: "",
-        endDate: "",
-        duration: "", // Duration in hours
-        document: "",
+        due: "",
         course: courses[0].title,
     });
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
 
-        if (e.target.name === "title" && e.target.value && !isNaN(e.target.value)) {
-            if (!errorList.includes("Title must be a string")) {
-                errorList.push("Title must be a string");
-            }
-        } else {
-          if (e.target.name === "title") {
-            errorList = errorList.filter((e) => e !== "Title must be a string");
-          }
-        }
+    if (e.target.name === "title" && e.target.value && !isNaN(e.target.value)) {
+      if (!errorList.includes("Title must be a string")) {
+        errorList.push("Title must be a string");
+      }
+    } else {
+      if (e.target.name === "title") {
+        errorList = errorList.filter((e) => e !== "Title must be a string");
+      }
+    }
 
         if (e.target.name === 'desc' && e.target.value && !isNaN(e.target.value)) {
             if (!errorList.includes('Description must be a string')) {
@@ -44,17 +41,6 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
                 errorList = errorList.filter(e => e !== 'Description must be a string');
             }
         }
-
-        // Validation for startDate and endDate
-        if (e.target.name === "endDate") {
-            if (e.target.value <= form.startDate) {
-                if (!errorList.includes("End date must be after the start date")) {
-                    errorList.push("End date must be after the start date");
-                }
-            } else {
-                errorList = errorList.filter(e => e !== "End date must be after the start date");
-            }
-        }
     };
 
     const handleSubmit = (e) => {
@@ -63,29 +49,24 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
         if (errorList.length) return;
 
         if (id) {
-            const { title, desc, duration, document, startDate, endDate } = e.target;
+            const { title, desc, due } = e.target;
             addHandler({
               title: title.value,
               description: desc.value,
               id: v4(),
-              startDate: startDate.value,
-              endDate: endDate.value,
-              duration: duration, // Duration in hours
-              document: document.value,
+              dueDate: due.value,
               courseID: id,
+              courseTitle:currentCourse.title,
             });
             showMessage("Assignemnt added successfully", false);
             navigate(`/CourseDetails/${id}`);
         } else {
-            const { title, desc, duration, document, startDate, endDate, course } = e.target;
+            const { title, desc, due, course } = e.target;
             addHandler({
               title: title.value,
               description: desc.value,
               id: v4(),
-              startDate: startDate.value,
-              endDate: endDate.value,
-              duration: duration, // Duration in hours
-              document: document.value,
+              dueDate: due.value,
               courseID: courses.find((c) => c.title === course.value).id,
             });
             showMessage("Assignment added successfully", false);
@@ -122,47 +103,25 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
                     </div>
                 }
                 <form className="form ps-2 pe-2" onSubmit={handleSubmit}>
-                    <div className="d-flex flex-column gap-3">
-                        <div className="form-group">
-                            <label htmlFor="title" className="green-text bold-text">Title</label>
-                            <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="document" className="green-text bold-text">Document</label>
-                            <input onChange={handleChange} value={form.document}
-                                   style={{color: "black"}}
-                                   type="file" id="document" name="document" required/>
-                        </div>
-                    </div>
-                    <div className="form-group justify-content-between">
-                        <label htmlFor="startDate" className="green-text bold-text">Start Date</label>
-                        <input onChange={handleChange} value={form.startDate}
-                               style={{height: "57px"}}
-                               type="datetime-local" id="startDate" name="startDate" required/>
-                    </div>
-                    <div className="form-group justify-content-between">
-                        <label htmlFor="endDate" className="green-text bold-text">End Date</label>
-                        <input onChange={handleChange} value={form.endDate}
-                               style={{height: "57px"}} disabled={!form.startDate}
-                               type="datetime-local" id="endDate" name="endDate" required/>
+                    <div className="form-group">
+                        <label htmlFor="title" className="green-text bold-text">Title</label>
+                        <input onChange={handleChange} value={form.title} type="text" id="title" name="title" required/>
                     </div>
                     <div className={!id ? "d-flex justify-content-between gap-3" : ""}>
-                        <div className="form-group justify-content-between" style={{width: "47%"}}>
-                            <label htmlFor="duration" className="green-text bold-text">Duration</label>
-                            <input onChange={handleChange} value={form.duration}
+                        <div className="form-group justify-content-between">
+                            <label htmlFor="due" className="green-text bold-text">Due Date</label>
+                            <input onChange={handleChange} value={form.due}
                                    style={{height: "57px"}}
-                                   type="number" id="duration" name="duration" required/>
+                                   type="date" id="due" name="due" required/>
                         </div>
-                        {
-                            id &&
-                            <div className="form-group" style={{width: "47%"}}>
+                        {id &&
+                        <div className="form-group">
                                 <label htmlFor="courseTitle" className="green-text bold-text">Course Title</label>
-                                <input name="courseTitle" readOnly value={currentCourse.title || "Course Not Available"}/>
-                            </div>
+                              <input name="courseTitle" readOnly value={currentCourse.title || "Course Not Available"}/>
+                         </div>
                         }
-                        {
-                            !id &&
-                            <div className="form-group flex-grow-1" style={{width: "47%"}}>
+                        {!id &&
+                            <div className="form-group flex-grow-1">
                                 <label htmlFor="course" className="green-text bold-text">Course</label>
                                 <Select
                                     sx={{
@@ -198,8 +157,7 @@ const AddAssignment = ({ addHandler, showFormHandler}) => {
 
                     <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
                         {
-                            errorList.length || !form.startDate || !form.endDate || !form.document ||
-                            !form.desc || !form.title || !form.duration || !form.course  ? (
+                            errorList.length || !form.due || !form.desc || !form.title || !form.course ? (
                                 <button disabled className="btn AddCourseButton" type="submit">Add</button>
                             ) : (
                                 <button className="btn AddCourseButton" type="submit">Add</button>

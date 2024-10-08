@@ -81,10 +81,6 @@ const pathsRoleBased = [
         path: /^\/AddMaterial\/[a-zA-Z0-9\-]+$/,
         roles: "instructor, admin, superadmin",
     },
-    {
-        path: /^\/MyCourses$/,
-        roles: "instructor, student",
-    },
 ]
 
 export const CurrentUserContext = createContext();
@@ -107,72 +103,6 @@ function App() {
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
     const routes = useLocation();
-
-    // Fetch courses / assignments / exams from the database
-    useEffect(() => {
-        const fetchCourses = async () => {
-            // Fetch courses for the student
-            const response =
-                await fetch(`http://localhost:3008/getCourses`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(currentUser.role? { userId: currentUser.id } : {} ),
-                })
-                .then((res) => res.json())
-            if (response.data) {
-                setCourses(response.data);
-                currentUser.role && (currentUser.role.toLowerCase() === "student" ||
-                    currentUser.role.toLowerCase() === "instructor") &&
-                    setMyCourses(response.data.filter((e) => e.isEnrolled));
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        const fetchAssignments = async () => {
-            // Fetch assignments for the student
-            const response =
-                await fetch(`http://localhost:3008/getAssignments/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': getCookie('token')
-                    },
-                })
-                .then((res) => res.json())
-            if (response.data) {
-                setAssignments(response.data);
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        const fetchExams = async () => {
-            // Fetch exams for the student
-            const response =
-                await fetch(`http://localhost:3008/course-exams/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': getCookie('token')
-                    },
-                })
-                .then((res) => res.json())
-            if (response.data) {
-                setExams(response.data);
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        fetchCourses();
-        if (currentUser) {
-            // fetchAssignments();
-            // fetchExams();
-        } else {
-            setAssignments([]);
-            setExams([]);
-        }
-    }, [currentUser]);
 
     useEffect(() => {
         let interval = null;
@@ -316,8 +246,8 @@ function App() {
                 <Route path="/ResetPassword" element={<ChangePassword />} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Profile" element={<UserProfile />} />
-                <Route path="/courses" element={ <CoursesPage courses={courses} addCourseHandler={addCourseHandler}/>}/>
-                <Route path="/MyCourses" element={ <CoursesPage mode="MyCourses" courses={myCourses} addCourseHandler={addCourseHandler}/>}/>
+                <Route path="/courses" element={ <CoursesPage courses={courses} addCourseHandler={addCourseHandler} enrolled={false}/>}/>
+                <Route path="/MyCourses" element={ <CoursesPage courses={myCourses} addCourseHandler={addCourseHandler} enrolled={true}/>}/>
                 <Route
                   path="/deadline"
                   element={<DeadlinesPage assignments={assignments} exams={exams} />}
@@ -397,20 +327,14 @@ const INITIAL_ASSIGNMENTS = [
         id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
         title: "Assignment 1",
         courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-        startDate: "2024-09-28",
-        endDate: "2024-09-30",
-        duration: "48", // Duration in hours
-        document: null,
+        dueDate: "2024-09-30",
         description: "This is a React assignment",
     },
     {
         id: "263b8b3d-9b82-4512-8392-5b1971fdba39",
         title: "Assignment 2",
         courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-        startDate: "2024-09-28",
-        endDate: "2024-10-01",
-        duration: "76", // Duration in hours
-        document: null,
+        dueDate: "2024-10-05",
         description: "This is a Node.js assignment",
     },
 ];

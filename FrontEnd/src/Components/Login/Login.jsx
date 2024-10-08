@@ -107,7 +107,7 @@ const Login = () => {
       <Box sx={{ width: "700px", margin: "80px auto" }}>
         <h4 className="mb-3">Login to your account</h4>
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
+          {/* Username Field */}
           <TextField
             label="Username"
             name="username"
@@ -173,7 +173,6 @@ const Login = () => {
               onChange={(e) => {
                 setFormData({ ...formData, password: e.target.value });
                 setError("");
-                toast.dismiss();
               }}
               type={showPassword ? "text" : "password"}
               onKeyDown={(e) => handleKeyPress(e, "password")}

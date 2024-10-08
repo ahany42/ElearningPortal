@@ -3,7 +3,6 @@ import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useContext,useState } from "react";
 import { CurrentUserContext } from '../../App';
-import {getCookie} from "../Cookie/Cookie.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './AddExam.css';
@@ -16,12 +15,12 @@ const ExamInfo = ({ handleNext,id}) => {
     const [formData,setFormData] = useState({
       title:'',
       courseTitle:currentCourse.title,
-      sDate:null,
       duration:'',
+      sDate:null,
       eDate:null
 
     })
-    const handleExamInfo = (examTitle)=>{
+    const handleExamInfo = ()=>{
       const selectedDate = new Date(formData.sDate).getTime();
       const currentDate = new Date().getTime();
      if(formData.title && formData.duration && formData.sDate && formData.eDate){
@@ -30,7 +29,7 @@ const ExamInfo = ({ handleNext,id}) => {
       console.log(formData)
       }
       else if(selectedDate < currentDate){
-        showMessage("The date must be now or later",true);
+        showMessage("The date must be today or later",true);
       }
       else if(isNaN(formData.duration)){
         showMessage("Invalid Duration",true);
@@ -39,30 +38,8 @@ const ExamInfo = ({ handleNext,id}) => {
         showMessage("Invalid Duration",true);
       }
       else{
-        fetch('http://localhost:3008/createExam',{
-          method:'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization:getCookie("token")
-          },
-          body: JSON.stringify(formData)
-         }
-        )
-        .then(response => {
-          return response.json().then(data => {
-            if (response.status === 201) {
-              showMessage(data.message, false); 
-              handleNext(examTitle);
-              return data;
-            } else {
-              showMessage(data.error, true); 
-              throw new Error('Failed to create exam');
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Error:', error); 
-        });
+        showMessage("Step 1 Added Successfully",false);
+        handleNext();
       }
      }
      else{
@@ -80,6 +57,7 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="text"
               value={formData.title}
+              //  onKeyDown={(e) => handleKeyPress(e, 'title')}
               onChange={(e) => {
                 setFormData({ ...formData, title: e.target.value })
                 toast.dismiss();
@@ -112,6 +90,12 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="text"
               value={currentCourse.title || "Course Not Available"}
+              //  onKeyDown={(e) => handleKeyPress(e, 'courseTitle')}
+              //  onChange={(e) => {
+              //      setFormData({...formData,courseTitle: e.target.value});
+              //      setError('');
+              //      toast.dismiss();
+              //  }}
               InputProps={{
                 readOnly: true,
               }}
@@ -141,6 +125,7 @@ const ExamInfo = ({ handleNext,id}) => {
               fullWidth
               type="number"
               value={formData.duration}
+              //  onKeyDown={(e) => handleKeyPress(e, 'duration')}
               onChange={(e) => {
                 setFormData({ ...formData, duration: e.target.value });
                 toast.dismiss();
@@ -248,7 +233,7 @@ const ExamInfo = ({ handleNext,id}) => {
           </form>
           <Button
             variant="contained"
-            onClick={()=>handleExamInfo(formData.title)}
+            onClick={handleExamInfo}
             className="stepper-button pascalCase-text"
             style={{ background: "#2d3480 !important" }}
           >
