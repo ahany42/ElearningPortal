@@ -53,23 +53,22 @@ const upload = multer({
 class CourseController {
 
        async createCourse(req, res, next) {
-              // Image handling added here
-              const { title, desc, hours, instructorId } = req.body;
-              const image = req.file ? req.file.path : null; // Store image path from multer
-              const id = v4();
-
-              const user =
-                  await User.findOne({ id: instructorId });
-
-              if (!title || !desc || !hours) {
-                     return deleteAssociateFiles(image, "All fields are required", res, next);
-              }
-
-              if (user && user.role.toLowerCase() !== "instructor") {
-                     return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
-              }
-
               try {
+                     // Image handling added here
+                     const { title, desc, hours, instructorId } = req.body;
+                     const image = req.file ? req.file.path : null; // Store image path from multer
+                     const id = v4();
+
+                     const user =
+                         await User.findOne({ id: instructorId });
+
+                     if (!title || !desc || !hours) {
+                            return deleteAssociateFiles(image, "All fields are required", res, next);
+                     }
+
+                     if (user && user.role.toLowerCase() !== "instructor") {
+                            return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
+                     }
                      const course = await Course.create({
                             title,
                             desc,
@@ -79,7 +78,7 @@ class CourseController {
                      });
 
                      if (user)
-                            // Optional create an Instructor_Course association
+                         // Optional create an Instructor_Course association
                             await Instructor_Course.create({
                                    instructorID: user._id,
                                    courseID: course._id,
@@ -94,65 +93,64 @@ class CourseController {
        }
 
        async updateCourse(req, res, next) {
-              // Image handling added here
-              const { title, desc, hours, instructorId } = req.body;
-              const { courseId } = req.params;
-              const image = req.file ? req.file.path : null; // Store image path from multer
-
-              const course = await Course.findOne({ id: courseId });
-              if (!course) {
-                     return deleteAssociateFiles(image, "Invalid Course", res, next);
-              }
-
-              const user =
-                  await User.findOne({ id: instructorId });
-
-              if (!title || !desc || !hours) {
-                     return deleteAssociateFiles(image, "All fields are required", res, next);
-              }
-
-              if ( isNaN(hours) || (!isNaN(hours) && (hours < 0) )) {
-                     return deleteAssociateFiles(image, "Invalid hours", res, next);
-              }
-
-              if (user && user.role.toLowerCase() !== "instructor") {
-                     return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
-              }
-
-              // Delete the old course image (file) from the file system (if it exists)
-              if (course.image) {
-                     fs.unlink(course.image, (err) => {
-                            if (err) {
-                                   return deleteAssociateFiles(course.image, "Error updating course image", res, next);
-                            }
-                     });
-              }
-
               try {
-                       const updatedCourse = await Course.findOne({ _id: course._id });
+                     // Image handling added here
+                     const { title, desc, hours, instructorId } = req.body;
+                     const { courseId } = req.params;
+                     const image = req.file ? req.file.path : null; // Store image path from multer
 
-                       updatedCourse.title = title; updatedCourse.desc = desc;
-                       updatedCourse.hours = hours; updatedCourse.image = image;
+                     const course = await Course.findOne({ id: courseId });
+                     if (!course) {
+                            return deleteAssociateFiles(image, "Invalid Course", res, next);
+                     }
+
+                     const user =
+                         await User.findOne({ id: instructorId });
+
+                     if (!title || !desc || !hours) {
+                            return deleteAssociateFiles(image, "All fields are required", res, next);
+                     }
+
+                     if ( isNaN(hours) || (!isNaN(hours) && (hours < 0) )) {
+                            return deleteAssociateFiles(image, "Invalid hours", res, next);
+                     }
+
+                     if (user && user.role.toLowerCase() !== "instructor") {
+                            return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
+                     }
+
+                     // Delete the old course image (file) from the file system (if it exists)
+                     if (course.image) {
+                            fs.unlink(course.image, (err) => {
+                                   if (err) {
+                                          return deleteAssociateFiles(course.image, "Error updating course image", res, next);
+                                   }
+                            });
+                     }
+                     const updatedCourse = await Course.findOne({ _id: course._id });
+
+                     updatedCourse.title = title; updatedCourse.desc = desc;
+                     updatedCourse.hours = hours; updatedCourse.image = image;
 
 
-                       if (user) {
-                              // Optional create an Instructor_Course association
-                              await Instructor_Course.findOneAndUpdate({courseID: updatedCourse._id}, {
-                                     instructorID: user._id,
-                                     courseID: updatedCourse._id,
-                                     duration: hours
-                              });
-                       } else {
-                                // If no instructor is provided, remove the Instructor_Course association
-                                await Instructor_Course.findOneAndDelete({courseID: updatedCourse._id});
-                       }
+                     if (user) {
+                            // Optional create an Instructor_Course association
+                            await Instructor_Course.findOneAndUpdate({courseID: updatedCourse._id}, {
+                                   instructorID: user._id,
+                                   courseID: updatedCourse._id,
+                                   duration: hours
+                            });
+                     } else {
+                            // If no instructor is provided, remove the Instructor_Course association
+                            await Instructor_Course.findOneAndDelete({courseID: updatedCourse._id});
+                     }
 
-                       updatedCourse.save();
+                     updatedCourse.save();
 
-                       res.status(201).json({data: updatedCourse, message: `Course (${title}) updated successfully`});
+                     res.status(201).json({data: updatedCourse, message: `Course (${title}) updated successfully`});
               } catch (error) {
-                       res.status(200).json({ error: error.message });
-                       next(`ERROR IN: Update Course function => ${error.message}`);
+                     res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Update Course function => ${error.message}`);
               }
        }
 
@@ -181,19 +179,73 @@ class CourseController {
                             studentID: student._id,
                             courseID: course._id
                      });
-                     res.status(201).json({ data: studentCourse });
+                     res.status(201).json({ data: studentCourse, message: `You Enrolled Successfully` });
               } catch (error) {
                      res.status(200).json({ error: error.message });
               }
        }
 
        async getCourse(req, res) {
-              const { courseId } = req.params;
               try {
-                     const course = await Course.findOne({ _id: courseId });
-                     res.status(200).json(course);
+                     const { courseId } = req.params;
+                     const course = await Course.findOne({ id: courseId });
+
+                     if (!course) {
+                            return res.status(200).json({ error: "Invalid course" });
+                     }
+
+                     res.status(201).json({data: course});
               } catch (error) {
-                     res.status(400).json({ error: error.message });
+                     res.status(200).json({ error: error.message });
+              }
+       }
+
+       async getAllCourses(req, res) {
+              try {
+                     const { userId } = req.body;
+
+                     if (userId) {
+                            const user = await User.findOne({ id: userId });
+                            if (!user) {
+                                   return res.status(200).json({ error: "Invalid userId" });
+                            }
+
+                            if (user.role.toLowerCase() === "student") {
+                                   const studentCourses = await Student_Course.find({ studentID: user._id });
+                                   // Get all courses where the courseID is in the studentCourses array
+                                   const Mycourses = await Course.find({ _id:
+                                              { $in: studentCourses.map(sc => sc.courseID) } });
+                                   let Allcourses = await Course.find();
+                                   Allcourses = Allcourses.map(course => {
+                                          if (Mycourses.find(c => c.id === course.id)) {
+                                                 return {...course._doc, isEnrolled: true};
+                                          }
+                                          return {...course._doc, isEnrolled: false};
+                                   });
+                                   return res.status(201).json({data: Allcourses});
+                            } else if (user.role.toLowerCase() === "instructor") {
+                                   const instuctorCourses = await Instructor_Course.find({ instructorID: user._id });
+                                   // Get all courses where the courseID is in the studentCourses array
+                                   const Mycourses = await Course.find({ _id:
+                                              { $in: instuctorCourses.map(ic => ic.courseID) } });
+                                   let Allcourses = await Course.find();
+                                   Allcourses = Allcourses.map(course => {
+                                          if (Mycourses.find(c => c.id === course.id)) {
+                                                 return {...course._doc, isEnrolled: true};
+                                          }
+                                          return {...course._doc, isEnrolled: false};
+                                   });
+                                   return res.status(201).json({data: Allcourses});
+                            } else { // admin or superadmin
+                                   const courses = await Course.find();
+                                   return res.status(201).json({data: courses});
+                            }
+                     } else { // Guest user
+                            const courses = await Course.find();
+                            return res.status(201).json({data: courses});
+                     }
+              } catch (error) {
+                     res.status(200).json({ error: error.message });
               }
        }
 

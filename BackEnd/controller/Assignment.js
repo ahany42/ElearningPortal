@@ -55,7 +55,7 @@ class AssignmentController {
     // Create a new assignment
     async createAssignment(req, res, next) {
         try {
-            const { courseID, startDate, duration, endDate, title } = req.body; // courseID as v4 uuid
+            const { courseID, startDate, duration, endDate, title, description } = req.body; // courseID as v4 uuid
             const document = req.file ? req.file.path : null; // Store document path from multer
 
             // Validate input
@@ -119,6 +119,7 @@ class AssignmentController {
                 duration,
                 endDate,
                 title,
+                description,
                 document
             });
 
@@ -266,7 +267,7 @@ class AssignmentController {
 
             // Check if the student has submitted an answer for this assignment
             const answer = await AssignmentAnswer.findOne({ assignmentID: assignment._id,
-                            studentID: student._id });
+                studentID: student._id });
             if (!answer) {
                 return res.status(200).json({ error: "Student has not submitted an answer for this assignment" });
             }
@@ -298,6 +299,7 @@ class AssignmentController {
                             endDate: assignment.endDate,
                             duration: assignment.duration,
                             document: assignment.document,
+                            description: assignment.description,
                             courseID: assignment.courseID.id
                         });
                     }
@@ -314,6 +316,7 @@ class AssignmentController {
                             endDate: assignment.endDate,
                             duration: assignment.duration,
                             document: assignment.document,
+                            description: assignment.description,
                             courseID: assignment.courseID.id
                         });
                     }
@@ -321,15 +324,16 @@ class AssignmentController {
                 return res.status(201).json({ data: myAssignments });
             } else {
                 return res.status(201).json({ data:
-                    assignments.map(assignment => ({
-                        id: assignment.id,
-                        title: assignment.title,
-                        startDate: assignment.startDate,
-                        endDate: assignment.endDate,
-                        duration: assignment.duration,
-                        document: assignment.document,
-                        courseID: assignment.courseID.id
-                    }))
+                        assignments.map(assignment => ({
+                            id: assignment.id,
+                            title: assignment.title,
+                            startDate: assignment.startDate,
+                            endDate: assignment.endDate,
+                            duration: assignment.duration,
+                            document: assignment.document,
+                            description: assignment.description,
+                            courseID: assignment.courseID.id
+                        }))
                 });
             }
 
@@ -350,14 +354,14 @@ class AssignmentController {
             }
 
             return res.status(201).json({data: {
-                id: assignment.id,
-                title: assignment.title,
-                startDate: assignment.startDate,
-                endDate: assignment.endDate,
-                duration: assignment.duration,
-                document: assignment.document,
-                courseID: assignment.courseID.id
-            }});
+                    id: assignment.id,
+                    title: assignment.title,
+                    startDate: assignment.startDate,
+                    endDate: assignment.endDate,
+                    duration: assignment.duration,
+                    document: assignment.document,
+                    courseID: assignment.courseID.id
+                }});
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Get Assignment By ID Function => ${err}`);
@@ -368,7 +372,7 @@ class AssignmentController {
     async updateAssignment(req, res, next) {
         try {
             const assignmentID = req.params.id; // assignmentID as v4 uuid
-            const { title, startDate, endDate, duration } = req.body;
+            const { title, startDate, endDate, duration, description } = req.body;
             const document = req.file ? req.file.path : null; // Store document path from multer
 
             // Find the assignment
@@ -394,7 +398,7 @@ class AssignmentController {
             // Update assignment fields
             assignment.title = title; assignment.duration = duration;
             assignment.startDate = startDate; assignment.endDate = endDate;
-            assignment.document = document;
+            assignment.document = document; assignment.description = description;
 
             // Save the updated assignment
             const updatedAssignment = await assignment.save();

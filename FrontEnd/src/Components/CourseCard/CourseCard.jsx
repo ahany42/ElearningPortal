@@ -13,9 +13,10 @@ import './CourseCard.css'
 let messagesList = [];
 let errorList = [];
 
-const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit,enrolled }) => {
+const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
+    const enrolled = mode? true : isEnrolled;
 
     const showErrors = (error) => {
         if (!errorList.includes(error)) {
@@ -66,7 +67,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         //     state: { id, title, desc, hours},
         // });
     }
-    
+
     const DeleteCourseHandler = (courseId) => {
         setCourses((prevState) =>
             prevState.filter((course) => course.id !== courseId)
@@ -95,7 +96,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
-                <div className="card course-card card-shadow" key={id}>
+                <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                     <div className="card-header">
                         <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                     </div>
@@ -111,7 +112,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         </div>
                         <div className="course-icons" style={enrolled? {top:0, left:0} : {}}>
                             {
-                                enrolled ? (
+                                enrolled ? !mode && (
                                     <span className="enroll-text enroll-button bold-text blue-text">
                                         Enrolled
                                     </span>
@@ -127,14 +128,14 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter stats-button">
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
                 </div>
             );
-        } 
+        }
         else if (currentUser.role === "Instructor") {
             return (
                 <div className="card course-card card-shadow" key={id}>
@@ -168,7 +169,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text">
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -178,47 +179,47 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         }
         // SuperAdmin and Admin
         else return (
-          <div className="card course-card card-shadow" key={id}>
-            <div className="card-header position-relative">
-              <img src={ReactImg || CoursePlaceholder} alt="Course" />
-              <div className="course-icons admin-icons">
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  style={{ cursor: "pointer" }}
-                  className="edit-icon"
-                  onClick={() => EditCourse(id)}
-                />
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  style={{ color: "red", cursor: "pointer" }}
-                  onClick={() => DeleteCourseHandler(id)}
-                />
-              </div>
-            </div>
-            <div className="card-body">
-              <h5 className="pascalCase-text bold-text">{title}</h5>
-              <p>{desc}</p>
-                <div className="card-bottom align-items-center">
-                    <div>{hours} Hours</div>
-                    <div className="card-header-container-admin">
-                        <div className="cardButton-container">
-                            <button className="enroll-button bold-text"
-                                    onClick={CourseDetails}>
-                                Details
-                            </button>
+                <div className="card course-card card-shadow" key={id}>
+                    <div className="card-header position-relative">
+                        <img src={ReactImg || CoursePlaceholder} alt="Course" />
+                        <div className="course-icons admin-icons">
+                            <FontAwesomeIcon
+                                icon={faEdit}
+                                style={{ cursor: "pointer" }}
+                                className="edit-icon"
+                                onClick={() => EditCourse(id)}
+                            />
+                            <FontAwesomeIcon
+                                icon={faTrash}
+                                style={{ color: "red", cursor: "pointer" }}
+                                onClick={() => DeleteCourseHandler(id)}
+                            />
                         </div>
                     </div>
-                    <div className="alignCenter-text">
-                        20 <FontAwesomeIcon icon={faUser} />
+                    <div className="card-body">
+                        <h5 className="pascalCase-text bold-text">{title}</h5>
+                        <p>{desc}</p>
+                        <div className="card-bottom align-items-center">
+                            <div>{hours} Hours</div>
+                            <div className="card-header-container-admin">
+                                <div className="cardButton-container">
+                                    <button className="enroll-button bold-text"
+                                            onClick={CourseDetails}>
+                                        Details
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="alignCenter-text" onClick={ShowStudentsList}>
+                                20 <FontAwesomeIcon icon={faUser} />
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-          </div>
             );
 
     } else { // Guest User View (currentUser = {})
         return (
-            <div className="card course-card card-shadow" key={id}>
+            <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                 <div className="card-header">
                     <img src={ReactImg || CoursePlaceholder} alt="Course"/>
                 </div>
@@ -242,8 +243,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <div className="card-bottom">
                         <div>{hours} Hours</div>
                         <div className="alignCenter-text">
-                                20 <FontAwesomeIcon icon={faUser} />
-                            </div>
+                            20 <FontAwesomeIcon icon={faUser} />
+                        </div>
                     </div>
                 </div>
             </div>

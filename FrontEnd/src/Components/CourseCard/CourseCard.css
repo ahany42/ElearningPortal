@@ -1,5 +1,8 @@
-.course-card {
+.card {
   width: 250px;
+}
+
+.course-card {
   min-height: 405px;
 }
 

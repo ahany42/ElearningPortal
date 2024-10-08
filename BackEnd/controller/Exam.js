@@ -1,4 +1,4 @@
-const { Exam, StudentExam, Question, Course } = require("../db/Database");
+const { Exam, StudentExam, Question, Course, User } = require("../db/Database");
 const { v4: uuidv4 } = require("uuid");
 /*
     Functions to be implemented:
@@ -33,14 +33,13 @@ module.exports.createExam = async (req, res, next) => {
     if (!title || !courseTitle || !sDate || !duration || !eDate) {
       return res.status(200).json({ error: "All fields are required" });
     }
-    const startDate = new Date(sDate);
-    const endDate = new Date(eDate);
-    if (endDate < startDate) {
+
+    if (eDate < sDate) {
       return res
-        .status(200)
-        .json({ error: "End date must be greater than start date" });
+          .status(200)
+          .json({ error: "End date must be greater than start date" });
     }
-    if (endDate < new Date()) {
+    if (eDate < new Date()) {
       return res.status(200).json({ error: "End date must be in the future" });
     }
     const courseId = await findCOurseIdByTitle(courseTitle);
@@ -48,9 +47,9 @@ module.exports.createExam = async (req, res, next) => {
       id: uuidv4(),
       courseID: courseId,
       title,
-      startDate,
+      startDate: sDate,
       duration,
-      endDate,
+      endDate: eDate,
     });
     await exam.save();
     res.status(201).json({ message: "Exam created successfully" });
@@ -70,18 +69,19 @@ module.exports.addQuestions = async (req, res, next) => {
 
     if (!questions || questions.length === 0) {
       return res
-        .status(200)
-        .json({ error: "Exam must at least has one question" });
+          .status(200)
+          .json({ error: "Exam must at least have one question" });
     }
 
     for (const questionData of questions) {
-      const { title, answers, correctAnswer } = questionData;
-      if (!title || !answers || !correctAnswer) {
+      const { title, answers, indexOfCorrectAnswer } = questionData;
+      if (!title || !answers || indexOfCorrectAnswer === undefined) {
         return res.status(200).json({
           error:
-            "Please ensure that the title and asnwers and the coreect answer are assigned",
+              "Please ensure that the title, answers, and the index of the correct answer are assigned",
         });
       }
+      const correctAnswer = answers[indexOfCorrectAnswer];
       const question = new Question({
         id: uuidv4(),
         title,
@@ -94,7 +94,7 @@ module.exports.addQuestions = async (req, res, next) => {
 
     res.status(201).json({ message: "Questions were added successfully" });
   } catch (error) {
-    res.status(200).json({ error: "Unexpected Error Occurred" });
+    res.status(500).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: addQuestions function => ${error}`);
   }
 };
@@ -102,7 +102,17 @@ module.exports.addQuestions = async (req, res, next) => {
 module.exports.getExamsforAdmins = async (req, res, next) => {
   try {
     const exams = await Exam.find();
-    res.status(201).json({ data: exams });
+    const examsInfo = [];
+    for (const exam of exams) {
+      examsInfo.push({
+        courseTitle: Course.findOne({ _id: exam.courseID }).title,
+        title: exam.title,
+        startDate: exam.startDate,
+        endDate: exam.endDate,
+        duration: exam.duration,
+      });
+    }
+    res.status(201).json({ data: examsInfo });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getExams function => ${error}`);
@@ -116,14 +126,32 @@ module.exports.getExamsforStudents = async (req, res, next) => {
       return res.status(200).json({ error: "Student ID is required" });
     }
     const studentExams = await StudentExam.find({ studentID: studentId });
-    res.status(201).json({ data: studentExams });
+    if (!studentExams || studentExams.length === 0) {
+      return res.status(200).json({ error: "There are no exams for you yet!" });
+    }
+    const examsId = studentExams.map((exam) => exam.examID);
+    const examList = await Exam.find({ _id: { $in: examsId } });
+    console.log(examList);
+    const examsInfo = [];
+    for (const exam of examList) {
+      const course = await Course.findOne({ _id: exam.courseID }); // Await the findOne method
+      console.log(course.title); // Now this should log the title correctly
+      examsInfo.push({
+        courseTitle: course.title,
+        title: exam.title,
+        startDate: exam.startDate,
+        endDate: exam.endDate,
+        duration: exam.duration,
+      });
+    }
+    res.status(201).json({ data: examsInfo });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getExams function => ${error}`);
   }
 };
 
-module.exports.getExam = async (req, res, next) => {
+module.exports.StartSolvingExam = async (req, res, next) => {
   try {
     const { examId } = req.params;
     if (!examId) {
@@ -133,7 +161,27 @@ module.exports.getExam = async (req, res, next) => {
     if (!exam) {
       return res.status(200).json({ error: "Exam not found" });
     }
-    res.status(201).json({ data: exam });
+    const questions = await Question.find({ examID: exam._id });
+    if (!questions) {
+      return res.status(200).json({
+        error: "This exam doesn't contain any questions",
+        data: exam.title,
+      });
+    }
+    responsedQuestionData = [];
+    for (const question of questions) {
+      responsedQuestionData.push({
+        title: question.title,
+        answers: question.answers,
+        correctAnswer: question.correctAnswer,
+      });
+    }
+    const responsedData = {
+      ExamTitle: exam.title,
+      questions: responsedQuestionData,
+      duration: exam.duration,
+    };
+    res.status(201).json({ data: responsedData });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: getExam function => ${error}`);
@@ -168,21 +216,21 @@ module.exports.updateExam = async (req, res, next) => {
     if (!exam) {
       return res.status(200).json({ error: "Exam not found" });
     }
-    const { title, startDate, duration, endDate } = req.body;
-    if (!title || !startDate || !duration || !endDate) {
+    const { title, sDate, duration, eDate } = req.body;
+    if (!title || !sDate || !duration || !eDate) {
       return res.status(200).json({ error: "All fields are required" });
     }
     if (exam.title != title) {
       exam.title = title;
     }
-    if (exam.startDate != startDate) {
-      exam.startDate = startDate;
+    if (exam.startDate != sDate) {
+      exam.startDate = sDate;
     }
     if (exam.duration != duration) {
       exam.duration = duration;
     }
-    if (exam.endDate != endDate) {
-      exam.endDate = endDate;
+    if (exam.endDate != eDate) {
+      exam.endDate = eDate;
     }
     await exam.save();
     res.status(201).json({ message: "Exam updated successfully", exam });
@@ -202,8 +250,8 @@ module.exports.updateQuestion = async (req, res, next) => {
     if (!question) {
       return res.status(200).json({ error: "Question not found" });
     }
-    const { title, answers, correctAnswer } = req.body;
-    if (!title || !answers || !correctAnswer) {
+    const { title, answers, indexOfCorrectAnswer } = req.body;
+    if (!title || !answers || !indexOfCorrectAnswer) {
       return res.status(200).json({ error: "All fields are required" });
     }
     if (question.title != title) {
@@ -212,13 +260,15 @@ module.exports.updateQuestion = async (req, res, next) => {
     if (question.answers != answers) {
       question.answers = answers;
     }
-    if (question.correctAnswer != correctAnswer) {
-      question.correctAnswer = correctAnswer;
+    questionAnswers = question.answers;
+
+    if (questionAnswers[indexOfCorrectAnswer] !== question.correctAnswer) {
+      question.correctAnswer = questionAnswers[indexOfCorrectAnswer];
     }
     await question.save();
     res
-      .status(201)
-      .json({ message: "Question updated successfully", question });
+        .status(201)
+        .json({ message: "Question updated successfully", question });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: updateQuestion function => ${error}`);
@@ -243,7 +293,7 @@ module.exports.deleteQuestion = async (req, res, next) => {
   }
 };
 
-module.exports.solveExam = async (req, res, next) => {
+module.exports.finishSolvingExam = async (req, res, next) => {
   try {
     const { examId } = req.params;
     if (!examId) {
@@ -261,14 +311,14 @@ module.exports.solveExam = async (req, res, next) => {
     if (!student) {
       return res.status(200).json({ error: "Student not found" });
     }
-    const studentExam = await Student_Exam.findOne({
+    const studentExam = await StudentExam.findOne({
       examID: examId,
       studentID: studentId,
     });
     if (!studentExam) {
       return res
-        .status(200)
-        .json({ error: "Student not registered for this exam" });
+          .status(200)
+          .json({ error: "Student not registered for this exam" });
     }
     if (submissionDate > exam.endDate) {
       studentExam.grade = 0;
@@ -280,6 +330,6 @@ module.exports.solveExam = async (req, res, next) => {
     res.status(201).json({ message: "Exam solved successfully" });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
-    next(`ERROR IN: solveExam function => ${error}`);
+    next(`ERROR IN: finishSolvingExam function => ${error}`);
   }
 };

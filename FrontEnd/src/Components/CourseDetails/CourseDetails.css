@@ -1,19 +1,19 @@
 .course-details{
     width: 90%;
     margin: 100px auto;
-    position: relative; 
+    position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
 }
 .course-title,.course-stats,.course-description{
-    position: absolute; 
-    padding: 5px; 
+    position: absolute;
+    padding: 5px;
     font-size: 1.5em;
-    z-index: 1; 
+    z-index: 1;
 }
 .course-title{
-    left: 10px; 
-    top: 10px; 
+    left: 10px;
+    top: 10px;
 }
 .course-stats{
     user-select: none;
