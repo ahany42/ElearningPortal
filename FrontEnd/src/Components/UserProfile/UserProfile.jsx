@@ -6,26 +6,17 @@ import {
   MDBCard,
   MDBCardBody,
   MDBCardImage,
-  MDBBtn,
-  MDBCardText,
-  MDBBreadcrumb,
-  MDBBreadcrumbItem,
 } from "mdb-react-ui-kit";
-import {FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField} from '@mui/material' ;
+import { TextField } from '@mui/material' ;
 import { CurrentUserContext } from "../../App";
 import { getCookie, updateCookie } from "../Cookie/Cookie.jsx";
 import {jwtDecode} from "jwt-decode";
-import { NavLink, useNavigate } from "react-router-dom";
-import avatar from "../../assets/avatar.png";
+import { useNavigate } from "react-router-dom";
 import './UserProfile.css'
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({});
-  const [selectedImage, setSelectedImage] = useState(avatar);
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const overlay = useRef(null);
   const { showMessage, currentUser, setLoading, setCurrentUser } =
@@ -34,13 +25,11 @@ const UserProfile = () => {
   useEffect(() => {
     if (currentUser) {
       setProfileData(currentUser);
-      setPassword(currentUser.password);
     }
-    setSelectedImage(currentUser.avatar || avatar);
   }, [currentUser]);
 
   useEffect(() => {
-    overlay.current.style.transform = `translateX(${isEditing ? "" : "-"}105%)`;
+    overlay.current.style.transform = `translateX(${isEditing ? "" : "-"}150%)`;
   }, [isEditing]);
 
   const handleChange = (e) => {
