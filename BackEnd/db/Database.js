@@ -199,6 +199,88 @@ const StudentExam = mongoose.model(
   )
 );
 
+const Announcement = mongoose.model(
+  "Announcement",
+  new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
+    },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
+    editedAt: { type: Date, default: null },
+    isEdited: { type: Boolean, default: false },
+  })
+);
+
+const Post = mongoose.model(
+  "Post",
+  new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    AnnouncementId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Announcement",
+      required: true,
+    },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    isEdited: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now },
+    editedAt: { type: Date, default: null },
+  })
+);
+
+const Comment = mongoose.model(
+  "Comment",
+  new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    postID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+      required: true,
+    },
+    content: { type: String, required: true },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
+    editedAt: { type: Date, default: null },
+  })
+);
+
+const Reply = mongoose.model(
+  "Reply",
+  new mongoose.Schema({
+    id: { type: String, required: true, unique: true },
+    commentID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      required: true,
+    },
+    content: { type: String, required: true },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
+    editedAt: { type: Date, default: null },
+  })
+);
 //--------------------------------------------
 
 module.exports = {
@@ -212,4 +294,8 @@ module.exports = {
   Assignment,
   AssignmentAnswer,
   Question,
+  Announcement,
+  Post,
+  Comment,
+  Reply,
 };
