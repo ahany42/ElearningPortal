@@ -173,7 +173,6 @@ const Login = () => {
               onChange={(e) => {
                 setFormData({ ...formData, password: e.target.value });
                 setError("");
-                toast.dismiss();
               }}
               type={showPassword ? "text" : "password"}
               onKeyDown={(e) => handleKeyPress(e, "password")}
