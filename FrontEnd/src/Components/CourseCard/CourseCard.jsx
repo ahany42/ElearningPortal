@@ -201,14 +201,15 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom align-items-center">
                             <div>{hours} Hours</div>
-                            <div className="card-header-container-admin">
-                                <div className="cardButton-container">
-                                    <button className="enroll-button bold-text"
-                                            onClick={CourseDetails}>
-                                        Details
-                                    </button>
-                                </div>
+                            <div className="card-header-container"
+                             style={{left: '50%', transform: 'translateX(-50%)'}}>
+                            <div className="cardButton-container">
+                                <button className="enroll-button bold-text"
+                                        onClick={CourseDetails}>
+                                    Details
+                                </button>
                             </div>
+                        </div>
                             <div className="alignCenter-text" onClick={ShowStudentsList}>
                                 20 <FontAwesomeIcon icon={faUser} />
                             </div>

@@ -76,7 +76,7 @@ const CourseDetails = () => {
                             <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                         </div>
                         {
-                            (currentUser.role === "Student" || currentUser.role === "Instructor" || !currentUser.role) ?
+                            (currentUser.role === "Student" || !currentUser.role) ?
                                 !isEnrolled ?
                                     <button className="enroll-button-courseDetails bold-text blue-text"
                                             onClick={() => EnrollCourse(course.id)}>
