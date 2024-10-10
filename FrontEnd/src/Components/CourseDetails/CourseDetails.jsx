@@ -48,7 +48,7 @@ const CourseDetails = () => {
         course ?
             <>
                 {
-                    (currentUser.role === "Instructor") &&
+                    (currentUser.role === "Instructor"  && course.isEnrolled) &&
                     <div className="add-material-button-container">
                         <button className="AddButton add-material" onClick={AddMaterial}>
                             <FontAwesomeIcon icon={faPlus} title="Add Course"/>
