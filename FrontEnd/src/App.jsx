@@ -63,7 +63,7 @@ const pathsRoleBased = [
     },
     {
         path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/StudentsList$/,
-        roles: "instructor, admin, superadmin",
+        roles: "instructor, admin, superadmin,student",
     },
     {
         path: /^\/AddAssignment\/[a-zA-Z0-9\-]+$/,
