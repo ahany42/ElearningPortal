@@ -199,8 +199,8 @@ const StudentExam = mongoose.model(
   )
 );
 
-const Announcement = mongoose.model(
-  "Announcement",
+const Post = mongoose.model(
+  "Post",
   new mongoose.Schema({
     id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
@@ -217,28 +217,6 @@ const Announcement = mongoose.model(
     createdAt: { type: Date, default: Date.now },
     editedAt: { type: Date, default: null },
     isEdited: { type: Boolean, default: false },
-  })
-);
-
-const Post = mongoose.model(
-  "Post",
-  new mongoose.Schema({
-    id: { type: String, required: true, unique: true },
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    AnnouncementId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Announcement",
-      required: true,
-    },
-    creatorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    isEdited: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now },
-    editedAt: { type: Date, default: null },
   })
 );
 
@@ -295,7 +273,6 @@ module.exports = {
   Assignment,
   AssignmentAnswer,
   Question,
-  Announcement,
   Post,
   Comment,
   Reply,
