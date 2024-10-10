@@ -102,7 +102,7 @@ const CourseDetails = () => {
                                     <Placeholder text="You're all caught up" img={CaughtUp}/>
                             }
                         </div>):
-                         (<Placeholder text="Access denied. Please check your permissions for this course." img={AccessDenied}/>)
+                         (<Placeholder text="Enroll to course to view Material" img={AccessDenied}/>)
                     }
                 </div>
             </>
