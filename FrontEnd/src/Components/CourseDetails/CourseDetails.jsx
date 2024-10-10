@@ -65,7 +65,6 @@ const CourseDetails = () => {
                     <span>Back</span>
                 </button>
                 <div className="card course-details card-shadow">
-                    {/* check if instructor is teaching this course */}
                     <div className="card-header details-header">
                         <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                         <img src={ReactImg} alt="Course Photo"/>
