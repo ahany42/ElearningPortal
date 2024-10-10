@@ -91,7 +91,7 @@ const CourseDetails = () => {
                         <h5 className="course-description">{course.desc}</h5>
                     </div>
                     {
-                        currentUser.role && course.isEnrolled ?(
+                        (currentUser.role && course.isEnrolled) || (currentUser.role==="SuperAdmin" || currentUser.role==="Admin") ?(
                         <div className="course-material card-body">
                             <h5>Added Material:</h5>
                             {
