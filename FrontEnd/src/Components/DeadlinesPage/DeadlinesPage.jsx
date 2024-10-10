@@ -105,7 +105,8 @@ const DeadlinesPage = ({ assignments, exams }) => {
               <th style={{ width: "70px" }}>No</th>
               <th>Title</th>
               <th>Course</th>
-              <th>Date</th>
+              <th>Start Date</th>
+              <th>End Date</th>
               <th>View Details</th>
             </tr>
             </thead>
@@ -127,7 +128,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
                       </span>
                           </td>
                           <td>
-                            <span>{assignment.dueDate || "Not Available"}</span>
+                            <span>{assignment.startDate || "Not Available"}</span>
+                          </td>
+                          <td>
+                            <span>{assignment.endDate || "Not Available"}</span>
                           </td>
                           <td>
                             <button
@@ -168,6 +172,9 @@ const DeadlinesPage = ({ assignments, exams }) => {
                       {courses.find((c) => c.id === exam.courseID)?.title ||
                           "Not Available"}
                     </span>
+                      </td>
+                      <td>
+                        <span>{exam.dueDate || "Not Available"}</span>
                       </td>
                       <td>
                         <span>{exam.dueDate || "Not Available"}</span>
