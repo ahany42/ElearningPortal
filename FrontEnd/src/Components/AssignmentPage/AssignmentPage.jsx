@@ -17,7 +17,8 @@ const AssignmentPage = ({ assignments }) => {
   const [assignment, setAssignment] = useState({
     title: "",
     courseID: "",
-    dueDate: "",
+    startDate: "",
+    endDate:"",
     description: "",
   });
 
@@ -33,7 +34,8 @@ const AssignmentPage = ({ assignments }) => {
           id: assignedData.id,
           title: assignedData.title,
           course: courses.find((c) => c.id === assignedData.courseID)?.title,
-          dueDate: assignedData.dueDate,
+          endDate: assignedData.endDate,
+          startDate: assignedData.startDate,
           description: assignedData.description,
         });
       }
@@ -71,7 +73,8 @@ const AssignmentPage = ({ assignments }) => {
         id: assignment.id,
         title: editableAssignment.title,
         courseID: courses.find((c) => c.title === editableAssignment.course)?.id,
-        dueDate: editableAssignment.dueDate,
+        endDate: editableAssignment.endDate,
+        startDate: editableAssignment.startDate,
         description: editableAssignment.description
     });
     setAssignments((prevAssignments) =>
@@ -79,7 +82,8 @@ const AssignmentPage = ({ assignments }) => {
         a.id === assignment.id ? { ...a,
             title: editableAssignment.title,
             courseID: courses.find((c) => c.title === editableAssignment.course)?.id,
-            dueDate: editableAssignment.dueDate,
+            endDate: editableAssignment.endDate,
+            startDate: editableAssignment.startDate,
             description: editableAssignment.description
         } : a
       )
@@ -87,7 +91,9 @@ const AssignmentPage = ({ assignments }) => {
     setIsEditing(false);
     showMessage("Assignment updated successfully", false);
   };
-
+ const comingSoon = ()=>{
+  alert("Coming Soon")
+ }
   return (
     <Container
       maxWidth="md"
@@ -173,23 +179,44 @@ const AssignmentPage = ({ assignments }) => {
               </td>
             </tr>
             <tr>
-              <td>Due Date</td>
+              <td>Start Date</td>
               <td>
                 {isEditing ? (
                     <TextField
                         fullWidth
                         type="date"
                         variant="outlined"
-                        value={editableAssignment.dueDate}
+                        value={editableAssignment.startDate}
                         onChange={(e) =>
                             setEditableAssignment({
                               ...editableAssignment,
-                              dueDate: e.target.value,
+                              startDate: e.target.value,
                             })
                         }
                     />
                 ) : (
-                    assignment.dueDate || "Not available"
+                    assignment.startDate || "Not available"
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td>End Date</td>
+              <td>
+                {isEditing ? (
+                    <TextField
+                        fullWidth
+                        type="date"
+                        variant="outlined"
+                        value={editableAssignment.endDate}
+                        onChange={(e) =>
+                            setEditableAssignment({
+                              ...editableAssignment,
+                              endDate: e.target.value,
+                            })
+                        }
+                    />
+                ) : (
+                    assignment.endDate || "Not available"
                 )}
               </td>
             </tr>
@@ -230,7 +257,8 @@ const AssignmentPage = ({ assignments }) => {
                             id: assignment.id,
                             title: assignment.title,
                             course: courses.find((c) => c.id === assignment.courseID)?.title,
-                            dueDate: assignment.dueDate,
+                            endDate: assignment.endDate,
+                            startDate: assignment.startDate,
                             description: assignment.description,
                           });
                         }}
@@ -247,6 +275,7 @@ const AssignmentPage = ({ assignments }) => {
                   </div>
               ) : (
                 <>
+                <div className="d-flex justify-content-center gap-5">
                   <Button
                       variant="contained"
                       onClick={() => navigate(-1)}
@@ -254,6 +283,16 @@ const AssignmentPage = ({ assignments }) => {
                   >
                   Back
                 </Button>
+                {(currentUser.role==="Student") && <Button
+                  variant="contained"
+                  style={{ backgroundColor: "#2196f3" }}
+                  onClick={comingSoon}
+                  className="pascalCase-text green-bg"
+                >
+                  Submit
+                </Button>}
+                <div/>
+                </div>
                 </>
               )
             }

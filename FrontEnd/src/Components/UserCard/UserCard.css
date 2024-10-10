@@ -1,0 +1,50 @@
+.user-card{
+    width:80%;
+    margin: auto;
+    height:70px;
+    overflow: none;
+}
+.user-list-user-avatar{
+    width:70px;
+    left:10px;
+    position: absolute;
+}
+.user-card-sub-container{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.user-card{
+    width:350px;
+    height:70px;
+    margin: 0.5em auto;
+    display: flex;
+    justify-content: center;
+}
+.user-sub-card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.remove-user-button{
+    cursor: pointer;
+    user-select: none;
+    right: 5px;
+    top:5px;
+    margin-right: 10px;
+    position: absolute;
+    border:none;
+    background-color: transparent;
+}
+.user-name{
+    color:rgb(71, 71, 71);
+    font-weight: 600;
+}
+.user-details{
+    display: flex;
+}
+.progress-button{
+    position:absolute;
+    right:10px;
+    bottom:10px;
+}
