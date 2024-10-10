@@ -10,6 +10,7 @@ import CourseMaterial from '../CourseMaterial/CourseMaterial';
 import NotFoundImg from '../../assets/404.svg';
 import Placeholder from '../Placeholder/Placeholder';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import AccessDenied from '../../assets/AccessDenied.svg';
 import CaughtUp from '../../assets/Grades.svg';
 
 const CourseDetails = () => {
@@ -90,7 +91,7 @@ const CourseDetails = () => {
                         <h5 className="course-description">{course.desc}</h5>
                     </div>
                     {
-                        currentUser.role && course.isEnrolled &&
+                        currentUser.role && course.isEnrolled ?(
                         <div className="course-material card-body">
                             <h5>Added Material:</h5>
                             {
@@ -100,7 +101,8 @@ const CourseDetails = () => {
                                     </div> :
                                     <Placeholder text="You're all caught up" img={CaughtUp}/>
                             }
-                        </div>
+                        </div>):
+                         (<Placeholder text="Access denied. Please check your permissions for this course." img={AccessDenied}/>)
                     }
                 </div>
             </>
