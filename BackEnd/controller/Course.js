@@ -34,22 +34,6 @@ const upload = multer({
        limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
 
-/*
-    Functions to be implemented:
-    - createCourse: (Done)
-    - updateCourse: (Done)
-    - enrollCourse: (Done)
-    - getCourse: (Done)
-    - getStudentCourses: (Done)
-    - getInstructorCourses: (Done)
-    - getCourseStudents: (Done)
-    - getCourseInstructors: (Done)
-    - number of enrolled students in each course: (Done)
-    - is student enrolled in course: (Done)
-    - getCourseExams
-    - getCourseAssignments
-*/
-
 class CourseController {
 
        async createCourse(req, res, next) {
@@ -387,23 +371,49 @@ class CourseController {
               }
        }
 
-       async getCourseExams(req, res) {
-              const { courseId } = req.params;
+       async getCourseMaterials(req, res) {
               try {
-                     const courseExams = await Exam.find({ courseID: courseId });
-                     res.status(200).json(courseExams);
-              } catch (error) {
-                     res.status(400).json({ error: error.message });
-              }
-       }
+                     const { courseId } = req.params;
 
-       async getCourseAssignments(req, res) {
-              const { courseId } = req.params;
-              try {
-                     const courseAssignments = await Assignment.find({ courseID: courseId });
-                     res.status(200).json(courseAssignments);
+                     const course = await Course.findOne({ id: courseId });
+                     if (!course) {
+                            return res.status(200).json({ error: "Invalid course" });
+                     }
+
+                     let courseExams = await Exam.find({ courseID: course._id })
+                         .populate('courseID', 'id');
+                     let courseAssignments = await Assignment.find({ courseID: course._id })
+                         .populate('courseID', 'id');
+
+                     courseExams = courseExams.map(exam => {
+                            return {
+                                   id: exam.id,
+                                   title: exam.title,
+                                   description: exam.description,
+                                   course: exam.courseID.id,
+                                   startDate: exam.startDate,
+                                   duration: exam.duration,
+                                   endDate: exam.endDate,
+                            };
+                     });
+
+                     courseAssignments = courseAssignments.map(assignment => {
+                            return {
+                                   id: assignment.id,
+                                   title: assignment.title,
+                                   description: assignment.description,
+                                   course: assignment.courseID.id,
+                                   startDate: assignment.startDate,
+                                   duration: assignment.duration,
+                                   endDate: assignment.endDate,
+                                   document: assignment.document,
+                            };
+                     });
+
+                     res.status(201).json({data: {exams: courseExams, assignments: courseAssignments}});
               } catch (error) {
-                     res.status(400).json({ error: error.message });
+                     res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Get Course Materials function => ${error.message}`);
               }
        }
 }

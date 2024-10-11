@@ -93,15 +93,15 @@ let messagesList = [];
 
 function App() {
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
-    const [ courses, setCourses ] = useState(INITIAL_COURSES);
+    const [ courses, setCourses ] = useState([]);
     const [ myCourses, setMyCourses ] = useState([]);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] =
         useState(getCookie('token') ? jwtDecode(getCookie('token')) : {});
     const [assignments, setAssignments] = useState([])
     const [exams, setExams] = useState([])
-    const [studentsList, setStudentsList] = useState(INITIAL_STUDENTS_LIST)
-    const [instructorsList, setInstructorsList] = useState(INITIAL_INSTRUCTORS_LIST)
+    const [studentsList, setStudentsList] = useState([])
+    const [instructorsList, setInstructorsList] = useState([])
     const [materials, setMaterials] = useState(INITIAL_MATERIALS)
     const [progress, setProgress] = useState(INITIAL_PROGRESS)
     const [ loading, setLoading ] = useState(false);
