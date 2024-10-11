@@ -18,7 +18,7 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
         setCourses( prevState => {
             return prevState.map((course) => {
                 if (course.id === id) {
-                    return updatedCourse;
+                    return { ...course, ...updatedCourse };
                 }
                 return course;
             });
@@ -113,7 +113,11 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
                     <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required/>
                 </div>
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
-                    <button className="btn AddCourseButton" type="submit">Save</button>
+                    <button className="btn AddCourseButton"
+                            disabled={errorList.length > 0 || !form.title || !form.desc || !form.hours}
+                            type="submit">
+                        Save
+                    </button>
                     <button className="btn btn-outline-danger CancelButton"
                             onClick={() => {
                                 showEditFormHandler();

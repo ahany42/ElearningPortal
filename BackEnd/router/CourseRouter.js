@@ -8,8 +8,6 @@ router.put('/update-course/:courseId', verifyToken("Admin"), uploadCourseImage, 
 router.post('/enroll-course', verifyToken("Student"), Controller.enrollCourse);
 router.get('/getCourse/:courseId', verifyToken(), Controller.getCourse);
 router.post('/getCourses', Controller.getAllCourses);
-router.get('/student-courses/:studentId', Controller.getStudentCourses);
-router.get('/instructor-courses/:instructorId', Controller.getInstructorCourses);
 router.get('/course-exams/:courseId', Controller.getCourseExams);
 router.get('/course-assignments/:courseId', Controller.getCourseAssignments);
 

@@ -16,12 +16,18 @@
     top: 10px;
 }
 .course-stats{
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 20px;
     user-select: none;
     right:10px;
     bottom:10px;
     display: flex;
     gap:20px;
     flex-wrap: wrap;
+}
+.course-stats > h6 {
+    margin: 0;
 }
 .course-description{
     left:10px;
@@ -30,11 +36,26 @@
 }
 .details-header{
     position: relative;
+    justify-content: right;
+    background: #fff;
+}
+.details-header:before{
+    content: "";
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.3;
 }
 .enroll-button-courseDetails {
+    background: #2d3480;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    z-index: 1;
     height: fit-content;
-    background: transparent;
-    padding: 0 5px;
     border: none;
 }
 .enroll-button-courseDetails:hover {

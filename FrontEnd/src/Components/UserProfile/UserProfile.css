@@ -58,8 +58,7 @@
     position: absolute;
     top: 0;
     left: 12px;
-    transform: translateX(-150%);
-    transition: 0.8s all ease-in-out;
+    transition: 0.3s all ease-in-out;
 }
 
 .profile-left-labels {

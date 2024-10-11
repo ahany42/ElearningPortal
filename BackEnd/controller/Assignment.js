@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         cb(null, 'static/assignments'); // Folder where images will be stored
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}_${file.originalname}`); // Naming the file
+        cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
     }
 });
 
@@ -215,7 +215,7 @@ class AssignmentController {
 
             // Delete the student's answer file from the file system
             const filePath = existingAnswer.document ? path.join(__dirname, '..', existingAnswer.document) : null;
-            if (filePath) {
+            if (filePath && fs.existsSync(filePath)) {
                 fs.unlink(filePath, async (err) => {
                     if (err) {
                         next(`WARNING IN: Delete Assignment Answer Function => ${err}`);
@@ -387,7 +387,7 @@ class AssignmentController {
             }
 
             // Delete the old assignment document (file) from the file system (if it exists)
-            if (assignment.document) {
+            if (assignment.document && fs.existsSync(assignment.document)) {
                 fs.unlink(assignment.document, (err) => {
                     if (err) {
                         return deleteAssociateFiles(document, "Error updating assignment", res, next);
@@ -440,7 +440,7 @@ class AssignmentController {
                     return deleteAssociateFiles(document, "Assignment answer not found", res, next);
                 }
 
-                if (assignmentAnswer.document) {
+                if (assignmentAnswer.document && fs.existsSync(assignmentAnswer.document)) {
                     fs.unlink(assignmentAnswer.document, (err) => {
                         if (err) {
                             return deleteAssociateFiles(document, "Error updating assignment answer", res, next);
@@ -480,7 +480,7 @@ class AssignmentController {
             const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
 
             // If a document is associated with the assignment, delete the file from the file system
-            if (filePath) {
+            if (filePath && fs.existsSync(filePath)) {
                 fs.unlink(filePath, async (err) => {
                     if (err) {
                         next(`WARNING IN: Delete Assignment Function => ${err}`);
@@ -515,7 +515,7 @@ async function deleteAssignmentFiles(assignmentID) {
         const filePath = answer.document ? path.join(__dirname, '..', answer.document) : null;
 
         // If a document is associated with the assignment answer, delete the file from the file system
-        if (filePath) {
+        if (filePath && fs.existsSync(filePath)) {
             fs.unlink(filePath, async (err) => {
                 if (err) {
                     errors.push(`WARNING IN: Delete Assignment File Function => ${err}`);
@@ -533,7 +533,7 @@ async function deleteAssignmentFiles(assignmentID) {
 
 // Function to delete associated files if error
 function deleteAssociateFiles(document, errMsg, res, next) {
-    if (document) {
+    if (document && fs.existsSync(document)) {
         fs.unlink(document, (err) => {
             if (err) {
                 next(`WARNING IN: Delete Assignment Answer Function => ${err}`);

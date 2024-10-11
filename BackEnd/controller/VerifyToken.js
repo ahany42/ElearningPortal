@@ -134,7 +134,7 @@ function verifyToken (role) {
     return VerifyTokenForAdmin;
   } else if (role === "instructor") {
     return VerifyTokenForInstructor;
-  } else {
+  } else if (role === "student") {
     return VerifyTokenForStudent;
   }
 }

@@ -11,10 +11,10 @@ const ExamPage = ({ exams }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    showMessage,
-    currentUser,
-    setExams,
-    courses = [],
+      showMessage,
+      currentUser,
+      setExams,
+      courses,
   } = useContext(CurrentUserContext);
 
   const [exam, setExam] = useState({
@@ -33,7 +33,7 @@ const ExamPage = ({ exams }) => {
       if (examData) {
         const courseTitle =
           courses?.find((c) => c.id === examData.courseID)?.title ||
-          "Not available"; 
+          "Not available";
         setExam(examData);
         setEditableExam({
           id: examData.id,
@@ -42,11 +42,12 @@ const ExamPage = ({ exams }) => {
           dueDate: examData.dueDate,
           description: examData.description,
         });
-      } else {
-        showMessage("Exam not found", true);
       }
+    } else {
+      showMessage("Exam not found", true);
+      navigate("/deadline");
     }
-  }, [exams, location.state, courses, showMessage]);
+  }, [exams, location.state]);
 
   const deleteExamHandler = (examID) => {
     setExams((prevState) => prevState.filter((exam) => exam.id !== examID));

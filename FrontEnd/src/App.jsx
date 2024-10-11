@@ -29,7 +29,7 @@ import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
-import ENV from "../Front_ENV.jsx"; // To Be Used Later
+import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import "./App.css";
 
@@ -55,7 +55,7 @@ const pathsNotRequireAuthentication = [
 const pathsRoleBased = [
     {
         path: /^\/deadline$/,
-        roles: "student",
+        roles: "student, admin, superadmin",
     },
     {
         path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/InstructorsList$/,
@@ -94,12 +94,12 @@ let messagesList = [];
 function App() {
     const [ showHeaderAndFooter, setShowHeaderAndFooter ] = useState(true);
     const [ courses, setCourses ] = useState(INITIAL_COURSES);
-    const [ myCourses, setMyCourses ] = useState(INITIAL_MY_COURSES);
+    const [ myCourses, setMyCourses ] = useState([]);
     const [ isAuthenticated, setIsAuthenticated ] = useState(!!getCookie('token'));
     const [ currentUser, setCurrentUser ] =
         useState(getCookie('token') ? jwtDecode(getCookie('token')) : {});
-    const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS)
-    const [exams, setExams] = useState(INITIAL_EXAMS)
+    const [assignments, setAssignments] = useState([])
+    const [exams, setExams] = useState([])
     const [studentsList, setStudentsList] = useState(INITIAL_STUDENTS_LIST)
     const [instructorsList, setInstructorsList] = useState(INITIAL_INSTRUCTORS_LIST)
     const [materials, setMaterials] = useState(INITIAL_MATERIALS)
@@ -164,14 +164,20 @@ function App() {
                 showMessage(response.error, true);
             }
         }
-        fetchCourses();
-        if (currentUser) {
-            // fetchAssignments();
-            // fetchExams();
-        } else {
-            setAssignments([]);
-            setExams([]);
+        const fetchAll = async () => {
+            setLoading(true);
+            await fetchCourses();
+            if (currentUser.id) {
+                await fetchAssignments();
+                // fetchExams();
+                setExams(INITIAL_EXAMS); // To be replaced with the fetchExams function
+            } else {
+                setAssignments([]);
+                setExams([]);
+            }
+            setLoading(false);
         }
+        fetchAll();
     }, [currentUser]);
 
     useEffect(() => {
@@ -180,7 +186,6 @@ function App() {
             setCurrentUser(jwtDecode(getCookie('token')));
             interval = setInterval(async () => {
                 if (!getCookie('token')) {
-                    console.log(1)
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     clearInterval(interval);
@@ -189,7 +194,6 @@ function App() {
                     return;
                 }
                 if (checkCookieExpiry('token')) {
-                    console.log(2)
                     setIsAuthenticated(false);
                     setCurrentUser({});
                     await axios.post('http://localhost:3008/logout');
@@ -205,8 +209,8 @@ function App() {
 
     useEffect(() => {
 
-        // Disable loader when the page is loaded
-        setLoading(false);
+        // Disable loader when the page is loaded (if it was loading)
+        loading && setLoading(false);
 
         // Limit access to specific routes based on user role
         const pathRole =
@@ -302,9 +306,9 @@ function App() {
             setAssignments, setExams,materials,studentsList,instructorsList
         }}
       >
-        <div className="body-container">
-          {showHeaderAndFooter && <Header />}
-          <div className="body-content">
+          <div className="body-container">
+            {showHeaderAndFooter && <Header />}
+            <div className="body-content">
             <ToastContainer style={{ width: "fit-content" }} />
             {loading ? (
               <Loader />

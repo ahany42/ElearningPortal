@@ -1,78 +1,30 @@
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 import { CurrentUserContext } from "../../App.jsx";
-import ReactImg from '../../assets/React.png';
-import CoursePlaceholder from '../../assets/Student.svg';
 import { faEdit,faTrash,faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseCard.css'
+import Front_ENV from "../../../Front_ENV.jsx";
+import CoursePlaceHolder from "../../assets/Course_Placeholder.svg";
 
-let messagesList = [];
-let errorList = [];
-
-const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit, isEnrolled, mode }) => {
+const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
+                        numStudents, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated, setCourses } = useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses, showMessage } = useContext(CurrentUserContext);
     const enrolled = mode? true : isEnrolled;
-
-    const showErrors = (error) => {
-        if (!errorList.includes(error)) {
-            toast.error(error, {
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: {
-                    userSelect: 'none',
-                    gap: '10px',
-                    padding: '20px',
-                },
-                onClose: () => {
-                    errorList = errorList.filter(e => e !== error);
-                }
-            });
-            errorList = [...errorList, error];
-        }
-    }
-
-    const showToast = (msg) => {
-        if (!messagesList.includes(msg)) {
-            toast(msg, {
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: {
-                    userSelect: 'none',
-                    gap: '10px',
-                    padding: '20px',
-                },
-                onClose: () => {
-                    messagesList = messagesList.filter(m => m !== msg);
-                }
-            });
-            messagesList = [...messagesList, msg];
-        }
-    }
 
     const EditCourse = (id)=>{
         showEditFormHandler();
         setCourseEdit({id, title, desc, hours});
-        // navigate(`/editCourseForm/${id}`, {
-        //     state: { id, title, desc, hours},
-        // });
     }
 
     const DeleteCourseHandler = (courseId) => {
         setCourses((prevState) =>
             prevState.filter((course) => course.id !== courseId)
         );
-        showToast("Course deleted successfully");
+        showMessage("Course deleted successfully", false);
     };
 
 
@@ -82,23 +34,19 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
 
     const EnrollCourse = ()=>{
         if (!isAuthenticated) {
-            showErrors("Please Login to Enroll")
+            showMessage("Please Login to Enroll", true);
             navigate('/login');
             return;
         }
-        showToast("Enroll Coming Soon");
-    }
-
-    const ShowStudentsList= ()=>{
-        navigate(`/CourseDetails/${id}/StudentsList`)
+        showMessage("Enroll Coming Soon", null);
     }
 
     if (isAuthenticated) { // Authenticated User View
         if(currentUser.role === "Student"){
             return (
                 <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
-                    <div className="card-header">
-                        <img src={ReactImg || CoursePlaceholder} alt="Course"/>
+                    <div className="card-header course-card-header-img">
+                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
                     </div>
                     <div className="card-body" style={enrolled? {position: 'unset'} : {position: 'relative'}}>
                         <div className="card-header-container"
@@ -128,8 +76,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
-                                20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text">
+                                {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -139,8 +87,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         else if (currentUser.role === "Instructor") {
             return (
                 <div className="card course-card card-shadow" key={id}>
-                    <div className="card-header">
-                        <img src={ReactImg || CoursePlaceholder} alt="Course"/>
+                    <div className="card-header course-card-header-img">
+                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
                     </div>
                     <div className="card-body" style={{position: 'unset'}}>
                         <div className="card-header-container"
@@ -169,8 +117,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
-                                20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text">
+                                {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -180,8 +128,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
         // SuperAdmin and Admin
         else return (
                 <div className="card course-card card-shadow" key={id}>
-                    <div className="card-header position-relative">
-                        <img src={ReactImg || CoursePlaceholder} alt="Course" />
+                    <div className="card-header position-relative course-card-header-img">
+                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course" />
                         <div className="course-icons admin-icons">
                             <FontAwesomeIcon
                                 icon={faEdit}
@@ -210,8 +158,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                                 </button>
                             </div>
                         </div>
-                            <div className="alignCenter-text" onClick={ShowStudentsList}>
-                                20 <FontAwesomeIcon icon={faUser} />
+                            <div className="alignCenter-text">
+                                {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
                     </div>
@@ -221,8 +169,8 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
     } else { // Guest User View (currentUser = {})
         return (
             <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
-                <div className="card-header">
-                    <img src={ReactImg || CoursePlaceholder} alt="Course"/>
+                <div className="card-header course-card-header-img">
+                    <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
                 </div>
                 <div className="card-body">
                     <div className="card-header-container">
@@ -244,7 +192,7 @@ const CourseCard = ({ id, title, desc, hours, showEditFormHandler, setCourseEdit
                     <div className="card-bottom">
                         <div>{hours} Hours</div>
                         <div className="alignCenter-text">
-                            20 <FontAwesomeIcon icon={faUser} />
+                            {numStudents} <FontAwesomeIcon icon={faUser} />
                         </div>
                     </div>
                 </div>

@@ -29,7 +29,8 @@ const UserProfile = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    overlay.current.style.transform = `translateX(${isEditing ? "" : "-"}150%)`;
+    overlay.current.style.opacity = `${isEditing ? "0" : "1"}`;
+    overlay.current.style.zIndex = `${isEditing ? "-1" : "1"}`;
   }, [isEditing]);
 
   const handleChange = (e) => {
@@ -49,7 +50,8 @@ const UserProfile = () => {
       setIsEditing(false);
       return;
     }
-    overlay.current.style.transform = `translateX(-105%)`;
+    overlay.current.style.opacity = `1`;
+    overlay.current.style.zIndex = `1`;
     setTimeout(async () => {
       setLoading(true);
       await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {

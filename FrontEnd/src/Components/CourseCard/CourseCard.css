@@ -14,8 +14,12 @@
 }
 
 .card-header > img {
-  width:200px;
-  margin:auto;
+  width: 100%;
+  margin: auto;
+}
+
+.course-card-header-img {
+  padding: 0;
 }
 
 .card-header-container {
@@ -80,8 +84,11 @@
 }
 
 .admin-icons {
+  background: white;
+  border-radius: 20px;
+  padding: 0.5rem 0.8rem;
   position: absolute;
-  top: 5px;
+  top: 7px;
   right: 10px;
 }
 

@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import { useParams,useNavigate} from "react-router";
-import ReactImg from '../../assets/React.png';
+import styled from 'styled-components';
+import CoursePlaceHolder from '../../assets/Course_Placeholder.svg';
 import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseDetails.css';
@@ -12,6 +13,26 @@ import Placeholder from '../Placeholder/Placeholder';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AccessDenied from '../../assets/AccessDenied.svg';
 import CaughtUp from '../../assets/Grades.svg';
+import Front_ENV from "../../../Front_ENV.jsx";
+
+const DetailsHeaderDiv = styled.div`
+      position: relative;
+      
+      &::before {
+          content: "";
+          background-image: url(${props => props.$image? `${Front_ENV.Back_Origin}/${props.$image}` : CoursePlaceHolder});
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-attachment: fixed;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          opacity: 0.2;
+      }
+`;
 
 const CourseDetails = () => {
     const {id} = useParams();
@@ -25,6 +46,11 @@ const CourseDetails = () => {
     const totalAnnouncements = 0;
 
     const EnrollCourse = (courseID) => {
+        if (!currentUser.id) {
+            showMessage("Please Login to Enroll", true);
+            navigate('/login');
+            return;
+        }
         showMessage(`Course (${courseID}) Enrolled Successfully`, false);
     }
 
@@ -65,20 +91,22 @@ const CourseDetails = () => {
                     <span>Back</span>
                 </button>
                 <div className="card course-details card-shadow">
-                    <div className="card-header details-header">
+                    {/* check if instructor is teaching this course */}
+                    <DetailsHeaderDiv className="card-header details-header"
+                                      $image={course.image ? course.image.replaceAll("\\", "/") : ""}>
                         <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
-                        <img src={ReactImg} alt="Course Photo"/>
                         <div className="course-stats">
                             <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
-                            <h6 className="stats stats-button" onClick={StudentsList}>20 <FontAwesomeIcon icon={faUser}/></h6>
-                            <h6 className="stats stats-button" onClick={InstructorsList}>3 <FontAwesomeIcon
+                            <h6 className="stats stats-button" onClick={StudentsList}>{course.numStudents} <FontAwesomeIcon icon={faUser}/></h6>
+                            <h6 className="stats stats-button" onClick={InstructorsList}>
+                                {course.numInstructors} <FontAwesomeIcon
                                 icon={faChalkboardTeacher}/></h6>
                             <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
                         </div>
                         {
                             (currentUser.role === "Student" || !currentUser.role) ?
                                 !isEnrolled ?
-                                    <button className="enroll-button-courseDetails bold-text blue-text"
+                                    <button className="enroll-button-courseDetails bold-text"
                                             onClick={() => EnrollCourse(course.id)}>
                                         Enroll
                                     </button> :
@@ -88,20 +116,22 @@ const CourseDetails = () => {
                                 null
                         }
                         <h5 className="course-description">{course.desc}</h5>
-                    </div>
+                    </DetailsHeaderDiv>
                     {
-                        (currentUser.role && course.isEnrolled) || (currentUser.role==="SuperAdmin" || currentUser.role==="Admin") ?(
-                        <div className="course-material card-body">
-                            <h5>Added Material:</h5>
-                            {
-                                (totalAnnouncements + totalAssignments + totalExams !== 0) ?
-                                    <div className="material-list">
-                                        <CourseMaterial/>
-                                    </div> :
-                                    <Placeholder text="You're all caught up" img={CaughtUp}/>
-                            }
-                        </div>):
-                         (<Placeholder text="Enroll to course to view Material" img={AccessDenied}/>)
+                        currentUser.role && (course.isEnrolled || currentUser.role.toLowerCase() === "admin" ||
+                                                                  currentUser.role.toLowerCase() === "superadmin") ?
+                            <div className="course-material card-body">
+                                <h5>Added Material:</h5>
+                                {
+                                    (totalAnnouncements + totalAssignments + totalExams !== 0) ?
+                                        <div className="material-list">
+                                            <CourseMaterial/>
+                                        </div> :
+                                        <Placeholder text="You're all caught up" img={CaughtUp}/>
+                                }
+                            </div>
+                        :
+                            <Placeholder text="Enroll to course to view Material" img={AccessDenied}/>
                     }
                 </div>
             </>
