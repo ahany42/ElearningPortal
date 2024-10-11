@@ -1,14 +1,28 @@
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import UserCard from '../UserCard/UserCard';
-import React, { useContext } from 'react';
 import { CurrentUserContext } from "../../App.jsx";
 import Placeholder from '../Placeholder/Placeholder.jsx';
 import NoStudentsImg from '../../assets/Grades.svg';
+import {useLocation} from "react-router-dom";
 
 const StudentList = () => {
     const {id} = useParams();
-    const { studentsList } = useContext(CurrentUserContext);
+    const { showMessage } = useContext(CurrentUserContext);
+    const [studentsList, setStudentsList] = useState([]);
     const navigate = useNavigate();
+    const route = useLocation();
+
+    useEffect(() => {
+        if (!route.state) {
+            setStudentsList([]);
+            showMessage("Access Denied", true);
+            navigate(`/CourseDetails/${id}`);
+        } else {
+            setStudentsList(route.state.studentsList);
+        }
+    }, [route]);
+
   
    return(
        <>

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { CurrentUserContext } from "../../App.jsx";
 import './UserCard.css';
 
-const UserCard = ({isStudent , student,instructor}) => {
+const UserCard = ({isStudent , student, instructor}) => {
   const { currentUser} = useContext(CurrentUserContext);
   const navigate = useNavigate ();
   const RemoveStudent = ()=>{

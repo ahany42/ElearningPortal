@@ -14,6 +14,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AccessDenied from '../../assets/AccessDenied.svg';
 import CaughtUp from '../../assets/Grades.svg';
 import Front_ENV from "../../../Front_ENV.jsx";
+import {getCookie} from "../Cookie/Cookie.jsx";
 
 const DetailsHeaderDiv = styled.div`
       position: relative;
@@ -60,12 +61,39 @@ const CourseDetails = () => {
 
     //for testing
     const isEnrolled = false;
-    const StudentsList = ()=>{
-        navigate(`/CourseDetails/${id}/StudentsList`)
+
+    const StudentsList = async ()=>{
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'students'
+        });
+        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: reponse.data}});
     }
 
-    const InstructorsList = ()=>{
-        navigate(`/CourseDetails/${id}/InstructorsList`)
+    const InstructorsList = async ()=> {
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'instructors'
+        });
+        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: reponse.data}})
     }
 
     const course = courses.find(course => course.id === id);
@@ -97,7 +125,9 @@ const CourseDetails = () => {
                         <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                         <div className="course-stats">
                             <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
-                            <h6 className="stats stats-button" onClick={StudentsList}>{course.numStudents} <FontAwesomeIcon icon={faUser}/></h6>
+                            <h6 className="stats stats-button" onClick={StudentsList}>
+                                {course.numStudents} <FontAwesomeIcon icon={faUser}/>
+                            </h6>
                             <h6 className="stats stats-button" onClick={InstructorsList}>
                                 {course.numInstructors} <FontAwesomeIcon
                                 icon={faChalkboardTeacher}/></h6>

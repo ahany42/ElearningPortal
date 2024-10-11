@@ -154,35 +154,35 @@ class CourseController {
               }
        }
 
-       async enrollCourse(req, res) {
-              const { courseId, duration } = req.body;
-
-              const user = req.user;
-
-              if (!user) {
-                     return res.status(200).json({ error: "Invalid studentId" });
-              }
-
-              if (user.role.toLowerCase() !== "student") {
-                     return res.status(200).json({ error: "Invalid role of studentId" });
-              }
-
-              const course = await Course.findOne({ id: courseId });
-              if (!course) {
-                     return res.status(200).json({ error: "Course is required" });
-              }
-
-              if (!duration) {
-                     return res.status(200).json({error: "Duration is required"});
-              }
-
-              if (isNaN(duration) || (!isNaN(duration) && (duration < 0))) {
-                     return res.status(200).json({error: "Invalid duration"});
-              }
-
-              const student = await User.findOne({ id: user.id });
-
+       async enrollCourse(req, res, next) {
               try {
+                     const { courseId, duration } = req.body;
+
+                     const user = req.user;
+
+                     if (!user) {
+                            return res.status(200).json({ error: "Invalid studentId" });
+                     }
+
+                     if (user.role.toLowerCase() !== "student") {
+                            return res.status(200).json({ error: "Invalid role of studentId" });
+                     }
+
+                     const course = await Course.findOne({ id: courseId });
+                     if (!course) {
+                            return res.status(200).json({ error: "Course is required" });
+                     }
+
+                     if (!duration) {
+                            return res.status(200).json({error: "Duration is required"});
+                     }
+
+                     if (isNaN(duration) || (!isNaN(duration) && (duration < 0))) {
+                            return res.status(200).json({error: "Invalid duration"});
+                     }
+
+                     const student = await User.findOne({ id: user.id });
+
                      const studentCourse = await Student_Course.create({
                             studentID: student._id,
                             courseID: course._id,
@@ -191,10 +191,11 @@ class CourseController {
                      res.status(201).json({ data: studentCourse, message: `You Enrolled Successfully` });
               } catch (error) {
                      res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Enroll Course function => ${error.message}`);
               }
        }
 
-       async getCourse(req, res) {
+       async getCourse(req, res, next) {
               try {
                      const { courseId } = req.params;
 
@@ -244,11 +245,12 @@ class CourseController {
                      res.status(201).json({ data: courseData[0] });
               } catch (error) {
                      res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Get Course function => ${error.message}`);
               }
        }
 
 
-       async getAllCourses(req, res) {
+       async getAllCourses(req, res, next) {
               try {
                      const { userId } = req.body;
 
@@ -344,6 +346,44 @@ class CourseController {
                      }
               } catch (error) {
                      res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Get All Course function => ${error.message}`);
+              }
+       }
+
+       async getCourseUsersList(req, res, next) {
+              try {
+                     const { courseId, type } = req.query;
+                     const course =
+                         await Course.findOne({ id: courseId });
+
+                     if (!course) {
+                            return res.status(200).json({ error: "Invalid course" });
+                     }
+
+                     if (!type || (type !== 'students' && type !== 'instructors')) {
+                            return res.status(200).json({ error: "Invalid type" });
+                     }
+
+                     const model = type === "students" ? Student_Course : Instructor_Course;
+
+                     const list =
+                             await model.find({ courseID: course._id })
+                                 .populate(type === "students"? "studentID" : "instructorID",
+                                     'id name username');
+
+                     const finalList = list.map(user => {
+                            return {
+                                   id: user[type === "students"? "studentID" : "instructorID"].id,
+                                   name: user[type === "students"? "studentID" : "instructorID"].name,
+                                   username: user[type === "students"? "studentID" : "instructorID"].username
+                            };
+                     });
+
+                     res.status(201).json({data: finalList});
+
+              } catch (error) {
+                     res.status(200).json({ error: error.message });
+                     next(`ERROR IN: Get Course Users List function => ${error.message}`);
               }
        }
 
