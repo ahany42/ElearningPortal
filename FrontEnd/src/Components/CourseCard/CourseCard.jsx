@@ -8,11 +8,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './CourseCard.css'
 import Front_ENV from "../../../Front_ENV.jsx";
 import CoursePlaceHolder from "../../assets/Course_Placeholder.svg";
+import {getCookie} from "../Cookie/Cookie.jsx";
 
 const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         numStudents, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated, setCourses, showMessage } = useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses, showMessage, fetchCourses } = useContext(CurrentUserContext);
     const enrolled = mode? true : isEnrolled;
 
     const EditCourse = (id)=>{
@@ -32,13 +33,32 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
         navigate(`/CourseDetails/${id}`)
     }
 
-    const EnrollCourse = ()=>{
+    const EnrollCourse = async () => {
         if (!isAuthenticated) {
             showMessage("Please Login to Enroll", true);
             navigate('/login');
             return;
         }
-        showMessage("Enroll Coming Soon", null);
+
+        const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie("token") || ""
+            },
+            body: JSON.stringify({
+                userId: currentUser.id,
+                courseId: id,
+                duration: hours
+            })})
+            .then(response => response.json());
+
+        if (response.error){
+            showMessage(response.error, true);
+        } else {
+            fetchCourses();
+            showMessage(response.message, false);
+        }
     }
 
     if (isAuthenticated) { // Authenticated User View
@@ -61,7 +81,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <div className="course-icons" style={enrolled? {top:0, left:0} : {}}>
                             {
                                 enrolled ? !mode && (
-                                    <span className="enroll-text enroll-button bold-text blue-text">
+                                    <span className="enroll-text enrolled-button bold-text blue-text">
                                         Enrolled
                                     </span>
                                 ) : (
@@ -103,11 +123,11 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <div className="course-icons" style={{top: 0, left: 0}}>
                             {
                                 enrolled ? (
-                                    <span className="enroll-text enroll-button bold-text blue-text">
+                                    <span className="enroll-text enrolled-button bold-text blue-text">
                                     Teaching
                                 </span>
                                 ) : (
-                                    <span className="enroll-text enroll-button bold-text blue-text">
+                                    <span className="enroll-text enrolled-button bold-text blue-text">
                                         Not Teaching
                                     </span>
                                 )

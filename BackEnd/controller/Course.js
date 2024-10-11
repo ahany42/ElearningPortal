@@ -140,7 +140,7 @@ class CourseController {
 
        async enrollCourse(req, res, next) {
               try {
-                     const {courseId, userId, duration} = req.body;
+                     const { courseId, userId, duration } = req.body;
 
                      const user = await User.findOne({id: userId, role: {$in: ['Instructor', 'Student']}})
                      if (!user) {
