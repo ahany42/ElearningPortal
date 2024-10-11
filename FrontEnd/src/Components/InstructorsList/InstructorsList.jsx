@@ -5,13 +5,34 @@ import Placeholder from '../Placeholder/Placeholder.jsx';
 import NoInstructorsImg from '../../assets/Instructor.svg';
 import { CurrentUserContext } from "../../App.jsx";
 import {useLocation} from "react-router-dom";
+import Front_ENV from "../../../Front_ENV.jsx";
+import {getCookie} from "../Cookie/Cookie.jsx";
 
 const InstructorsList = () => {
     const { showMessage } = useContext(CurrentUserContext);
-    const [instructorsList, setInstructorsList] = useState([]);
+    const [ instructorsList, setInstructorsList ] = useState([]);
+    const [ updateList, setUpdateList ] = useState(false);
     const {id} = useParams();
     const navigate = useNavigate();
     const route = useLocation();
+
+    const fetchInstructors = async () => {
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'instructors'
+        });
+        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        setInstructorsList(reponse.data);
+        navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: reponse.data}});
+    }
 
     useEffect(() => {
         if (!route.state) {
@@ -19,9 +40,9 @@ const InstructorsList = () => {
             showMessage("Access Denied", true);
             navigate(`/CourseDetails/${id}`);
         } else {
-            setInstructorsList(route.state.instructorsList);
+            fetchInstructors();
         }
-    }, [route]);
+    }, [updateList]);
 
     return (
         <>
@@ -37,7 +58,8 @@ const InstructorsList = () => {
                 <h5 className="sub-title">{instructorsList.length} Course Instructors: </h5>
                 {!instructorsList.length && <Placeholder text="No Instructors Added" img={NoInstructorsImg}/>}
                 {instructorsList.map(instructor => (
-                    <UserCard isStudent={false} instructor={instructor} key={instructor.id} student={false}/>
+                    <UserCard setUpdateList={setUpdateList} updateList={updateList}
+                              isStudent={false} instructor={instructor} key={instructor.id} student={false}/>
                 ))}
             </div>
         </>

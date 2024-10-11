@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import { useParams,useNavigate} from "react-router";
+import { useContext, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from "react-router";
 import styled from 'styled-components';
 import CoursePlaceHolder from '../../assets/Course_Placeholder.svg';
 import { faUser,faChalkboardTeacher, faFileAlt, faClock} from '@fortawesome/free-solid-svg-icons';
@@ -38,13 +38,19 @@ const DetailsHeaderDiv = styled.div`
 const CourseDetails = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-    const { currentUser, showMessage, courses } = useContext(CurrentUserContext);
+    const { currentUser, showMessage, courses, fetchCourses } = useContext(CurrentUserContext);
+    const route = useLocation();
     //for testing
     const totalExams = 0;
     //for testing
     const totalAssignments = 1;
     //for testing
     const totalAnnouncements = 0;
+
+    useEffect(() => {
+        fetchCourses();
+    }, [route]);
+
 
     const EnrollCourse = (courseID) => {
         if (!currentUser.id) {
@@ -58,9 +64,6 @@ const CourseDetails = () => {
     const AddMaterial = ()=>{
         navigate(`/AddMaterial/${course.id}`);
     }
-
-    //for testing
-    const isEnrolled = false;
 
     const StudentsList = async ()=>{
         const params = new URLSearchParams({
@@ -135,7 +138,7 @@ const CourseDetails = () => {
                         </div>
                         {
                             (currentUser.role === "Student" || !currentUser.role) ?
-                                !isEnrolled ?
+                                !course.isEnrolled ?
                                     <button className="enroll-button-courseDetails bold-text"
                                             onClick={() => EnrollCourse(course.id)}>
                                         Enroll

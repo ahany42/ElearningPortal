@@ -51,7 +51,7 @@
 }
 
 .overlay-profile {
-    width: 736px;
+    width: calc(100% - 24px);
     border-radius: 5px;
     background: #00000052;
     height: 100%;

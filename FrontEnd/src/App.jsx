@@ -108,75 +108,79 @@ function App() {
     const navigate = useNavigate();
     const routes = useLocation();
 
+    const fetchCourses = async () => {
+        // Fetch courses for the student
+        const response =
+            await fetch(`http://localhost:3008/getCourses`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(currentUser.role? { userId: currentUser.id } : {} ),
+            })
+                .then((res) => res.json())
+        if (response.data) {
+            setCourses(response.data);
+            currentUser.role && (currentUser.role.toLowerCase() === "student" ||
+                currentUser.role.toLowerCase() === "instructor") &&
+            setMyCourses(response.data.filter((e) => e.isEnrolled));
+        } else {
+            showMessage(response.error, true);
+        }
+    }
+
+    const fetchAssignments = async () => {
+        // Fetch assignments for the student
+        const response =
+            await fetch(`http://localhost:3008/getAssignments/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie('token')
+                },
+            })
+                .then((res) => res.json())
+        if (response.data) {
+            setAssignments(response.data);
+        } else {
+            showMessage(response.error, true);
+        }
+    }
+
+    const fetchExams = async () => {
+        // Fetch exams for the student
+        const response =
+            await fetch(`http://localhost:3008/course-exams/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie('token')
+                },
+            })
+                .then((res) => res.json())
+        if (response.data) {
+            setExams(response.data);
+        } else {
+            showMessage(response.error, true);
+        }
+    }
+
+    const fetchAll = async () => {
+        setLoading(true);
+        await fetchCourses();
+        if (currentUser.id) {
+            await fetchAssignments();
+            // fetchExams();
+            setExams(INITIAL_EXAMS); // To be replaced with the fetchExams function
+        } else {
+            setAssignments([]);
+            setExams([]);
+        }
+        setLoading(false);
+    }
+
     // Fetch courses / assignments / exams from the database
     useEffect(() => {
-        const fetchCourses = async () => {
-            // Fetch courses for the student
-            const response =
-                await fetch(`http://localhost:3008/getCourses`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(currentUser.role? { userId: currentUser.id } : {} ),
-                })
-                    .then((res) => res.json())
-            if (response.data) {
-                setCourses(response.data);
-                currentUser.role && (currentUser.role.toLowerCase() === "student" ||
-                    currentUser.role.toLowerCase() === "instructor") &&
-                setMyCourses(response.data.filter((e) => e.isEnrolled));
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        const fetchAssignments = async () => {
-            // Fetch assignments for the student
-            const response =
-                await fetch(`http://localhost:3008/getAssignments/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': getCookie('token')
-                    },
-                })
-                    .then((res) => res.json())
-            if (response.data) {
-                setAssignments(response.data);
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        const fetchExams = async () => {
-            // Fetch exams for the student
-            const response =
-                await fetch(`http://localhost:3008/course-exams/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': getCookie('token')
-                    },
-                })
-                    .then((res) => res.json())
-            if (response.data) {
-                setExams(response.data);
-            } else {
-                showMessage(response.error, true);
-            }
-        }
-        const fetchAll = async () => {
-            setLoading(true);
-            await fetchCourses();
-            if (currentUser.id) {
-                await fetchAssignments();
-                // fetchExams();
-                setExams(INITIAL_EXAMS); // To be replaced with the fetchExams function
-            } else {
-                setAssignments([]);
-                setExams([]);
-            }
-            setLoading(false);
-        }
         fetchAll();
     }, [currentUser]);
 
@@ -300,10 +304,10 @@ function App() {
       <CurrentUserContext.Provider
         value={{
             currentUser, setCurrentUser,
-            isAuthenticated, showMessage,
-            setIsAuthenticated, courses,
-            setCourses, setLoading,progress,
-            setAssignments, setExams,materials,studentsList,instructorsList
+            isAuthenticated, showMessage, fetchCourses,
+            fetchAll, setIsAuthenticated, courses,
+            setCourses, setLoading,progress, instructorsList,
+            setAssignments, setExams, materials, studentsList
         }}
       >
           <div className="body-container">

@@ -140,21 +140,16 @@ class CourseController {
 
        async enrollCourse(req, res, next) {
               try {
-                     const { courseId, duration } = req.body;
+                     const {courseId, userId, duration} = req.body;
 
-                     const user = req.user;
-
+                     const user = await User.findOne({id: userId, role: {$in: ['Instructor', 'Student']}})
                      if (!user) {
-                            return res.status(200).json({ error: "Invalid studentId" });
+                            return res.status(200).json({error: "Invalid studentId"});
                      }
 
-                     if (user.role.toLowerCase() !== "student") {
-                            return res.status(200).json({ error: "Invalid role of studentId" });
-                     }
-
-                     const course = await Course.findOne({ id: courseId });
+                     const course = await Course.findOne({id: courseId});
                      if (!course) {
-                            return res.status(200).json({ error: "Course is required" });
+                            return res.status(200).json({error: "Course is required"});
                      }
 
                      if (!duration) {
@@ -165,17 +160,64 @@ class CourseController {
                             return res.status(200).json({error: "Invalid duration"});
                      }
 
-                     const student = await User.findOne({ id: user.id });
+                     const model = user.role.toLowerCase() === "student" ? Student_Course : Instructor_Course;
+                     const userCourse = await model
+                         .findOne({
+                                [user.role.toLowerCase() === "student" ? "studentID" : "instructorID"]:
+                                user._id, courseID: course._id
+                         });
 
-                     const studentCourse = await Student_Course.create({
-                            studentID: student._id,
+                     if (userCourse) {
+                            return res.status(200).json({error: "You are already enrolled in this course"});
+                     }
+
+                     await model.create({
+                            [user.role.toLowerCase() === "student" ? "studentID" : "instructorID"]: user._id,
                             courseID: course._id,
                             duration
                      });
-                     res.status(201).json({ data: studentCourse, message: `You Enrolled Successfully` });
+
+                     res.status(201).json({
+                            data: {
+                                   course: course.id,
+                                   user: user.id,
+                                   duration
+                            }, message: `You Enrolled Successfully in ${course.title}`
+                     });
               } catch (error) {
-                     res.status(200).json({ error: error.message });
+                     res.status(200).json({error: error.message});
                      next(`ERROR IN: Enroll Course function => ${error.message}`);
+              }
+       }
+
+       async unenrollCourse(req, res, next) {
+              try {
+                     const { courseId, userId } = req.body;
+                     const user = await User.findOne({ id: userId, role: { $in: ['Instructor', 'Student'] } });
+
+                     if (!user) {
+                         return res.status(200).json({ error: "Invalid userId" });
+                     }
+
+                     const course = await Course.findOne({ id: courseId });
+                     if (!course) {
+                         return res.status(200).json({ error: "Course is required" });
+                     }
+
+                     const model = user.role.toLowerCase() === "student" ? Student_Course : Instructor_Course;
+                     const userCourse = await model
+                         .findOneAndDelete(
+                             { [user.role.toLowerCase() === "student"? "studentID" : "instructorID"]:
+                                    user._id, courseID: course._id });
+
+                     if (!userCourse) {
+                         return res.status(200).json({ error: "You are not enrolled in this course" });
+                     }
+
+                     res.status(201).json({ data: userCourse, message: `${user.name} is Unenrolled Successfully` });
+              } catch (error) {
+                     res.status(200).json({error: error.message});
+                     next(`ERROR IN: Unenroll Course function => ${error.message}`);
               }
        }
 
@@ -232,7 +274,6 @@ class CourseController {
                      next(`ERROR IN: Get Course function => ${error.message}`);
               }
        }
-
 
        async getAllCourses(req, res, next) {
               try {
@@ -416,6 +457,7 @@ class CourseController {
                      next(`ERROR IN: Get Course Materials function => ${error.message}`);
               }
        }
+
 }
 
 // Function to delete associated files if error

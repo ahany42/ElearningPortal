@@ -134,6 +134,15 @@ module.exports.register = async (req, res, next) => {
 
 module.exports.getUsers = async (req, res, next) => {
   try {
+    const { role } = req.query;
+
+    if (role && (role === "Admin" || role === "Student" || role === "Instructor")) {
+      const users = await User.find({ role });
+      return res.status(201).json({ data: users });
+    } else if (role) {
+        return res.status(200).json({ error: "Invalid role" });
+    }
+
     const users = await User.find();
     res.status(201).json({ data: users });
   } catch (error) {
