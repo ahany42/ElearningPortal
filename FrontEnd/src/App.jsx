@@ -360,16 +360,29 @@ function App() {
     return (
       <CurrentUserContext.Provider
         value={{
-            currentUser, setCurrentUser,
-            isAuthenticated, showMessage,confirmationToast, fetchCourses,
-            fetchAll, setIsAuthenticated, courses,
-            setCourses, setLoading,progress, instructorsList,
-            setAssignments, setExams, materials, studentsList
+          currentUser,
+          setCurrentUser,
+          isAuthenticated,
+          showMessage,
+          confirmationToast,
+          fetchCourses,
+          fetchAll,
+          setIsAuthenticated,
+          courses,
+          setCourses,
+          setLoading,
+          progress,
+          instructorsList,
+          setAssignments,
+          setExams,
+          materials,
+          studentsList,
+          INITIAL_MATERIALS,
         }}
       >
-          <div className="body-container">
-            {showHeaderAndFooter && <Header />}
-            <div className="body-content">
+        <div className="body-container">
+          {showHeaderAndFooter && <Header />}
+          <div className="body-content">
             <ToastContainer style={{ width: "fit-content" }} />
             {loading ? (
               <Loader />
@@ -381,20 +394,54 @@ function App() {
                 <Route path="/ResetPassword" element={<ChangePassword />} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Profile" element={<UserProfile />} />
-                <Route path="/courses" element={ <CoursesPage courses={courses} addCourseHandler={addCourseHandler}/>}/>
-                <Route path="/MyCourses" element={ <CoursesPage mode="MyCourses" courses={myCourses} addCourseHandler={addCourseHandler}/>}/>
+                <Route
+                  path="/courses"
+                  element={
+                    <CoursesPage
+                      courses={courses}
+                      addCourseHandler={addCourseHandler}
+                    />
+                  }
+                />
+                <Route
+                  path="/MyCourses"
+                  element={
+                    <CoursesPage
+                      mode="MyCourses"
+                      courses={myCourses}
+                      addCourseHandler={addCourseHandler}
+                    />
+                  }
+                />
                 <Route
                   path="/deadline"
-                  element={<DeadlinesPage assignments={assignments} exams={exams} />}
+                  element={
+                    <DeadlinesPage assignments={assignments} exams={exams} />
+                  }
                 />
-                <Route path="/CourseDetails/:id" element={<CourseDetails/>} />
-                <Route path="/CourseDetails/:id/StudentsList" element={<StudentList />} />
-                <Route path="/CourseDetails/:id/InstructorsList" element={<InstructorsList />} />
+                <Route path="/CourseDetails/:id" element={<CourseDetails />} />
+                <Route
+                  path="/CourseDetails/:id/StudentsList"
+                  element={<StudentList />}
+                />
+                <Route
+                  path="/CourseDetails/:id/InstructorsList"
+                  element={<InstructorsList />}
+                />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/AddMaterial/:id" element={<AddMaterial />} />
-                <Route path="/AddExam/:id" element={<AddExam courses={courses}/>} />
-                <Route path="/AddAnnouncement/:id" element={<AddAnnouncement courses={courses}/>} />
-                <Route path="/AddAssignment/:id" element={<AddAssignment addHandler={addAssignmentHandler} />} />
+                <Route
+                  path="/AddExam/:id"
+                  element={<AddExam courses={courses} />}
+                />
+                <Route
+                  path="/AddAnnouncement/:id"
+                  element={<AddAnnouncement courses={courses} />}
+                />
+                <Route
+                  path="/AddAssignment/:id"
+                  element={<AddAssignment addHandler={addAssignmentHandler} />}
+                />
                 <Route
                   path="/AssignmentPage"
                   element={<AssignmentPage assignments={assignments} />}
@@ -406,10 +453,10 @@ function App() {
                   path="*"
                   element={
                     <Placeholder
-                        text="Page Not Found"
-                        img={NotFoundImg}
-                        buttonText="Back To Home"
-                        buttonRoute="/"
+                      text="Page Not Found"
+                      img={NotFoundImg}
+                      buttonText="Back To Home"
+                      buttonRoute="/"
                     />
                   }
                 />
