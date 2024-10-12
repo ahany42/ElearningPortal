@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import {Container,Card,CardContent,Typography,Button,Table,TextField} from "@mui/material";
 import { Select, MenuItem } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+// import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../App";
 import "./ExamPage.css";
@@ -48,36 +48,37 @@ const ExamPage = ({ exams }) => {
       navigate("/deadline");
     }
   }, [exams, location.state]);
+//page only for student
+  // const deleteExamHandler = (examID) => {
+  //   setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
+  //   showMessage("Exam deleted successfully", false);
+  //   navigate("/deadline");
+  // };
 
-  const deleteExamHandler = (examID) => {
-    setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
-    showMessage("Exam deleted successfully", false);
-    navigate("/deadline");
-  };
+  //page only for student
+  // const editExamHandler = () => {
+  //   if (!editableExam.title || !editableExam.dueDate) {
+  //     showMessage("Title and date are required.", true);
+  //     return;
+  //   }
 
-  const editExamHandler = () => {
-    if (!editableExam.title || !editableExam.dueDate) {
-      showMessage("Title and date are required.", true);
-      return;
-    }
-
-    setExams((prevExams) =>
-      prevExams.map((e) =>
-        e.id === exam.id
-          ? {
-              ...e,
-              title: editableExam.title,
-              courseID: courses.find((c) => c.title === editableExam.course)
-                ?.id,
-              dueDate: editableExam.dueDate,
-              description: editableExam.description,
-            }
-          : e
-      )
-    );
-    setIsEditing(false);
-    showMessage("Exam updated successfully", false);
-  };
+  //   setExams((prevExams) =>
+  //     prevExams.map((e) =>
+  //       e.id === exam.id
+  //         ? {
+  //             ...e,
+  //             title: editableExam.title,
+  //             courseID: courses.find((c) => c.title === editableExam.course)
+  //               ?.id,
+  //             dueDate: editableExam.dueDate,
+  //             description: editableExam.description,
+  //           }
+  //         : e
+  //     )
+  //   );
+  //   setIsEditing(false);
+  //   showMessage("Exam updated successfully", false);
+  // };
 
 
   const solveExamHandler = () => {

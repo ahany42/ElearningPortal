@@ -13,7 +13,7 @@ import {getCookie} from "../Cookie/Cookie.jsx";
 const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         numStudents, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated, setCourses, showMessage, fetchCourses } = useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses, showMessage,confirmationToast,fetchCourses } = useContext(CurrentUserContext);
     const enrolled = mode? true : isEnrolled;
     const StudentsList = async ()=>{
         const params = new URLSearchParams({
@@ -37,7 +37,8 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
         setCourseEdit({id, title, desc, hours});
     }
 
-    const DeleteCourseHandler = (courseId) => {
+    const DeleteCourseHandler = async (courseId) => {
+        const isConfirmed = await confirmationToast("Are You sure you want to delete course?");
         setCourses((prevState) =>
             prevState.filter((course) => course.id !== courseId)
         );

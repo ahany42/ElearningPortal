@@ -9,12 +9,14 @@ import {getCookie} from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
 const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) => {
-  const { currentUser, showMessage, fetchAll } = useContext(CurrentUserContext);
+  const { currentUser, showMessage, fetchAll,confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
 
   const RemoveStudent = async () => {
-      const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
+    const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
+      if(isConfirmed){
+    const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,9 +34,12 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
           setUpdateList(!updateList);
           showMessage(response.message, false);
       }
+    }
   }
 
   const RemoveInstructor = async () => {
+    const isConfirmed = await confirmationToast("Are You Sure You Want to remove instructor?");
+      if(isConfirmed){
       const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
           method: 'POST',
           headers: {
@@ -53,6 +58,7 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
           setUpdateList(!updateList);
           showMessage(response.message, false);
       }
+    }
   }
   const ViewProgress = ()=>{
     navigate(`/ViewProgress/${student.id}`)

@@ -121,8 +121,8 @@ const AssignmentPage = ({ assignments }) => {
                 assignment.title || "No Assignment Available"
             )}
           </Typography>
-
-          { currentUser.role && (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
+          {/* page only viewed by student */}
+          {/* { currentUser.role && (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
               <div
                   className="course-icons admin-icons d-flex gap-2 mt-2"
                   style={{ marginBottom: "1rem", right: "20px", top: "10px" }}>
@@ -143,7 +143,7 @@ const AssignmentPage = ({ assignments }) => {
                   )
                 }
               </div>
-          }
+          } */}
 
           {/* Assignment Information */}
           <Table className="table table-bordered">

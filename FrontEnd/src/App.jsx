@@ -303,12 +303,65 @@ function App() {
             }
         }
     }
-
+    const confirmationToast = (confirmationMsg) => {
+        return new Promise((resolve) => {
+            toast.info(
+                <div>
+                    <h6>{confirmationMsg}</h6>
+                    <button
+                        onClick={() => {
+                            resolve(true); 
+                            toast.dismiss(); 
+                        }}
+                        style={{
+                            marginRight: "10px",
+                            padding: "2px 10px",
+                            backgroundColor: "green",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "3px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Confirm
+                    </button>
+                    <button
+                        onClick={() => {
+                            resolve(false); 
+                            toast.dismiss(); 
+                        }}
+                        style={{
+                            padding: "2px 10px",
+                            backgroundColor: "red",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "3px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Cancel
+                    </button>
+                </div>,
+                {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: {
+                        userSelect: "none",
+                        gap: "10px",
+                        padding: "20px",
+                    },
+                }
+            );
+        });
+    };
     return (
       <CurrentUserContext.Provider
         value={{
             currentUser, setCurrentUser,
-            isAuthenticated, showMessage, fetchCourses,
+            isAuthenticated, showMessage,confirmationToast, fetchCourses,
             fetchAll, setIsAuthenticated, courses,
             setCourses, setLoading,progress, instructorsList,
             setAssignments, setExams, materials, studentsList

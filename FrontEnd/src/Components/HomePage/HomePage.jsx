@@ -43,13 +43,6 @@ const HomePage = () => {
                   .map((course) => {
                     return (
                         <Carousel.Item key={course.id}>
-                          {/*<img*/}
-                          {/*    className="d-block w-100"*/}
-                          {/*    style={{width: "100%"}}*/}
-                          {/*    src={`${Front_ENV.Back_Origin}/${course.image.replaceAll("\\", "/")}`}*/}
-                          {/*    alt="First slide"*/}
-                          {/*    draggable="false"*/}
-                          {/*/>*/}
                           <CarouselItemDiv $image={course.image ? course.image.replaceAll("\\", "/") : ""}
                                            className="background-image-item w-100"></CarouselItemDiv>
                           <div className="CarouselText">
