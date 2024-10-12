@@ -15,10 +15,10 @@ if(!id){
     <>
     <h5 className="alignCenter-text">{currentUser.name}'s Progress in React Js</h5>
         <table className="student-progress-table">
+            <th>Course</th>
             <th>Exam/Assignment</th>
-            <th>Submission Date</th>
             <th>DeadLine</th>
-            <th>On Time</th>
+            <th>Submitted</th>
             <th>Grade</th>
             {!progress.length &&  <Placeholder text="You're all caught up" img={CaughtUp}/>}
            {progress.map(record=>(

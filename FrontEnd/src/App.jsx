@@ -670,19 +670,20 @@ const INITIAL_PROGRESS = [
     {
         id:1,
         title:"Exam 1",
+        course:"React.js",
         isExam:true,
         submissionDate:"30 Sep 9:00",
         deadline:"1 Oct 9:00",
         grade:"30",
-        onTime:true,
+        isSubmitted:true,
     } ,{
         id:2,
         title:"Assignment 1",
+        course:"js",
         isExam:false,
-        submissionDate:"30 Sep 9:00",
         deadline:"29 Sep 9:00",
         grade:"",
-        onTime:false,
+        isSubmitted:false,
     }
 ]
 
