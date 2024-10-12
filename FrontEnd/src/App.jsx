@@ -348,6 +348,7 @@ function App() {
                 />
                 <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
                 <Route path="/ViewProgress/:id" element={<StudentProgress />} />
+                <Route path="/ViewProgress" element={<StudentProgress />} />
                 <Route
                   path="*"
                   element={

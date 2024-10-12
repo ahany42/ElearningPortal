@@ -16,14 +16,16 @@ const pages = [
     { name: 'Courses', to: '/courses'}, // This is the only page that is not protected (logged in or not)
     { auth: true, name: 'My Courses', to: '/MyCourses', role: ["student", "instructor"]}, // This page is protected (must be
     // logged in)
-    { auth: true, name: 'Deadlines', to: '/deadline', role: ["student", "admin", "superadmin"]}, // This page is protected (must be
+    { auth: true, name: 'Deadlines', to: '/deadline', role: ["student"]}, // This page is protected (must be
+    { auth: true, name: 'Progress', to: `/ViewProgress`, role: ["student"]}, // This page is protected (must be
     // logged in)
 ];
 
 const burgerListPages = [
     { name: 'Courses', to: '/courses'},
     { auth: true, name: 'My Courses', to: '/MyCourses', role: ["student", "instructor"]},
-    { auth: true, name: 'Deadline', to: '/deadline', role: ["student", "admin", "superadmin"]},
+    { auth: true, name: 'Deadline', to: '/deadline', role: ["student"]},
+    { auth: true, name: 'Progress', to: `/ViewProgress`, role: ["student"]}, // This page is protected (must be
     { auth: false, name: 'Login', to: '/login' },
     { auth: false, name: 'Register', to: '/SignUp' },
     { auth: true, name: 'Profile', to: '/profile' },
