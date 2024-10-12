@@ -68,12 +68,16 @@
     height: fit-content !important;
 }
 .add-material{
-    top: 30px;
-    right: 57px;
+top:20px;
 }
 .add-material-button-container{
     width: 90%;
-}
+} 
+ .buttons-container{
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 50px;
+ }
 .stats-button {
     cursor: pointer;
 }
@@ -82,10 +86,6 @@
 }
 
 .goBackBtn {
-    position: absolute;
-    top: 0;
-    left: 57px;
-    display: flex;
     height: 3em;
     width: 100px;
     align-items: center;
