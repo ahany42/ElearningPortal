@@ -237,6 +237,7 @@ const Comment = mongoose.model(
     },
     createdAt: { type: Date, default: Date.now },
     editedAt: { type: Date, default: null },
+    isEdited: { type: Boolean, default: false },
   })
 );
 

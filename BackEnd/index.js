@@ -45,6 +45,7 @@ const CourseRouter = require("./router/CourseRouter");
 const AssignmentRouter = require("./router/AssignmentRouter");
 const ExamRouter = require("./router/ExamRouter");
 const PostRouter = require("./router/PostRouter");
+const CommentRouter = require("./router/commentRouter");
 
 // Middleware to monitor requests and responses
 app.use((req, res, next) => {
@@ -62,6 +63,7 @@ app.use(CourseRouter);
 app.use(AssignmentRouter);
 app.use(ExamRouter);
 app.use(PostRouter);
+app.use(CommentRouter);
 
 // Middleware to catch any errors
 app.use((err, req, res, _) => {
