@@ -21,7 +21,7 @@ const StudentList = () => {
             courseId: id,
             type: 'students'
         });
-        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,8 +29,8 @@ const StudentList = () => {
             }
         })
             .then(response => response.json());
-        setStudentsList(reponse.data);
-        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: reponse.data}});
+        setStudentsList(response.data);
+        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: response.data}});
     }
 
     useEffect(() => {

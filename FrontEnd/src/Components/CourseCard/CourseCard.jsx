@@ -15,6 +15,22 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
     const navigate = useNavigate();
     const { currentUser, isAuthenticated, setCourses, showMessage, fetchCourses } = useContext(CurrentUserContext);
     const enrolled = mode? true : isEnrolled;
+    const StudentsList = async ()=>{
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'students'
+        });
+        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: response.data}});
+    }
 
     const EditCourse = (id)=>{
         showEditFormHandler();
@@ -28,11 +44,9 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
         showMessage("Course deleted successfully", false);
     };
 
-
     const CourseDetails = ()=>{
         navigate(`/CourseDetails/${id}`)
     }
-
     const EnrollCourse = async () => {
         if (!isAuthenticated) {
             showMessage("Please Login to Enroll", true);
@@ -96,7 +110,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text">
+                            <div className="alignCenter-text" onClick={StudentsList}>
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -137,7 +151,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text">
+                            <div className="alignCenter-text" onClick = {StudentsList}>
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -178,7 +192,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                                 </button>
                             </div>
                         </div>
-                            <div className="alignCenter-text">
+                            <div className="alignCenter-text" onClick={StudentsList}>
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>

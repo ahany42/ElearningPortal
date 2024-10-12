@@ -113,9 +113,6 @@ const UserProfile = () => {
           }, 1400);
         });
   };
- const NavigateToProgress = ()=>{
-  navigate(`/ViewProgress/${currentUser.id}`)
- }
   return (
       <section style={{ backgroundColor: "#eee" }}>
         <MDBContainer className="py-5 my-3 profile-container">
@@ -298,21 +295,6 @@ const UserProfile = () => {
                       </button>
                     </MDBCol>
                   </MDBRow>
-                
-                  <hr/>
-                  {currentUser.role==="Student" &&
-                  <MDBRow className="gap-2">
-                    <MDBCol sm="3" className="d-flex align-items-center">
-                      <div className="profile-left-labels">My Progress:</div>
-                    </MDBCol>
-                    <MDBCol sm="8" className="flex-grow-1">
-                      <button className="btn ProfileSaveButton"
-                              style={{margin: "8px 0"}}
-                              onClick={NavigateToProgress}>
-                        Progress
-                      </button>
-                    </MDBCol>
-                  </MDBRow>}
                 </MDBCardBody>
               </MDBCard>
               <div className="overlay-profile" ref={overlay}></div>

@@ -70,7 +70,7 @@ const CourseDetails = () => {
             courseId: id,
             type: 'students'
         });
-        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,24 +79,29 @@ const CourseDetails = () => {
         })
             .then(response => response.json());
 
-        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: reponse.data}});
+        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: response.data}});
     }
 
     const InstructorsList = async ()=> {
-        const params = new URLSearchParams({
-            courseId: id,
-            type: 'instructors'
-        });
-        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': getCookie('token') || '',
-            }
-        })
-            .then(response => response.json());
-
-        navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: reponse.data}})
+        if(!(currentUser.role === "Admin" || currentUser.role === "SuperAdmin" || currentUser.role === "Instructor") ){
+            return;
+        }
+        else{
+            const params = new URLSearchParams({
+                courseId: id,
+                type: 'instructors'
+            });
+            const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie('token') || '',
+                }
+            })
+                .then(response => response.json());
+    
+            navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: response.data}})
+        }
     }
 
     const course = courses.find(course => course.id === id);
@@ -131,7 +136,7 @@ const CourseDetails = () => {
                             <h6 className="stats stats-button" onClick={StudentsList}>
                                 {course.numStudents} <FontAwesomeIcon icon={faUser}/>
                             </h6>
-                            <h6 className="stats stats-button" onClick={InstructorsList}>
+                           <h6 className={!(currentUser.role === "Admin" || currentUser.role === "SuperAdmin" || currentUser.role === "Instructor")? "stats":"stats stats-button"} onClick={InstructorsList}>
                                 {course.numInstructors} <FontAwesomeIcon
                                 icon={faChalkboardTeacher}/></h6>
                             <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
