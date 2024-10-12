@@ -85,6 +85,10 @@ const pathsRoleBased = [
         path: /^\/MyCourses$/,
         roles: "instructor, student",
     },
+    {
+        path: /^\/ViewProgress\/[a-zA-Z0-9\-]+$/,
+        roles: "student,instructor",
+    }
 ]
 
 export const CurrentUserContext = createContext();
