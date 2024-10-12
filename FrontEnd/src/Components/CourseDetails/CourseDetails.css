@@ -84,32 +84,3 @@ top:20px;
 .stats-button:hover{
     color:#1330BE ;
 }
-
-.goBackBtn {
-    height: 3em;
-    width: 100px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    letter-spacing: 1px;
-    transition: all 0.2s linear;
-    border: none;
-    background: #d8d7d1;
-}
-
-.goBackBtn > svg {
-    margin-right: 5px;
-    margin-left: 5px;
-    font-size: 20px;
-    transition: all 0.4s ease-in;
-}
-
-.goBackBtn:hover > svg {
-    font-size: 1.2em;
-    transform: translateX(-5px);
-}
-
-.goBackBtn:hover {
-    background: #fb8928;
-    transform: translateY(-2px);
-}

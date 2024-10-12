@@ -11,7 +11,6 @@ import {CurrentUserContext} from "../../App";
 import {NavLink, useLocation} from "react-router-dom";
 import {v4} from "uuid";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
 const pages = [
     { name: 'Courses', to: '/courses'}, // This is the only page that is not protected (logged in or not)
     { auth: true, name: 'My Courses', to: '/MyCourses', role: ["student", "instructor"]}, // This page is protected (must be
@@ -100,7 +99,9 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleOpenProfileMenu}
                 color="inherit">
-                <AccountCircleIcon fontSize="large" sx={{ color: '#f1f1f1' }}/>
+                {currentUser.name?
+                <img   src={`https://ui-avatars.com/api/?background=2d3480&color=`+ `fff&rounded=true&name=${currentUser.name}`} className ="profile-image" alt="user"/>
+                 :<AccountCircleIcon fontSize="large" sx={{ color: '#f1f1f1' }}/> }
             </MuiIconButton>
             <Menu
                 id="profile-menu"

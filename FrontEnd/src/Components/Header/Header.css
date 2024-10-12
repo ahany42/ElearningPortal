@@ -45,7 +45,11 @@
     background-color: #fb8928;
     box-shadow: 0 0 6px 2px rgb(241 241 241 / 34%);
 }
-
+.profile-image{
+    border: solid 2px #fff;
+    border-radius:50%;
+    width:50px;
+}
 @media (max-width: 850px) {
     .courses-buttons-container {
         margin-top: 1rem;

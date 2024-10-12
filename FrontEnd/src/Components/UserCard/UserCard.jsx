@@ -1,4 +1,3 @@
-import Image from "../../assets/Course_Placeholder.svg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -61,7 +60,8 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
   return (
     <div className=" card user-card card-shadow ">
     <div className=" user-sub-card">
-      <img src={Image} alt="user" className="user-list-user-avatar"/>
+      <img src={`https://ui-avatars.com/api/?background=2d3480&color=`+
+                           `fb8928&rounded=true&name=${currentUser.name}`} alt="user" className="user-list-user-avatar"/>
         <div className="user-details-container">
             <div className="user-details">
             <h6>
