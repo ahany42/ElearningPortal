@@ -55,7 +55,7 @@ const pathsNotRequireAuthentication = [
 const pathsRoleBased = [
     {
         path: /^\/deadline$/,
-        roles: "student, admin, superadmin",
+        roles: "student",
     },
     {
         path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/InstructorsList$/,
