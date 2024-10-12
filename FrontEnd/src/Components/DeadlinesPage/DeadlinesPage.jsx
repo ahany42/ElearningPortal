@@ -148,15 +148,8 @@ const DeadlinesPage = ({ assignments, exams }) => {
                         </tr>
                     ))
                 ) : (
-                    <tr>
-                      <td colSpan="5" style={{ textAlign: "center" }}>
-                        <Placeholder
-                            style={{margin: "1em auto"}}
-                            img={NoAssignmentImg}
-                            text="No Assignment available. Add one now!"
-                        />
-                      </td>
-                    </tr>
+                    <>
+                    </>
                 )
             ) : exams && exams.length > 0 ? (
                 exams.map((exam, index) => (
@@ -194,17 +187,27 @@ const DeadlinesPage = ({ assignments, exams }) => {
                     </tr>
                 ))
             ) : (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    <Placeholder
-                        img={NoExamImg}
-                        text="No Exam available. Add one now!"
-                    />
-                  </td>
-                </tr>
+                <>
+                </>
             )}
             </tbody>
           </Table>
+          {(exams.length === 0) && (activeTab === "exams")?
+           
+                    (<Placeholder
+                        img={NoExamImg}
+                        text="You are all caumkmkght up!"
+                    />)
+              :(null)
+          }
+               {(assignments.length === 0) && (activeTab === "assignments") ?
+           
+           (<Placeholder
+               img={NoExamImg}
+               text="You are all caught up!"
+           />)
+     :(null)
+ }
         </div>
       </>
   );
