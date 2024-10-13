@@ -19,7 +19,7 @@ const MaterialCard = ({material}) => {
   };
   const deleteExamHandler = (examID) => {
     setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
-    showMessage("Exam deleted successfully", false);
+    showMessage("Exam deleted locally", false);
 };
 const editExamHandler = () => {
     if (!editableExam.title || !editableExam.dueDate) {
@@ -43,6 +43,20 @@ const editExamHandler = () => {
     setIsEditing(false);
     showMessage("Exam updated successfully", false);
 };
+const deleteAnnouncementHandler = () => {
+  showMessage("delete announcement coming soon",false);
+
+}
+const editAnnouncementHandler = () => {
+  showMessage(" edit announcement coming soon",false);
+
+}
+const deleteAssignmentHandler = () => {
+  showMessage(" delete assignment coming soon",false);
+}
+const editAssignmentHandler = () => {
+  showMessage(" edit assignment coming soon",false);
+}
 return (
   <>
     {material.materialType === "exam" ? (
@@ -65,6 +79,7 @@ return (
             </h6>
           </div>
         </div>
+        { CurrentUserContext.role==="Instructor" &&
         <div className="course-icons-materialCard admin-icons">
           <FontAwesomeIcon
             icon={faEdit}
@@ -77,7 +92,7 @@ return (
             style={{ color: "red", cursor: "pointer" }}
             onClick={() => deleteExamHandler(INITIAL_MATERIALS.id)}
           />
-        </div>
+        </div>}
       </div>
     ) : material.materialType === "assignment" ? (
       <div className=" card material-card ">
@@ -100,19 +115,20 @@ return (
             </h6>
           </div>
         </div>{" "}
+        { CurrentUserContext.role==="Instructor" &&
         <div className="course-icons-materialCard admin-icons">
           <FontAwesomeIcon
             icon={faEdit}
             style={{ cursor: "pointer" }}
             className="edit-icon"
-            onClick={() => editExamHandler(INITIAL_MATERIALS.id)}
+            onClick={() => editAssignmentHandler(INITIAL_MATERIALS.id)}
           />
           <FontAwesomeIcon
             icon={faTrash}
             style={{ color: "red", cursor: "pointer" }}
-            onClick={() => deleteExamHandler(INITIAL_MATERIALS.id)}
+            onClick={() => deleteAssignmentHandler(INITIAL_MATERIALS.id)}
           />
-        </div>
+        </div>}
       </div>
     ) : material.materialType === "announcement" ? (
       <div className="material-card card">
@@ -133,19 +149,20 @@ return (
               </div>
               <h6 className="material-date">{material.startDate}</h6>
             </div>
+            { CurrentUserContext.role==="Instructor" &&
             <div className="course-icons-materialCard admin-icons">
               <FontAwesomeIcon
                 icon={faEdit}
                 style={{ cursor: "pointer" }}
                 className="edit-icon"
-                onClick={() => editExamHandler(INITIAL_MATERIALS.id)}
+                onClick={() => editAnnouncementHandler(INITIAL_MATERIALS.id)}
               />
               <FontAwesomeIcon
                 icon={faTrash}
                 style={{ color: "red", cursor: "pointer" }}
-                onClick={() => deleteExamHandler(INITIAL_MATERIALS.id)}
+                onClick={() => deleteAnnouncementHandler(INITIAL_MATERIALS.id)}
               />
-            </div>
+            </div>}
             {seeMore ? (
               <h6
                 className="material-button blue-text bold-text"
