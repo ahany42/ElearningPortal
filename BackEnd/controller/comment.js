@@ -12,11 +12,11 @@ module.exports = {
   createComment: async (req, res, next) => {
     try {
       const { creatorId } = req.params;
-      const { postId, content } = req.body;
+      const { postID, content } = req.body;
       if (!creatorId || creatorId === "") {
         return res.status(200).json({ error: "Creator ID is required" });
       }
-      if (!postId || postId === "") {
+      if (!postID || postID === "") {
         return res.status(200).json({ error: "Post ID is required" });
       }
       if (!content || content === "") {
@@ -26,13 +26,15 @@ module.exports = {
       if (!user) {
         return res.status(200).json({ error: "User not found" });
       }
-      console.log(user);
-      const post = await Post.findOne({ id: postId });
+      // console.log(user);
+      const post = await Post.findOne({ id: postID });
+      console.log(post.courseId);
       if (!post) {
         return res.status(200).json({ error: "Post not found" });
       }
-      const PostCourse = await Course.find(post.courseId);
-      console.log(user.role.toLowerCase());
+      const PostCourse = await Course.findOne(post.courseId);
+      console.log(PostCourse);
+      // console.log(user.role.toLowerCase());
       if (
         user.role.toLowerCase() !== "admin" &&
         user.role.toLowerCase() !== "superadmin"
@@ -42,6 +44,8 @@ module.exports = {
             studentID: user._id,
             courseID: PostCourse._id,
           });
+          console.log(user._id, PostCourse._id);
+          console.log(userCourses);
           if (userCourses.length === 0) {
             return res.status(200).json({ error: "User not authorized!" });
           }
@@ -59,9 +63,9 @@ module.exports = {
 
       const newComment = new Comment({
         id: uuidv4(),
-        postId,
+        postID: post._id,
         content,
-        creatorId,
+        creatorId: user._id,
       });
       newComment.save();
       res.status(201).json({ message: "Comment created successfully" });
@@ -79,19 +83,20 @@ module.exports = {
         return res.status.send(200, "user ID is required");
       }
       if (!commentId || commentId === "") {
-        return res.status.send(200, "comment ID is required");
+        return res.status(200).json({ error: "comment ID is required" });
       }
       if (!content || content === "") {
-        return res.status.send(200, "content is required");
+        return res.status(200).json({ error: "Content is required" });
       }
       const user = await User.findOne({ id: userId });
       if (!user) {
-        return res.status.send(200, "user is not found!");
+        return res.status(200).json({ error: "User is not found!" });
       }
-      const comment = await Comment.find({ id: commentId });
-      const commentCreator = await User.find({ _id: comment.creatorId });
+      const comment = await Comment.findOne({ id: commentId });
+      const commentCreator = await User.findOne({ _id: comment.creatorId });
+      console.log(commentCreator);
       if (commentCreator.id !== user.id) {
-        return res.status.send(200, "user is not authorized");
+        return res.status(200).json({ error: "User not authorized" });
       }
       comment.editedAt = Date.now();
       comment.content = content;
@@ -104,21 +109,24 @@ module.exports = {
     }
   },
 
-  deleteComment: async (req, res, nect) => {
+  deleteComment: async (req, res, next) => {
     try {
       const { userId } = req.params;
       const { commentId } = req.body;
       if (!userId || userId === "") {
-        return res.status.send(200, "user ID is required");
+        return res.status(200).json({ error: "user ID is required" });
       }
       if (!commentId || commentId === "") {
-        return res.status.send(200, "comment ID is required");
+        return res.status(200).json({ error: "comment ID is required" });
       }
-      const user = await User.find({ id: userId });
-      const comment = await Comment.find({ id: commentId });
-      const commentCreator = await User.findById(comment.creatorId);
+      const user = await User.findOne({ id: userId });
+      const comment = await Comment.findOne({ id: commentId });
+      console.log(comment);
+      const commentCreator = await User.findOne({ _id: comment.creatorId });
+      console.log(commentCreator);
       if (user.id !== commentCreator.id) {
-        return res.status.send(200, "user is not authorized");
+        console.log(user.id, commentCreator.id);
+        return res.status(200).json({ error: "user not authorized" });
       }
       await Comment.deleteOne({ id: commentId });
       res.status(201).json({ message: "Comment deleted successfully" });
@@ -138,15 +146,18 @@ module.exports = {
       if (!postId || postId === "") {
         return res.status.send(200, "post ID is required");
       }
-      const post = await Post.find({ id: postId });
-      const user = await User.find({ id: userId });
+      const post = await Post.findOne({ id: postId });
+      const user = await User.findOne({ id: userId });
       if (!user) {
         return res.status.send(200, "user is not found!");
       }
+      console.log(user);
       if (!post) {
         return res.status.send(200, "post is not found!");
       }
-      const PostCourse = await Course.find(post.courseId);
+      console.log(post);
+      const PostCourse = await Course.findOne(post.courseId);
+      console.log(PostCourse);
       if (
         user.role.toLowerCase() !== "admin" &&
         user.role.toLowerCase() !== "superadmin"
@@ -156,6 +167,7 @@ module.exports = {
             studentID: user._id,
             courseID: PostCourse._id,
           });
+          console.log(user._id, PostCourse._id);
           if (userCourses.length === 0) {
             return res.status(200).json({ error: "User not authorized!" });
           }
@@ -170,7 +182,9 @@ module.exports = {
           }
         }
       }
-      const comments = await Comment.find({ postId: postId });
+      const comments = await Comment.find({ postID: post._id });
+      console.log(comments);
+      console.log(post._id);
       res.status(201).json({ comments });
     } catch (err) {
       res.status(200).json({ error: "Unexpected Error Occurred" });

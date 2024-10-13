@@ -8,7 +8,7 @@ router.post(
   verifyToken(),
   Controller.createComment
 ); //verified
-router.get("/getComments", verifyToken(), Controller.getComments); //verified
+router.get("/getComments/:userId", verifyToken(), Controller.getComments); //verified
 router.put("/updateComment/:userId", verifyToken(), Controller.updateComment); //verified
 router.delete(
   "/deleteComment/:userId",

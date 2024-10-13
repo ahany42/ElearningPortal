@@ -53,7 +53,7 @@ module.exports = {
         if (user.role.toLowerCase() === "student") {
           const studentCourseArray = await Student_Course.find({
             studentID: user._id,
-            courseID: curentCourse._id,
+            courseID: course._id,
           });
           if (studentCourseArray.length === 0) {
             return res.status(200).json({ error: "User not authorized" });
@@ -183,7 +183,7 @@ module.exports = {
         if (user.role.toLowerCase() === "instructor") {
           const InstructorCourseArray = await Instructor_Course.find({
             instructorID: user._id,
-            courseID: curentCourse._id,
+            courseID: course._id,
           });
           if (InstructorCourseArray.length === 0) {
             return res.status(200).json({ error: "User not authorized" });
