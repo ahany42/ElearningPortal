@@ -26,7 +26,7 @@ import {setCookie} from "../Cookie/Cookie.jsx";
 import {jwtDecode} from "jwt-decode";
 
 
-const SignUp = () => {
+const SignUp = ({isInstructor,adminId}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [genderValue, setGenderValue] = useState("Male");
@@ -34,10 +34,13 @@ const SignUp = () => {
     name: "",
     gender: genderValue,
     username: "",
-    role: "Student",
+    role:isInstructor?"Instructor" : "Student",
     email: "",
     password: "",
     confirmpassword: "",
+    userId:isInstructor?adminId : 0,
+      //userId is the admin id
+
   });
   const { setIsAuthenticated, setCurrentUser, showMessage, setLoading } = useContext(CurrentUserContext);
   const navigate = useNavigate();
@@ -119,7 +122,7 @@ const SignUp = () => {
   return (
     <>
       <Box sx={{ width: "700px", margin: "100px auto" }}>
-        <h4 className="mb-3">Create New Account</h4>
+        {isInstructor ? <h4 className="mb-3">Add New Instructor</h4>:<h4 className="mb-3">Create New Account</h4>}
         <form onSubmit={handleSubmit}>
           <TextField
             label="Full Name"
@@ -354,14 +357,14 @@ const SignUp = () => {
           </Button>
 
           {/* Sign Up Link */}
-          <NavLink
+    {!isInstructor &&<NavLink
             to="/login"
             variant="body2"
             className="blue-text"
             style={{ display: "block", marginTop: "1rem" }}
           >
             Have an account? Sign in
-          </NavLink>
+          </NavLink>}
         </form>
       </Box>
     </>

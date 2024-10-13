@@ -31,6 +31,7 @@ import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
+import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
 import "./App.css";
 
 const pathsWithNoHeaderAndFooter = [
@@ -88,7 +89,12 @@ const pathsRoleBased = [
     {
         path: /^\/ViewProgress\/[a-zA-Z0-9\-]+$/,
         roles: "student,instructor",
-    }
+    },
+    {
+        path: /^\/AddInstructor$/,
+        roles: "admin, superadmin",
+    },
+   
 ]
 
 export const CurrentUserContext = createContext();
@@ -449,6 +455,7 @@ function App() {
                 <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
                 <Route path="/ViewProgress/:id" element={<StudentProgress />} />
                 <Route path="/ViewProgress" element={<StudentProgress />} />
+                <Route path="/AddInstructor" element={<AddInstructor/>} />
                 <Route
                   path="*"
                   element={

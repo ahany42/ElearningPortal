@@ -87,6 +87,7 @@ module.exports.logout = async (req, res, next) => {
 };
 
 module.exports.register = async (req, res, next) => {
+  //userId is the admin id
   try {
     const { name, gender, email, username, password, role, userId } = req.body;
     const id = uuidv4();
