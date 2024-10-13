@@ -1,4 +1,12 @@
-const { Exam, StudentExam, Question, Course, User } = require("../db/Database");
+const {
+  Exam,
+  StudentExam,
+  Question,
+  Course,
+  User,
+  Student_Course,
+  Instructor_Course,
+} = require("../db/Database");
 const { v4: uuidv4 } = require("uuid");
 /*
     Functions to be implemented:
@@ -154,13 +162,43 @@ module.exports.getExamsforStudents = async (req, res, next) => {
 module.exports.getExamQuestions = async (req, res, next) => {
   try {
     const { examId } = req.params;
+    const { userId } = req.body;
     if (!examId) {
       return res.status(200).json({ error: "Exam ID is required" });
     }
+    if (!userId) {
+      return res.status(200).json({ error: "User ID is required" });
+    }
     const exam = await Exam.findOne({ id: examId });
-    console.log(exam);
     if (!exam) {
       return res.status(200).json({ error: "Exam not found" });
+    }
+    const user = await User.findOne({ id: userId });
+    if (!user) {
+      return res.status(200).json({ error: "User not found" });
+    }
+    if (
+      user.role.toLowerCase() !== "admin" &&
+      user.role.toLowerCase() !== "superadmin"
+    ) {
+      if (user.role.toLowerCase() === "student") {
+        const studentCourse = await Student_Course.findOne({
+          studentID: user._id,
+          courseID: exam.courseID,
+        });
+        if (!studentCourse) {
+          return res.status(200).json({ error: "User not authorized" });
+        }
+      }
+      if (user.role.toLowerCase() === "instructor") {
+        const instructorCourse = await Instructor_Course.findOne({
+          instructorID: user._id,
+          courseID: exam.courseID,
+        });
+        if (!instructorCourse) {
+          return res.status(200).json({ error: "User not authorized" });
+        }
+      }
     }
     const questions = await Question.find({ examID: exam._id });
     if (!questions) {
@@ -174,6 +212,7 @@ module.exports.getExamQuestions = async (req, res, next) => {
       responsedQuestionData.push({
         title: question.title,
         answers: question.answers,
+        correctAnswer: question.correctAnswer,
       });
     }
     const responsedData = {
@@ -311,22 +350,17 @@ module.exports.finishSolvingExam = async (req, res, next) => {
     if (!student) {
       return res.status(200).json({ error: "Student not found" });
     }
-    const studentExam = await StudentExam.findOne({
+    const submitExam = new StudentExam({
       examID: examId,
       studentID: studentId,
+      grade,
     });
-    if (!studentExam) {
-      return res
-        .status(200)
-        .json({ error: "Student not registered for this exam" });
-    }
-    if (submissionDate > exam.endDate) {
-      studentExam.grade = 0;
-    } else {
-      studentExam.grade = grade;
-    }
-
-    await studentExam.save();
+    await submitExam.save();
+    // if (submissionDate > exam.endDate) {
+    //   studentExam.grade = 0;
+    // } else {
+    //   studentExam.grade = grade;
+    // }
     res.status(201).json({ message: "Exam solved successfully" });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });

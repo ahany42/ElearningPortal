@@ -193,7 +193,7 @@ const StudentExam = mongoose.model(
         ref: "User",
         required: true,
       },
-      grade: { type: Number },
+      grade: { type: Number, required: true },
     },
     { timestamps: true }
   )
