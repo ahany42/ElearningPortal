@@ -12,7 +12,9 @@ const CarouselItemDiv = styled.div`
       &::before {
           content: "";
           background-image: url(${props => props.$image? `${Front_ENV.Back_Origin}/${props.$image}` : CoursePlaceHolder});
-          background-size: contain;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
           position: absolute;
           top: 0;
           left: 0;

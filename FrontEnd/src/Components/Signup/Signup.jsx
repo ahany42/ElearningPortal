@@ -34,7 +34,7 @@ const SignUp = ({isInstructor,adminId}) => {
     name: "",
     gender: genderValue,
     username: "",
-    role:isInstructor?"Instructor" : "Student",
+    role:isInstructor? "Instructor" : "Student",
     email: "",
     password: "",
     confirmpassword: "",
@@ -77,7 +77,12 @@ const SignUp = ({isInstructor,adminId}) => {
 
         if (!response.error) {
           if(isInstructor){
-           navigate('/Courses');
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              showMessage(response.message, false);
+              navigate('/Courses');
+            }, 1000);
           }
           else{
             setLoading(true);

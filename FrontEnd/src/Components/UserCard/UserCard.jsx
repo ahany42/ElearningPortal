@@ -2,63 +2,65 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {useNavigate, useParams} from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { CurrentUserContext } from "../../App.jsx";
 import './UserCard.css';
-import {getCookie} from "../Cookie/Cookie.jsx";
+import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
 const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) => {
-  const { currentUser, showMessage, fetchAll,confirmationToast } = useContext(CurrentUserContext);
+  const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
 
   const RemoveStudent = async () => {
-    const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
-      if(isConfirmed){
-    const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'authorization': getCookie("token") || ""
-        },
-        body: JSON.stringify({
-            userId: student.id,
-            courseId: id
-        })})
-          .then(response => response.json());
+      const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
+      if (isConfirmed) {
+          const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'authorization': getCookie("token") || ""
+              },
+              body: JSON.stringify({
+                  userId: student.id,
+                  courseId: id
+              })
+          })
+              .then(response => response.json());
 
-      if (response.error){
-          showMessage(response.error, true);
-      } else {
-          setUpdateList(!updateList);
-          showMessage(response.message, false);
+          if (response.error) {
+              showMessage(response.error, true);
+          } else {
+              setUpdateList(!updateList);
+              showMessage(response.message, false);
+          }
       }
-    }
   }
 
   const RemoveInstructor = async () => {
-    const isConfirmed = await confirmationToast("Are You Sure You Want to remove instructor?");
-      if(isConfirmed){
-      const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'authorization': getCookie("token") || ""
-          },
-          body: JSON.stringify({
-              userId: instructor.id,
-              courseId: id
-          })})
-          .then(response => response.json());
+      const isConfirmed = await confirmationToast("Are You Sure You Want to remove instructor?");
+      if (isConfirmed) {
+          const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'authorization': getCookie("token") || ""
+              },
+              body: JSON.stringify({
+                  userId: instructor.id,
+                  courseId: id
+              })
+          })
+              .then(response => response.json());
 
-      if (response.error){
-          showMessage(response.error, true);
-      } else {
-          setUpdateList(!updateList);
-          showMessage(response.message, false);
+          if (response.error) {
+              showMessage(response.error, true);
+          } else {
+              setUpdateList(!updateList);
+              showMessage(response.message, false);
+          }
       }
-    }
   }
   const ViewProgress = ()=>{
     navigate(`/ViewProgress/${student.id}`)

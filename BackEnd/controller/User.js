@@ -143,7 +143,10 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-    res.status(201).json({ message: `User (${user.name}) registered successfully` });
+    role === "Instructor"?
+        res.status(201).json({ message: `Instructor (${user.name}) Added Successfully` })
+    :
+        res.status(201).json({ message: `User (${user.name}) registered successfully` })
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Register function => ${error}`);
@@ -155,7 +158,18 @@ module.exports.getUsers = async (req, res, next) => {
     const { role } = req.query;
 
     if (role && (role === "Admin" || role === "Student" || role === "Instructor")) {
-      const users = await User.find({ role });
+      let users = await User.find({ role });
+      users = users.map(({id, name, gender, email, username, role}) => {
+        return {
+          id,
+          name,
+          gender,
+          email,
+          username,
+          role
+        }
+      });
+
       return res.status(201).json({ data: users });
     } else if (role) {
         return res.status(200).json({ error: "Invalid role" });

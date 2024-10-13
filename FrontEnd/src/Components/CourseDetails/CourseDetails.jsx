@@ -38,7 +38,8 @@ const DetailsHeaderDiv = styled.div`
 const CourseDetails = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-    const { currentUser, showMessage, courses, fetchCourses } = useContext(CurrentUserContext);
+    const { currentUser, showMessage, courses, fetchCourses, isAuthenticated, confirmationToast } =
+        useContext(CurrentUserContext);
     const route = useLocation();
     //for testing
     const totalExams = 0;
@@ -46,19 +47,42 @@ const CourseDetails = () => {
     const totalAssignments = 1;
     //for testing
     const totalAnnouncements = 0;
+    const course = courses.find(course => course.id === id);
 
     useEffect(() => {
         fetchCourses();
     }, [route]);
 
 
-    const EnrollCourse = (courseID) => {
-        if (!currentUser.id) {
+    const EnrollCourse = async (courseID) => {
+        if (!isAuthenticated) {
             showMessage("Please Login to Enroll", true);
             navigate('/login');
             return;
         }
-        showMessage(`Course (${courseID}) Enrolled Successfully`, false);
+
+        const confirm = await confirmationToast("Are you sure you want to enroll in this course?");
+        if (confirm) {
+            const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie("token") || ""
+                },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    courseId: courseID,
+                    duration: course.hours
+                })})
+                .then(response => response.json());
+
+            if (response.error){
+                showMessage(response.error, true);
+            } else {
+                fetchCourses();
+                showMessage(response.message, false);
+            }
+        }
     }
 
     const AddMaterial = ()=>{
@@ -103,8 +127,6 @@ const CourseDetails = () => {
             navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: response.data}})
         }
     }
-
-    const course = courses.find(course => course.id === id);
 
     return (
         course ?

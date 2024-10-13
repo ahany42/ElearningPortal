@@ -13,24 +13,9 @@ import {getCookie} from "../Cookie/Cookie.jsx";
 const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         numStudents, setCourseEdit, isEnrolled, mode }) => {
     const navigate = useNavigate();
-    const { currentUser, isAuthenticated, setCourses, showMessage,confirmationToast,fetchCourses } = useContext(CurrentUserContext);
+    const { currentUser, isAuthenticated, setCourses, showMessage,confirmationToast,fetchCourses } =
+        useContext(CurrentUserContext);
     const enrolled = mode? true : isEnrolled;
-    const StudentsList = async ()=>{
-        const params = new URLSearchParams({
-            courseId: id,
-            type: 'students'
-        });
-        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': getCookie('token') || '',
-            }
-        })
-            .then(response => response.json());
-
-        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: response.data}});
-    }
 
     const EditCourse = (id)=>{
         showEditFormHandler();
@@ -55,24 +40,27 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
             return;
         }
 
-        const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': getCookie("token") || ""
-            },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                courseId: id,
-                duration: hours
-            })})
-            .then(response => response.json());
+        const confirm = await confirmationToast("Are you sure you want to enroll in this course?");
+        if (confirm) {
+            const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie("token") || ""
+                },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    courseId: courseID,
+                    duration: course.hours
+                })})
+                .then(response => response.json());
 
-        if (response.error){
-            showMessage(response.error, true);
-        } else {
-            fetchCourses();
-            showMessage(response.message, false);
+            if (response.error){
+                showMessage(response.error, true);
+            } else {
+                fetchCourses();
+                showMessage(response.message, false);
+            }
         }
     }
 
@@ -111,7 +99,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick={StudentsList}>
+                            <div className="alignCenter-text">
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -152,7 +140,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         <p>{desc}</p>
                         <div className="card-bottom">
                             <div>{hours} Hours</div>
-                            <div className="alignCenter-text" onClick = {StudentsList}>
+                            <div className="alignCenter-text">
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>
@@ -193,7 +181,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                                 </button>
                             </div>
                         </div>
-                            <div className="alignCenter-text" onClick={StudentsList}>
+                            <div className="alignCenter-text">
                                 {numStudents} <FontAwesomeIcon icon={faUser} />
                             </div>
                         </div>

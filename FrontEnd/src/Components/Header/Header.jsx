@@ -102,7 +102,8 @@ const Header = () => {
                 onClick={handleOpenProfileMenu}
                 color="inherit">
                 {currentUser.name?
-                <img   src={`https://ui-avatars.com/api/?background=2d3480&color=`+ `fff&rounded=true&name=${currentUser.name}`} className ="profile-image" alt="user"/>
+                <img src={`https://ui-avatars.com/api/?background=2d3480&color=`+
+                    `fff&rounded=true&name=${currentUser.name}`} className ="profile-image" alt="user"/>
                  :<AccountCircleIcon fontSize="large" sx={{ color: '#f1f1f1' }}/> }
             </MuiIconButton>
             <Menu
@@ -140,8 +141,8 @@ const Header = () => {
               onClick={handleOpenNavMenu}
               color="inherit"
           >
-          <MenuIcon sx={{ color: 'white', fontSize: "40px" }} />
-</MuiIconButton>
+              <MenuIcon sx={{ color: 'white', fontSize: "40px" }} />
+          </MuiIconButton>
           <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}

@@ -36,6 +36,11 @@ img {
   min-height: 100vh;
 }
 
+.toast-confirm > div > div {
+  align-self: flex-start;
+  margin-right: 20px;
+}
+
 .body-content {
   position: relative;
   flex-grow: 1;

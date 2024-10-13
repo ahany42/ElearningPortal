@@ -1,8 +1,10 @@
-const {Assignment, AssignmentAnswer, User, Course, Student_Course, Instructor_Course} = require('../db/Database');
+const {Assignment, AssignmentAnswer, User, Course,
+    Student_Course, Instructor_Course, Exam} = require('../db/Database');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const mongoose = require("mongoose");
 
 // Configure multer for assignment uploads
 const storage = multer.diskStorage({
@@ -20,7 +22,7 @@ const storage2 = multer.diskStorage({
         cb(null, 'static/assignments_solutions'); // Folder where images will be stored
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}_${file.originalname}`); // Naming the file
+        cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
     }
 });
 
@@ -285,7 +287,7 @@ class AssignmentController {
     // Get all assignments/exams progress for a student
     async getStudentProgress(req, res, next) {
         try {
-            const { studentID } = req.body; // studentID as v4 uuid
+            const { studentID } = req.query; // studentID as v4 uuid
             const loggedInUser = await User.findOne({ id: req.user.id });
 
             const user = await User.findOne({ id: studentID });
@@ -296,16 +298,139 @@ class AssignmentController {
             if (loggedInUser.role.toLowerCase() !== "student") {
                 // get my progress (assignments & exams)
 
-                const assignments = await Assignment.find().populate('courseID', 'id').aggregate([
+                const assignments = await Assignment.aggregate([
                     {
                         $lookup: {
                             from: "assignmentanswers",
                             localField: "_id",
                             foreignField: "assignmentID",
                             as: "assignment_answers"
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'courses',
+                            localField: 'courseID',
+                            foreignField: '_id',
+                            as: 'course',
+                        }
+                    },
+                    {
+                        $addFields: {
+                            course: { $arrayElemAt: ["$course.id", 0] } // Extract only courseID from the course array
+                        }
+                    },
+                    {
+                        $addFields: {
+                            isExam: false
+                        }
+                    },
+                    {
+                        $project: {
+                            id: 1,
+                            title: 1,
+                            course: 1,
+                            isExam: 1,
+                            deadline: {
+                                $dateToString: {
+                                    format: "%d-%m-%Y %H:%M",
+                                    date: "$endDate",
+                                    timezone: "Egypt"
+                                }
+                            },
+                            grade: {
+                                $cond: {
+                                    if: { $ne: [{ $size: "$assignment_answers" }, 0] },
+                                    then: { $arrayElemAt: ["$assignment_answers.grade", 0] },
+                                    else: null
+                                }
+                            },
+                            isSubmitted: {
+                                $cond: {
+                                    if: { $eq: [{ $size: "$assignment_answers" }, 0] },
+                                    then: false,
+                                    else: true
+                                }
+                            }
                         }
                     }
                 ]);
+
+                let exams = await Exam.aggregate([
+                    {
+                        $lookup: {
+                            from: "studentexams",
+                            let: { examId: "$_id", userId: user._id }, // Passing both examID and userID as variables
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $eq: ["$examID", "$$examId"] },  // Match examID
+                                                { $eq: ["$studentID", "$$userId"] }  // Match studentID
+                                            ]
+                                        }
+                                    }
+                                }
+                            ],
+                            as: "student_exams"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'courses',
+                            localField: 'courseID',
+                            foreignField: '_id',
+                            as: 'course',
+                        }
+                    },
+                    {
+                        $addFields: {
+                            course: { $arrayElemAt: ["$course.id", 0] } // Extract course ID from course array
+                        }
+                    },
+                    {
+                        $addFields: {
+                            isExam: true
+                        }
+                    },
+                    {
+                        $addFields: {
+                            isSubmitted: {
+                                $cond: {
+                                    if: { $gt: [{ $size: "$student_exams" }, 0] },
+                                    then: true,
+                                    else: false
+                                }
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            id: 1,
+                            title: 1,
+                            course: 1,
+                            isExam: 1,
+                            deadline: {
+                                $dateToString: {
+                                    format: "%d-%m-%Y %H:%M",
+                                    date: "$endDate",
+                                    timezone: "Egypt"
+                                }
+                            },
+                            grade: {
+                                $cond: {
+                                    if: { $ne: [{ $size: "$student_exams" }, 0] },
+                                    then: { $arrayElemAt: ["$student_exams.grade", 0] },
+                                    else: null
+                                }
+                            },
+                            isSubmitted: 1
+                        }
+                    }
+                ]);
+
+                return res.status(201).json({ data: [...assignments, ...exams] });
             }
 
             res.status(201).json({ data: [] });

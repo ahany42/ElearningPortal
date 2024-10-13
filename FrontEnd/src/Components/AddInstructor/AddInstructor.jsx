@@ -4,8 +4,7 @@ import SignUp from "../Signup/Signup"
 const AddInstructor = () => {
     const {currentUser} = useContext(CurrentUserContext);
   return (
-    <SignUp isInstructor={true} adminId={currentUser.id}/>
-    
+      <SignUp isInstructor={true} adminId={currentUser.id}/>
   )
 }
 
