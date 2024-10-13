@@ -10,7 +10,7 @@ import Front_ENV from "../../../Front_ENV.jsx";
 
 const StudentList = () => {
     const {id} = useParams();
-    const { showMessage } = useContext(CurrentUserContext);
+    const { currentUser, showMessage } = useContext(CurrentUserContext);
     const [studentsList, setStudentsList] = useState([]);
     const [updateList, setUpdateList] = useState(false);
     const navigate = useNavigate();
@@ -29,8 +29,9 @@ const StudentList = () => {
             }
         })
             .then(response => response.json());
+
         setStudentsList(response.data);
-        navigate(`/CourseDetails/${id}/StudentsList`, {state: {studentsList: response.data}});
+        route.state = {state: {studentsList: response.data}};
     }
 
     useEffect(() => {
@@ -57,10 +58,12 @@ const StudentList = () => {
            <div className="d-flex flex-column mt-5">
                <h5 className="sub-title">{studentsList.length} Enrolled Students: </h5>
                {!studentsList.length && <Placeholder text="No Students Enrolled" img={NoStudentsImg}/>}
-               {studentsList.map(student => (
-                   <UserCard setUpdateList={setUpdateList} updateList={updateList} isStudent={true}
-                             student={student} key={student.id}/>
-               ))}
+               {
+                   studentsList.map(student => (
+                       <UserCard setUpdateList={setUpdateList} updateList={updateList} isStudent={true}
+                                 student={student} key={student.id}/>
+                   ))
+               }
            </div>
        </>
    )

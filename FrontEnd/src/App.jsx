@@ -62,11 +62,11 @@ const pathsRoleBased = [
   },
   {
     path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/InstructorsList$/,
-    roles: "instructor, admin, superadmin",
+    roles: "student, instructor, admin, superadmin",
   },
   {
     path: /^\/CourseDetails\/[a-zA-Z0-9\-]+\/StudentsList$/,
-    roles: "instructor, admin, superadmin,student",
+    roles: "student, instructor, admin, superadmin,student",
   },
   {
     path: /^\/AddAssignment\/[a-zA-Z0-9\-]+$/,
@@ -90,7 +90,7 @@ const pathsRoleBased = [
   },
   {
     path: /^\/ViewProgress\/[a-zA-Z0-9\-]+$/,
-    roles: "student,instructor",
+    roles: "student, instructor, admin, superadmin",
   },
   {
     path: /^\/AddInstructor$/,
@@ -107,22 +107,22 @@ export const CurrentUserContext = createContext();
 let messagesList = [];
 
 function App() {
-  const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
-  const [courses, setCourses] = useState([]);
-  const [myCourses, setMyCourses] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getCookie("token"));
-  const [currentUser, setCurrentUser] = useState(
+    const [showHeaderAndFooter, setShowHeaderAndFooter] = useState(true);
+    const [courses, setCourses] = useState([]);
+    const [myCourses, setMyCourses] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(!!getCookie("token"));
+    const [currentUser, setCurrentUser] = useState(
     getCookie("token") ? jwtDecode(getCookie("token")) : {}
-  );
-  const [assignments, setAssignments] = useState([]);
-  const [exams, setExams] = useState([]);
-  const [studentsList, setStudentsList] = useState([]);
-  const [instructorsList, setInstructorsList] = useState([]);
-  const [materials, setMaterials] = useState(INITIAL_MATERIALS);
-  const [progress, setProgress] = useState(INITIAL_PROGRESS);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const routes = useLocation();
+    );
+    const [assignments, setAssignments] = useState([]);
+    const [exams, setExams] = useState([]);
+    const [studentsList, setStudentsList] = useState([]);
+    const [instructorsList, setInstructorsList] = useState([]);
+    const [materials, setMaterials] = useState(INITIAL_MATERIALS);
+    const [progress, setProgress] = useState(INITIAL_PROGRESS);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const routes = useLocation();
 
     const fetchCourses = async () => {
         // Fetch courses for the student
