@@ -460,7 +460,7 @@ function App() {
                   element={<AssignmentPage assignments={assignments} />}
                 />
                 <Route path="/ExamPage" element={<ExamPage exams={exams} />} />
-                <Route path="/ViewProgress/:id" element={<StudentProgress />} />
+                <Route path="/ViewProgress/:id/:name" element={<StudentProgress />} />
                 <Route path="/ViewProgress" element={<StudentProgress />} />
                 <Route path="/AddInstructor" element={<AddInstructor/>} />
                 <Route path="/InstructorsPage" element={<InstructorsPage />} />

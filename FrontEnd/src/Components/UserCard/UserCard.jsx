@@ -63,7 +63,7 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
       }
   }
   const ViewProgress = ()=>{
-    navigate(`/ViewProgress/${student.id}`)
+    navigate(`/ViewProgress/${student.id}/${student.name}`)
   }
   return (
     <div className=" card user-card card-shadow ">

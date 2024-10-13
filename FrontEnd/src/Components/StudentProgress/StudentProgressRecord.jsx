@@ -1,9 +1,9 @@
 import './StudentProgress.css';
-const StudentProgressRecord = ({record}) => {
+const StudentProgressRecord = ({record,courseName}) => {
   return (
     <tr>
             <td>
-                {record.course}
+                {courseName}
             </td>
             <td>
                {record.title}
@@ -15,9 +15,9 @@ const StudentProgressRecord = ({record}) => {
            <h6 className = {record.isSubmitted? "on-time bold-text blue-text":"late bold-text"}>{record.isSubmitted? "Yes" : "No"}</h6>
             </td>
             <td>
-             {record.isExam? record.grade : "-"}
+             {(record.isExam && record.isSubmitted) ? record.grade : "-"}
             </td>
-            </tr>
+    </tr>  
   )
 }
 
