@@ -13,5 +13,6 @@ router.put('/updateAssignmentAnswer/:id', verifyToken(), uploadAssignmentAnswerD
 router.get('/getAssignments', verifyToken(), Controller.getAllAssignments);
 router.get('/getAssignment/:id', verifyToken(), Controller.getAssignmentById);
 router.delete('/deleteAssignment/:id', verifyToken("Instructor"), Controller.deleteAssignment);
+router.get('/getStudentProgress', verifyToken(), Controller.getStudentProgress);
 
 module.exports = router;

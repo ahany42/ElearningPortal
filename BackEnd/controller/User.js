@@ -88,7 +88,7 @@ module.exports.logout = async (req, res, next) => {
 
 module.exports.register = async (req, res, next) => {
   try {
-    const { name, gender, email, username, password, role } = req.body;
+    const { name, gender, email, username, password, role, userId } = req.body;
     const id = uuidv4();
     const validEmail = emailAcceptance(email);
     const validPassword = passwordAcceptance(password);
@@ -110,6 +110,25 @@ module.exports.register = async (req, res, next) => {
       return res.status(200).json({ error: "Email already exists" });
     }
 
+    if (!role) {
+        return res.status(200).json({ error: "Role is required" });
+    }
+
+    if (!["Student", "Instructor", "Admin", "SuperAdmin"].includes(role)) {
+        return res.status(200).json({ error: "Invalid role" });
+    }
+
+    const admin = await User.findOne({ role: "Admin", id: userId });
+    if (userId && admin) {
+        if (["Student", "Instructor"].includes(admin.role)) {
+            return res.status(200).json({ error: "Unauthorized action" });
+        }
+    }
+
+    if (!userId && role !== "Student") {
+      return res.status(200).json({ error: "Unauthorized action" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
@@ -123,9 +142,7 @@ module.exports.register = async (req, res, next) => {
     });
 
     await user.save();
-    res
-      .status(201)
-      .json({ message: `User (${user.name}) registered successfully` });
+    res.status(201).json({ message: `User (${user.name}) registered successfully` });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Register function => ${error}`);

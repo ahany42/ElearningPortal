@@ -282,6 +282,40 @@ class AssignmentController {
         }
     }
 
+    // Get all assignments/exams progress for a student
+    async getStudentProgress(req, res, next) {
+        try {
+            const { studentID } = req.body; // studentID as v4 uuid
+            const loggedInUser = await User.findOne({ id: req.user.id });
+
+            const user = await User.findOne({ id: studentID });
+            if (!user) {
+                return res.status(200).json({ error: "Invalid Student ID" });
+            }
+
+            if (loggedInUser.role.toLowerCase() !== "student") {
+                // get my progress (assignments & exams)
+
+                const assignments = await Assignment.find().populate('courseID', 'id').aggregate([
+                    {
+                        $lookup: {
+                            from: "assignmentanswers",
+                            localField: "_id",
+                            foreignField: "assignmentID",
+                            as: "assignment_answers"
+                        }
+                    }
+                ]);
+            }
+
+            res.status(201).json({ data: [] });
+
+        } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occurred" });
+            next(`ERROR IN: Get Student Progress Function => ${err}`);
+        }
+    }
+
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {

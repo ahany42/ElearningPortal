@@ -18,7 +18,6 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({});
   const navigate = useNavigate();
-  const overlay = useRef(null);
   const { showMessage, currentUser, setLoading, setCurrentUser } =
       useContext(CurrentUserContext);
 
@@ -27,11 +26,6 @@ const UserProfile = () => {
       setProfileData(currentUser);
     }
   }, [currentUser]);
-
-  useEffect(() => {
-    overlay.current.style.opacity = `${isEditing ? "0" : "1"}`;
-    overlay.current.style.zIndex = `${isEditing ? "-1" : "1"}`;
-  }, [isEditing]);
 
   const handleChange = (e) => {
     setProfileData({
@@ -50,8 +44,6 @@ const UserProfile = () => {
       setIsEditing(false);
       return;
     }
-    overlay.current.style.opacity = `1`;
-    overlay.current.style.zIndex = `1`;
     setTimeout(async () => {
       setLoading(true);
       await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {
@@ -289,6 +281,7 @@ const UserProfile = () => {
                     </MDBCol>
                     <MDBCol sm="8" className="flex-grow-1">
                       <button className="btn ProfileSaveButton"
+                              disabled={!isEditing}
                               style={{margin: "8px 0"}}
                               onClick={changePassword}>
                         Change Password
@@ -297,7 +290,6 @@ const UserProfile = () => {
                   </MDBRow>
                 </MDBCardBody>
               </MDBCard>
-              <div className="overlay-profile" ref={overlay}></div>
             </MDBCol>
           </MDBRow>
         </MDBContainer>

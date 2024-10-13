@@ -310,6 +310,22 @@ class CourseController {
                                    },
                                    {
                                           $lookup: {
+                                                 from: 'exams',
+                                                 localField: '_id',
+                                                 foreignField: 'courseID',
+                                                 as: 'examCount',
+                                          }
+                                   },
+                                   {
+                                          $lookup: {
+                                                 from: 'assignments',
+                                                 localField: '_id',
+                                                 foreignField: 'courseID',
+                                                 as: 'assignmentCount',
+                                          }
+                                   },
+                                   {
+                                          $lookup: {
                                                  from: 'instructor_courses',
                                                  localField: '_id',
                                                  foreignField: 'courseID',
@@ -325,6 +341,8 @@ class CourseController {
                                                  image: 1,
                                                  numStudents: { $size: '$students' }, // Count of students
                                                  numInstructors: { $size: '$instructors' }, // Count of instructors
+                                                 materialCount: { $add: [{ $size: '$examCount' },
+                                                                { $size: '$assignmentCount' }] } // Sum of exams and assignments
                                           }
                                    }
                             ]);
@@ -356,6 +374,22 @@ class CourseController {
                                           }
                                    },
                                    {
+                                          $lookup: {
+                                                 from: 'exams',
+                                                 localField: '_id',
+                                                 foreignField: 'courseID',
+                                                 as: 'examCount',
+                                          }
+                                   },
+                                   {
+                                          $lookup: {
+                                                 from: 'assignments',
+                                                 localField: '_id',
+                                                 foreignField: 'courseID',
+                                                 as: 'assignmentCount',
+                                          }
+                                   },
+                                   {
                                           $project: {
                                                  title: 1,
                                                  desc: 1,
@@ -364,6 +398,8 @@ class CourseController {
                                                  image: 1,
                                                  numStudents: { $size: '$students' }, // Count of students
                                                  numInstructors: { $size: '$instructors' }, // Count of instructors
+                                                 materialCount: { $add: [{ $size: '$examCount' },
+                                                               { $size: '$assignmentCount' }] } // Sum of exams and assignments
                                           }
                                    }
                             ]);

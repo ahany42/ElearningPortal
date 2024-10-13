@@ -134,14 +134,14 @@ const CourseDetails = () => {
                                       $image={course.image ? course.image.replaceAll("\\", "/") : ""}>
                         <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                         <div className="course-stats">
-                            <h6 className="stats">3 <FontAwesomeIcon icon={faClock}/></h6>
+                            <h6 className="stats">{course.hours} <FontAwesomeIcon icon={faClock}/></h6>
                             <h6 className="stats stats-button" onClick={StudentsList}>
                                 {course.numStudents} <FontAwesomeIcon icon={faUser}/>
                             </h6>
                            <h6 className={!(currentUser.role === "Admin" || currentUser.role === "SuperAdmin" || currentUser.role === "Instructor")? "stats":"stats stats-button"} onClick={InstructorsList}>
                                 {course.numInstructors} <FontAwesomeIcon
                                 icon={faChalkboardTeacher}/></h6>
-                            <h6 className="stats stats-button">3 <FontAwesomeIcon icon={faFileAlt}/></h6>
+                            <h6 className="stats">{course.materialCount} <FontAwesomeIcon icon={faFileAlt}/></h6>
                         </div>
                         {
                             (currentUser.role === "Student" || !currentUser.role) ?
