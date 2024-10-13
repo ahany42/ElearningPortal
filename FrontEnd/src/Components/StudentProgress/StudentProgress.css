@@ -1,6 +1,17 @@
 .student-progress-table{
+    min-width: 900px;
     margin: 30px;
 }
+
+.student-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 4rem;
+    gap: 1.5rem;
+}
+
 .on-time{
     background: #b4b4b4;
     padding: 0 5px;

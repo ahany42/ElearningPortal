@@ -178,6 +178,7 @@ h6 {
   }
 }
 .goBackBtn {
+  position: absolute;
   height: 3em;
   width: 100px;
   margin-left: 50px;

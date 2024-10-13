@@ -107,25 +107,20 @@ const CourseDetails = () => {
     }
 
     const InstructorsList = async ()=> {
-        if(!(currentUser.role === "Admin" || currentUser.role === "SuperAdmin" || currentUser.role === "Instructor") ){
-            return;
-        }
-        else{
-            const params = new URLSearchParams({
-                courseId: id,
-                type: 'instructors'
-            });
-            const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': getCookie('token') || '',
-                }
-            })
-                .then(response => response.json());
-    
-            navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: response.data}})
-        }
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'instructors'
+        });
+        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: response.data}})
     }
 
     return (
@@ -157,12 +152,15 @@ const CourseDetails = () => {
                         <h3 className="course-title alignLeft-text bold-text">{course.title}</h3>
                         <div className="course-stats">
                             <h6 className="stats">{course.hours} <FontAwesomeIcon icon={faClock}/></h6>
-                            <h6 className="stats stats-button" onClick={StudentsList}>
+                            <h6 className={course.isEnrolled || currentUser.role === "Admin"? "stats stats-button" : "stats"}
+                                onClick={course.isEnrolled || currentUser.role === "Admin"? StudentsList : null}>
                                 {course.numStudents} <FontAwesomeIcon icon={faUser}/>
                             </h6>
-                           <h6 className={!(currentUser.role === "Admin" || currentUser.role === "SuperAdmin" || currentUser.role === "Instructor")? "stats":"stats stats-button"} onClick={InstructorsList}>
-                                {course.numInstructors} <FontAwesomeIcon
-                                icon={faChalkboardTeacher}/></h6>
+                           <h6 className={course.isEnrolled || currentUser.role === "Admin"? "stats stats-button" : "stats"}
+                               onClick={course.isEnrolled || currentUser.role === "Admin"? InstructorsList : null}>
+                                {course.numInstructors}
+                               <FontAwesomeIcon icon={faChalkboardTeacher}/>
+                           </h6>
                             <h6 className="stats">{course.materialCount} <FontAwesomeIcon icon={faFileAlt}/></h6>
                         </div>
                         {
@@ -188,7 +186,8 @@ const CourseDetails = () => {
                                     (totalAnnouncements + totalAssignments + totalExams !== 0) ?
                                         <div className="material-list">
                                             <CourseMaterial/>
-                                        </div> :
+                                        </div>
+                                    :
                                         <Placeholder text="You're all caught up" img={CaughtUp}/>
                                 }
                             </div>

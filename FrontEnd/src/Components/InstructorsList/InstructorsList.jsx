@@ -31,7 +31,7 @@ const InstructorsList = () => {
             .then(response => response.json());
 
         setInstructorsList(reponse.data);
-        navigate(`/CourseDetails/${id}/InstructorsList`, {state: {instructorsList: reponse.data}});
+        route.state = {state: {instructorsList: reponse.data}};
     }
 
     useEffect(() => {

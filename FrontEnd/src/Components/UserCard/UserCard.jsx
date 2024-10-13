@@ -62,9 +62,11 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
           }
       }
   }
+
   const ViewProgress = ()=>{
     navigate(`/ViewProgress/${student.id}`)
   }
+
   return (
     <div className=" card user-card card-shadow ">
     <div className=" user-sub-card">
@@ -81,9 +83,38 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
             </h6>
         </div>
 
-    {((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin"))  && <FontAwesomeIcon className="remove-user-button" icon={faTrash} onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>}
-    {((currentUser.role === "Student") && (currentUser.id === student.id)) && <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> My Progress</button>}
-    {((currentUser.role === "Instructor") && isStudent )&& <button className=" enroll-text enroll-button bold-text blue-text progress-button" onClick={ViewProgress}> Progress</button>}
+        {
+            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) &&
+                <FontAwesomeIcon className="remove-user-button" icon={faTrash}
+                                 onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>
+        }
+        {
+            ((currentUser.role === "Student") && isStudent && (currentUser.id === student.id)) ?
+                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                        onClick={ViewProgress}>
+                    My Progress
+                </button>
+            :
+                ((currentUser.role === "Student") && isStudent) &&
+                    <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                            onClick={ViewProgress}>
+                        My Progress
+                    </button>
+        }
+        {
+            ((currentUser.role === "Instructor") && isStudent) &&
+                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                        onClick={ViewProgress}>
+                    Progress
+                </button>
+        }
+        {
+            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
+                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                        onClick={ViewProgress}>
+                    Progress
+                </button>
+        }
     </div>
 </div>
   )
