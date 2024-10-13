@@ -89,17 +89,11 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
                                  onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>
         }
         {
-            ((currentUser.role === "Student") && isStudent && (currentUser.id === student.id)) ?
+            ((currentUser.role === "Student") && isStudent && (currentUser.id === student.id)) &&
                 <button className=" enroll-text enroll-button bold-text blue-text progress-button"
                         onClick={ViewProgress}>
                     My Progress
                 </button>
-            :
-                ((currentUser.role === "Student") && isStudent) &&
-                    <button className=" enroll-text enroll-button bold-text blue-text progress-button"
-                            onClick={ViewProgress}>
-                        My Progress
-                    </button>
         }
         {
             ((currentUser.role === "Instructor") && isStudent) &&
