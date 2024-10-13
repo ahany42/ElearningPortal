@@ -76,34 +76,36 @@ const SignUp = ({isInstructor,adminId}) => {
         const response = await res.json();
 
         if (!response.error) {
-          setLoading(true);
-          const loginResponse = await fetch('http://localhost:3008/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({username: formData.username, password: formData.password}),
-          });
-          if(!isInstructor){
-          if (!data.error) {
-            setTimeout(() => {
-              // Successful login, redirect to courses
-              setLoading(false);
-              showMessage(data.message, false);
-              setCookie('token', data.data);
-              setIsAuthenticated(true);
-              setCurrentUser(jwtDecode(data.data));
-              navigate('/courses');
-            }, 1400);
-          } else {
-            setTimeout(() => {
-              setLoading(false);
-              showMessage(data.error, true);
-              setIsAuthenticated(false);
-            }, 1400);
+          if(isInstructor){
+           navigate('/Courses');
           }
-        }
-        else {
-          navigate('/courses');
-        }
+          else{
+            setLoading(true);
+            const loginResponse = await fetch('http://localhost:3008/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({username: formData.username, password: formData.password}),
+            });
+  
+            const data = await loginResponse.json();
+            if (!data.error) {
+              setTimeout(() => {
+                setLoading(false);
+                showMessage(data.message, false);
+                setCookie('token', data.data);
+                setIsAuthenticated(true);
+                setCurrentUser(jwtDecode(data.data));
+                navigate('/courses');
+              }, 1400);
+            } else {
+              setTimeout(() => {
+                setLoading(false);
+                showMessage(data.error, true);
+                setIsAuthenticated(false);
+              }, 1400);
+            }
+          }
+
         } else {
           showMessage(response.error, true);
         }
