@@ -5,21 +5,37 @@ import { faBookOpen , faFileAlt ,faBullhorn} from '@fortawesome/free-solid-svg-i
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Components/CourseMaterial/CourseMaterial.css';
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {getCookie} from "../Cookie/Cookie.jsx";
 import './MaterialCard.css'
 
 const MaterialCard = ({material}) => {
-  const { showMessage, INITIAL_MATERIALS , setExams , editableExam , setIsEditing} = useContext(CurrentUserContext);
-
-  {
+  const { showMessage, INITIAL_MATERIALS , setExams , editableExam , setIsEditing,confirmationToast} = useContext(CurrentUserContext);
     /* for testing */
-  }
   const seeMore = true;
   const handleSeeMore = () => {
     showMessage("See More Coming Soon", null);
   };
-  const deleteExamHandler = (examID) => {
-    setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
-    showMessage("Exam deleted locally", false);
+  const deleteExamHandler = async(examID) => {
+    const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
+    if(isConfirmed){
+      const response = await fetch(`http://localhost:3008/deleteExam/${examID}`,{
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            authorization:getCookie("token")
+        },
+        body: {
+          examId:examID
+        }
+    });
+    if(response.status===201){
+      setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
+      showMessage(response.message, false);
+    }
+    else{
+      showMessage(response.error,true)
+    }
+    }
 };
 const editExamHandler = () => {
     if (!editableExam.title || !editableExam.dueDate) {
@@ -43,16 +59,22 @@ const editExamHandler = () => {
     setIsEditing(false);
     showMessage("Exam updated successfully", false);
 };
-const deleteAnnouncementHandler = () => {
-  showMessage("delete announcement coming soon",false);
+const deleteAnnouncementHandler = async() => {
+  const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
+  if(isConfirmed){
+    showMessage("delete announcement coming soon",false);
+  }
 
 }
 const editAnnouncementHandler = () => {
   showMessage(" edit announcement coming soon",false);
 
 }
-const deleteAssignmentHandler = () => {
-  showMessage(" delete assignment coming soon",false);
+const deleteAssignmentHandler = async() => {
+  const isConfirmed = await confirmationToast("Are You Sure You Want to remove student?");
+  if(isConfirmed){
+    showMessage("delete assignment coming soon",false);
+  }
 }
 const editAssignmentHandler = () => {
   showMessage(" edit assignment coming soon",false);
@@ -79,7 +101,7 @@ return (
             </h6>
           </div>
         </div>
-        { CurrentUserContext.role==="Instructor" &&
+        { CurrentUserContext.role==="Instructor"  &&
         <div className="course-icons-materialCard admin-icons">
           <FontAwesomeIcon
             icon={faEdit}
