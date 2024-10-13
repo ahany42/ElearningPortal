@@ -33,8 +33,7 @@ import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
 import "./App.css";
-import SolveExam from "./Components/SolveExam/SolveExam.jsx";
-
+import SolveExam from "./Components/SolveExam/ExamQuestions.jsx";
 const pathsWithNoHeaderAndFooter = [
   // "/ForgetPassword",
 ];
