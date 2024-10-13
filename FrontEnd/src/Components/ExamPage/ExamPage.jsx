@@ -1,5 +1,13 @@
 import { useState, useEffect, useContext } from "react";
-import {Container,Card,CardContent,Typography,Button,Table,TextField} from "@mui/material";
+import {
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Table,
+  TextField,
+} from "@mui/material";
 import { Select, MenuItem } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -8,14 +16,11 @@ import { CurrentUserContext } from "../../App";
 import "./ExamPage.css";
 
 const ExamPage = ({ exams }) => {
+  // console.log(exams);
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-      showMessage,
-      currentUser,
-      setExams,
-      courses,
-  } = useContext(CurrentUserContext);
+  const { showMessage, currentUser, setExams, courses } =
+    useContext(CurrentUserContext);
 
   const [exam, setExam] = useState({
     title: "",
@@ -48,7 +53,7 @@ const ExamPage = ({ exams }) => {
       navigate("/deadline");
     }
   }, [exams, location.state]);
-//page only for student
+  //page only for student
   // const deleteExamHandler = (examID) => {
   //   setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
   //   showMessage("Exam deleted successfully", false);
@@ -80,9 +85,8 @@ const ExamPage = ({ exams }) => {
   //   showMessage("Exam updated successfully", false);
   // };
 
-
   const solveExamHandler = () => {
-    navigate(`/solve-exam`); 
+    navigate(`/solve-exam`);
   };
 
   return (
@@ -90,7 +94,7 @@ const ExamPage = ({ exams }) => {
       <Card elevation={3} style={{ padding: "1.5rem", position: "relative" }}>
         <CardContent>
           {/* Exam Title */}
-          <Typography variant="h4" sx={{marginBottom: "15px"}}>
+          <Typography variant="h4" sx={{ marginBottom: "15px" }}>
             {isEditing ? (
               <TextField
                 fullWidth
@@ -131,8 +135,8 @@ const ExamPage = ({ exams }) => {
                 )}
               </div>
             )}
-            <Table className="table table-bordered">
-              <thead>
+          <Table className="table table-bordered">
+            <thead>
               <tr>
                 <th>Field</th>
                 <th>Details</th>
@@ -241,18 +245,20 @@ const ExamPage = ({ exams }) => {
                 <Button
                   variant="contained"
                   onClick={() => navigate(-1)}
-                   className="pascalCase-text dark-bg light-text backButton-ExamPage"
+                  className="pascalCase-text dark-bg light-text backButton-ExamPage"
                 >
                   Back
                 </Button>
-                {(currentUser.role==="Student") && <Button
-                  variant="contained"
-                  style={{ backgroundColor: "#2196f3" }}
-                  onClick={solveExamHandler}
-                  className="pascalCase-text green-bg"
-                >
-                  Solve
-                </Button>}
+                {currentUser.role === "Student" && (
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "#2196f3" }}
+                    onClick={solveExamHandler}
+                    className="pascalCase-text green-bg"
+                  >
+                    Solve
+                  </Button>
+                )}
               </div>
             )}
           </div>

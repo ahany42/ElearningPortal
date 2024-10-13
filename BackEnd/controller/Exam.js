@@ -36,8 +36,8 @@ module.exports.createExam = async (req, res, next) => {
 
     if (eDate < sDate) {
       return res
-          .status(200)
-          .json({ error: "End date must be greater than start date" });
+        .status(200)
+        .json({ error: "End date must be greater than start date" });
     }
     if (eDate < new Date()) {
       return res.status(200).json({ error: "End date must be in the future" });
@@ -69,8 +69,8 @@ module.exports.addQuestions = async (req, res, next) => {
 
     if (!questions || questions.length === 0) {
       return res
-          .status(200)
-          .json({ error: "Exam must at least have one question" });
+        .status(200)
+        .json({ error: "Exam must at least have one question" });
     }
 
     for (const questionData of questions) {
@@ -78,7 +78,7 @@ module.exports.addQuestions = async (req, res, next) => {
       if (!title || !answers || indexOfCorrectAnswer === undefined) {
         return res.status(200).json({
           error:
-              "Please ensure that the title, answers, and the index of the correct answer are assigned",
+            "Please ensure that the title, answers, and the index of the correct answer are assigned",
         });
       }
       const correctAnswer = answers[indexOfCorrectAnswer];
@@ -151,13 +151,14 @@ module.exports.getExamsforStudents = async (req, res, next) => {
   }
 };
 
-module.exports.StartSolvingExam = async (req, res, next) => {
+module.exports.getExamQuestions = async (req, res, next) => {
   try {
     const { examId } = req.params;
     if (!examId) {
       return res.status(200).json({ error: "Exam ID is required" });
     }
     const exam = await Exam.findOne({ id: examId });
+    console.log(exam);
     if (!exam) {
       return res.status(200).json({ error: "Exam not found" });
     }
@@ -173,7 +174,6 @@ module.exports.StartSolvingExam = async (req, res, next) => {
       responsedQuestionData.push({
         title: question.title,
         answers: question.answers,
-        correctAnswer: question.correctAnswer,
       });
     }
     const responsedData = {
@@ -267,8 +267,8 @@ module.exports.updateQuestion = async (req, res, next) => {
     }
     await question.save();
     res
-        .status(201)
-        .json({ message: "Question updated successfully", question });
+      .status(201)
+      .json({ message: "Question updated successfully", question });
   } catch (error) {
     res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: updateQuestion function => ${error}`);
@@ -317,8 +317,8 @@ module.exports.finishSolvingExam = async (req, res, next) => {
     });
     if (!studentExam) {
       return res
-          .status(200)
-          .json({ error: "Student not registered for this exam" });
+        .status(200)
+        .json({ error: "Student not registered for this exam" });
     }
     if (submissionDate > exam.endDate) {
       studentExam.grade = 0;

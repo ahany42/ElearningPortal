@@ -26,7 +26,6 @@ module.exports = {
       if (!user) {
         return res.status(200).json({ error: "User not found" });
       }
-      // console.log(user);
       const post = await Post.findOne({ id: postID });
       console.log(post.courseId);
       if (!post) {
@@ -34,7 +33,6 @@ module.exports = {
       }
       const PostCourse = await Course.findOne(post.courseId);
       console.log(PostCourse);
-      // console.log(user.role.toLowerCase());
       if (
         user.role.toLowerCase() !== "admin" &&
         user.role.toLowerCase() !== "superadmin"
@@ -44,8 +42,6 @@ module.exports = {
             studentID: user._id,
             courseID: PostCourse._id,
           });
-          console.log(user._id, PostCourse._id);
-          console.log(userCourses);
           if (userCourses.length === 0) {
             return res.status(200).json({ error: "User not authorized!" });
           }
@@ -121,11 +117,9 @@ module.exports = {
       }
       const user = await User.findOne({ id: userId });
       const comment = await Comment.findOne({ id: commentId });
-      console.log(comment);
       const commentCreator = await User.findOne({ _id: comment.creatorId });
       console.log(commentCreator);
       if (user.id !== commentCreator.id) {
-        console.log(user.id, commentCreator.id);
         return res.status(200).json({ error: "user not authorized" });
       }
       await Comment.deleteOne({ id: commentId });
@@ -155,9 +149,7 @@ module.exports = {
       if (!post) {
         return res.status.send(200, "post is not found!");
       }
-      console.log(post);
       const PostCourse = await Course.findOne(post.courseId);
-      console.log(PostCourse);
       if (
         user.role.toLowerCase() !== "admin" &&
         user.role.toLowerCase() !== "superadmin"
@@ -167,7 +159,6 @@ module.exports = {
             studentID: user._id,
             courseID: PostCourse._id,
           });
-          console.log(user._id, PostCourse._id);
           if (userCourses.length === 0) {
             return res.status(200).json({ error: "User not authorized!" });
           }
@@ -183,8 +174,6 @@ module.exports = {
         }
       }
       const comments = await Comment.find({ postID: post._id });
-      console.log(comments);
-      console.log(post._id);
       res.status(201).json({ comments });
     } catch (err) {
       res.status(200).json({ error: "Unexpected Error Occurred" });

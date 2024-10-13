@@ -23,7 +23,7 @@ router.get(
   Controller.getExamsforStudents
 ); //verified
 
-router.get("/getExam/:examId", verifyToken(), Controller.StartSolvingExam); //verified
+router.get("/getExam/:examId", verifyToken(), Controller.getExamQuestions); //verified
 
 router.put(
   "/updateExam/:examId",
