@@ -32,6 +32,7 @@ import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
 import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
+import InstructorsPage from "./Components/AdminInstructorsPage/AdminInstructorsPage.jsx";
 import "./App.css";
 import SolveExam from "./Components/SolveExam/ExamQuestions.jsx";
 const pathsWithNoHeaderAndFooter = [
@@ -92,6 +93,10 @@ const pathsRoleBased = [
   },
   {
     path: /^\/AddInstructor$/,
+    roles: "admin, superadmin",
+  },
+  {
+    path: /^\/InstructorsPage$/,
     roles: "admin, superadmin",
   },
 ];
@@ -463,6 +468,7 @@ function App() {
               <Route path="/ViewProgress/:id" element={<StudentProgress />} />
               <Route path="/ViewProgress" element={<StudentProgress />} />
               <Route path="/AddInstructor" element={<AddInstructor />} />
+              <Route path="/InstructorsPage" element={<InstructorsPage />} />
               <Route
                 path="*"
                 element={
