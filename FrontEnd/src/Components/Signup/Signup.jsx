@@ -82,8 +82,7 @@ const SignUp = ({isInstructor,adminId}) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({username: formData.username, password: formData.password}),
           });
-
-          const data = await loginResponse.json();
+          if(!isInstructor){
           if (!data.error) {
             setTimeout(() => {
               // Successful login, redirect to courses
@@ -101,7 +100,10 @@ const SignUp = ({isInstructor,adminId}) => {
               setIsAuthenticated(false);
             }, 1400);
           }
-
+        }
+        else {
+          navigate('/courses');
+        }
         } else {
           showMessage(response.error, true);
         }
@@ -112,9 +114,9 @@ const SignUp = ({isInstructor,adminId}) => {
           showMessage(error.message, true);
         }, 1400);
     }
-
-
   }
+    
+  
 
 }
 
