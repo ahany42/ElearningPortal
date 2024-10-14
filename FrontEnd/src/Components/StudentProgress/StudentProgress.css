@@ -1,6 +1,26 @@
-.student-progress-table{
-    min-width: 900px;
-    margin: 30px;
+.student-progress-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px auto;
+    text-align: left;
+    font-size: 16px;
+}
+
+.student-progress-table th,
+.student-progress-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.student-progress-table th {
+    background-color: #2D3480;
+    color: white;
+    font-weight: bold;
+}
+
+.student-progress-table td {
+    background-color: #fff;
+    text-align: left;
 }
 
 .student-progress-container {
@@ -12,16 +32,117 @@
     gap: 1.5rem;
 }
 
-.on-time{
-    background: #b4b4b4;
-    padding: 0 5px;
-    border-radius: 10px; 
-    width:80px;
+.on-time {
+    background-color: #b4b4b4;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80px;
+    color: green;
 }
-.late{
-    background: #b4b4b4;
-    padding: 0 5px;
-    border-radius: 10px; 
-    width:80px;
-    color:red;
+
+.late {
+    background-color: #b4b4b4;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80px;
+    color: red;
+}
+
+.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px;
+}
+
+.placeholder img {
+    width: 150px;
+    height: 150px;
+}
+
+.alignCenter-text {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .student-progress-table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .student-progress-table th,
+    .student-progress-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .student-progress-table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .student-progress-table th,
+    .student-progress-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .student-progress-table thead {
+        width: 100%;
+    }
+
+    .student-progress-table tbody {
+        width: 100%;
+    }
+
+    .student-progress-table th,
+    .student-progress-table td {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+
+    .student-progress-table th {
+        background-color: #2D3480;
+        color: white;
+    }
+
+    .on-time,
+    .late {
+        width: auto;
+        text-align: center;
+    }
+
+    .alignCenter-text {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .student-progress-table th,
+    .student-progress-table td {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .placeholder img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .alignCenter-text {
+        font-size: 14px;
+    }
 }
