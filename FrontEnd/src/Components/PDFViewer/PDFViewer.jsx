@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router';
 import { CurrentUserContext } from '../../App';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -7,9 +8,10 @@ import './PdfViewer.css'; // Import your custom CSS for further styling
 import ENV from '../../../Front_ENV';
 import Loader from "../Loader/Loader.jsx";
 
-const PdfViewer = ({ title, pdfURL }) => {
-    const [pdfUrl, setPdfUrl] = useState('');
-
+const PdfViewer = () => {
+    const {url,pdfTitle} = useParams();
+    const [title, setTitle] = useState(pdfTitle);
+    const [pdfUrl, setPdfUrl] = useState(url);
     useEffect(() => {
         // Fetch the PDF URL from the backend
         const fetchPdf = async () => {

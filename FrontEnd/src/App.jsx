@@ -33,11 +33,13 @@ import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
 import InstructorsPage from "./Components/AdminInstructorsPage/AdminInstructorsPage.jsx";
-import "./App.css";
 import ExamQuestions from "./Components/SolveExam/ExamQuestions.jsx";
+import PdfViewer from "./Components/PDFViewer/PDFViewer.jsx";
+import "./App.css";
 
 const pathsWithNoHeaderAndFooter = [
   // "/ForgetPassword",
+  // "ViewPdf/:url/:title"
 ];
 
 const pathsRequireAuthentication = [
@@ -474,6 +476,7 @@ function App() {
                 element={<StudentProgress />}
               />{" "}
               <Route path="/ViewProgress" element={<StudentProgress />} />
+              <Route path="/ViewPdf/:url/:title" element={<PdfViewer />} />
               <Route path="/AddInstructor" element={<AddInstructor />} />
               <Route path="/InstructorsPage" element={<InstructorsPage />} />
               <Route

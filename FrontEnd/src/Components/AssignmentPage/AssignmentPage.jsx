@@ -20,6 +20,7 @@ const AssignmentPage = ({ assignments }) => {
     startDate: "",
     endDate:"",
     description: "",
+    document:""
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -38,6 +39,7 @@ const AssignmentPage = ({ assignments }) => {
           endDate: assignedData.endDate,
           startDate: assignedData.startDate,
           description: assignedData.description,
+          document: assignedData.document,
         });
       }
     }
@@ -94,6 +96,9 @@ const AssignmentPage = ({ assignments }) => {
   };
  const comingSoon = ()=>{
   alert("Coming Soon")
+ }
+ const ViewAssignment = ()=>{
+  navigate(`ViewPdf/${assignment.document}/${assignment.title}`)
  }
   return (
     <Container
@@ -283,6 +288,13 @@ const AssignmentPage = ({ assignments }) => {
                       className="pascalCase-text dark-bg light-text backButton-AssignmentPage"
                   >
                   Back
+                </Button>
+                <Button
+                      variant="contained"
+                      onClick={ViewAssignment}
+                      className="pascalCase-text dark-bg light-text backButton-AssignmentPage"
+                  >
+                  View
                 </Button>
                 {(currentUser.role==="Student") && <Button
                   variant="contained"
