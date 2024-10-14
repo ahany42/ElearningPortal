@@ -457,7 +457,10 @@ function App() {
                 path="/AddExam/:id"
                 element={<AddExam courses={courses} />}
               />
-              <Route path="/examQuestions/:id" element={<ExamQuestions />} />
+              <Route
+                path="/examQuestions/:examId"
+                element={<ExamQuestions />}
+              />
               <Route
                 path="/AddAnnouncement/:id"
                 element={<AddAnnouncement courses={courses} />}

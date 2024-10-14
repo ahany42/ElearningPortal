@@ -86,7 +86,7 @@ const ExamPage = ({ exams }) => {
   // };
 
   const solveExamHandler = () => {
-    navigate(`/solve-exam`);
+    navigate(`/examQuestions/${exam.id}`);
   };
 
   return (

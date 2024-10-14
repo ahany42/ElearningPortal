@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { getCookie } from "../Cookie/Cookie";
+import { useParams } from "react-router";
 import Loader from "../Loader/Loader";
 import "./exam-questions.css";
 
-const ExamQuestions = ({ examId }) => {
+const ExamQuestions = () => {
+  const { examId } = useParams();
+  console.log(examId);
   const yourToken = getCookie("token");
   const userData = jwtDecode(yourToken);
   console.log(userData);
@@ -13,19 +16,16 @@ const ExamQuestions = ({ examId }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const fetchExamHandler = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3008/getExam/a6bc188c-0cac-4407-9ac7-da47f1b66d4c`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${yourToken}`,
-          },
-          body: JSON.stringify({
-            userId: `4ca07905-c912-43c7-b3f9-75e03f144b6e`,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:3008/getExam/${examId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${yourToken}`,
+        },
+        body: JSON.stringify({
+          userId: `4ca07905-c912-43c7-b3f9-75e03f144b6e`,
+        }),
+      });
       const data = await response.json();
       setExam(data.data);
     } catch (error) {
@@ -82,10 +82,10 @@ const ExamQuestions = ({ examId }) => {
   return (
     <>
       {userData.role === "Student" && (
-        <div>
+        <div className="container">
           <h2 className="text-center text-white py-3">{exam.ExamTitle}</h2>
           {exam.questions.map((question, index) => (
-            <div key={index} className="mx-5 my-2 bg-body-secondary px-3 py-2">
+            <div key={index} className="mx-5 my-4 px-3 py-2 exam-question">
               <h3 className="mb-3">{question.title}</h3>
               {question.answers.map((answer, idx) => (
                 <div key={idx} className="form-check mb-3">
