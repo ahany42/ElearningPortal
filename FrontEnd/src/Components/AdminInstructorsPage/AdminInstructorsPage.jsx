@@ -8,7 +8,7 @@ const InstructorsPage = () => {
     const navigate = useNavigate();
     const {currentUser} = useContext(CurrentUserContext);
     const InstructorsList = ()=>{
-    
+    navigate('/Current');
     }
     const AddInstructor = ()=>{
      navigate('/AddInstructor');

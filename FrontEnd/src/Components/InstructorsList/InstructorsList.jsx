@@ -8,14 +8,14 @@ import {useLocation} from "react-router-dom";
 import Front_ENV from "../../../Front_ENV.jsx";
 import {getCookie} from "../Cookie/Cookie.jsx";
 
-const InstructorsList = () => {
+const InstructorsList = ({fromAdmin}) => {
     const { showMessage } = useContext(CurrentUserContext);
     const [ instructorsList, setInstructorsList ] = useState([]);
     const [ updateList, setUpdateList ] = useState(false);
     const {id} = useParams();
     const navigate = useNavigate();
     const route = useLocation();
-
+    if(!fromAdmin){
     const fetchInstructors = async () => {
         const params = new URLSearchParams({
             courseId: id,
@@ -33,6 +33,26 @@ const InstructorsList = () => {
         setInstructorsList(reponse.data);
         route.state = {state: {instructorsList: reponse.data}};
     }
+}
+else{
+    const fetchInstructors = async () => {
+        const params = new URLSearchParams({
+            courseId: id,
+            type: 'instructors'
+        });
+        const reponse = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie('token') || '',
+            }
+        })
+            .then(response => response.json());
+
+        setInstructorsList(reponse.data);
+        route.state = {state: {instructorsList: reponse.data}};
+    }
+}
 
     useEffect(() => {
         if (!route.state) {
