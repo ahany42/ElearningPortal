@@ -8,20 +8,39 @@ import {useLocation} from "react-router-dom";
 import Front_ENV from "../../../Front_ENV.jsx";
 import {getCookie} from "../Cookie/Cookie.jsx";
 
-const InstructorsList = ({fromAdmin}) => {
+const InstructorsList = () => {
     const { showMessage } = useContext(CurrentUserContext);
     const [ instructorsList, setInstructorsList ] = useState([]);
     const [ updateList, setUpdateList ] = useState(false);
     const {id} = useParams();
     const navigate = useNavigate();
     const route = useLocation();
-    if(!fromAdmin){
+    //console.log(route.state)
     const fetchInstructors = async () => {
         const params = new URLSearchParams({
             courseId: id,
             type: 'instructors'
         });
-        const reponse = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
+        console.log(route.state.isAdmin)
+        if(route.state.isAdmin){
+
+                const response = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': getCookie('token') || '',
+                    }
+                })
+                    .then(response => response.json());
+                    if(response.error){
+                        showMessage(response.error,true);
+                        return
+                    }
+                setInstructorsList(response.data);
+                route.state = {state: {instructorsList: response.data,isAdmin:true}};
+            
+        }else{
+            const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,30 +48,14 @@ const InstructorsList = ({fromAdmin}) => {
             }
         })
             .then(response => response.json());
-
-        setInstructorsList(reponse.data);
-        route.state = {state: {instructorsList: reponse.data}};
-    }
-}
-else{
-    const fetchInstructors = async () => {
-        const params = new URLSearchParams({
-            courseId: id,
-            type: 'instructors'
-        });
-        const reponse = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': getCookie('token') || '',
+            if(response.error){
+                showMessage(response.error,true);
+                return
             }
-        })
-            .then(response => response.json());
-
-        setInstructorsList(reponse.data);
-        route.state = {state: {instructorsList: reponse.data}};
+        setInstructorsList(response.data);
+        route.state = {state: {instructorsList: response.data}};
     }
-}
+    }
 
     useEffect(() => {
         if (!route.state) {
@@ -79,7 +82,7 @@ else{
                 {!instructorsList.length && <Placeholder text="No Instructors Added" img={NoInstructorsImg}/>}
                 {instructorsList.map(instructor => (
                     <UserCard setUpdateList={setUpdateList} updateList={updateList}
-                              isStudent={false} instructor={instructor} key={instructor.id} student={false}/>
+                              isStudent={false} instructor={instructor} key={instructor.id} student={false} isAdmin={route.state.isAdmin}/>
                 ))}
             </div>
         </>

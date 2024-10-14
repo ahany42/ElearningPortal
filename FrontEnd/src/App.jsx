@@ -452,8 +452,8 @@ function App() {
                 element={<InstructorsList />}
               />
               <Route
-                path="/Current"
-                element={<InstructorsList fromAdmin={true}/>}
+                path="/CurrentInstructors"
+                element={<InstructorsList/>}
               />
               <Route path="/logout" element={<Logout />} />
               <Route path="/AddMaterial/:id" element={<AddMaterial />} />

@@ -8,7 +8,7 @@ import './UserCard.css';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
-const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) => {
+const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,isAdmin}) => {
   const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -84,7 +84,7 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
         </div>
 
         {
-            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) &&
+            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) && !isAdmin &&
                 <FontAwesomeIcon className="remove-user-button" icon={faTrash}
                                  onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>
         }
@@ -102,13 +102,14 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList}) 
                     Progress
                 </button>
         }
-        {
-            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
+         {
+            // isAdmin is immutated 
+            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") && !isAdmin &&
                 <button className=" enroll-text enroll-button bold-text blue-text progress-button"
                         onClick={ViewProgress}>
                     Progress
                 </button>
-        }
+        } 
     </div>
 </div>
   )

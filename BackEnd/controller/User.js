@@ -156,7 +156,6 @@ module.exports.register = async (req, res, next) => {
 module.exports.getUsers = async (req, res, next) => {
   try {
     const { role } = req.query;
-
     if (role && (role === "Admin" || role === "Student" || role === "Instructor")) {
       let users = await User.find({ role });
       users = users.map(({id, name, gender, email, username, role}) => {
