@@ -36,7 +36,7 @@ const StudentProgress = () => {
 
   return (
     <>
-      <h5 className="alignCenter-text">{name || currentUser.name}'s Progress in React Js</h5>
+      <h5 className="alignCenter-text">{name || currentUser.name}'s Progress</h5>
       <table className="student-progress-table">
         <thead>
           <tr>
