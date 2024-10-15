@@ -5,28 +5,27 @@ This eLearning platform enables users to enroll in courses, submit assignments, 
 
 ## 2. Technology Stack
 The platform is developed using the MERN stack along with additional tools like bcrypt for password encryption, express-rate-limiter for rate limiting, Vite for fast builds, Bootstrap, and Material-UI (MUI) for styling:
-
-- **Frontend**: React.js  
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="100px" height="100px"/>&nbsp;
-
-- **Backend**: Node.js with Express.js  
+<p align="center" >
+<h5>Frontend: React.js </h5> 
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="100px" height="100px"/>
+<h5>Backend: Node.js with Express.js  </h5>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" width="100px" height="100px"/>&nbsp;
-
-- **Database**: MongoDB  
+ 
+<h5>Database: MongoDB </h5> 
  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg" width="100px" height="100px"/>&nbsp;
 
-- **Authentication**: JWT (JSON Web Token)  
+<h5>Authentication: JWT (JSON Web Token)</h5> 
   <img src="https://jwt.io/img/pic_logo.svg" alt="JWT Logo" style="width:100px; height:100px;">
 
-- **Styling**: Bootstrap  
+<h5>Styling: Bootstrap </h5> 
   <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Bootstrap_logo.svg" alt="Bootstrap Logo" style="width:100px; height:100px;">
 
-- **Styling**: Material-UI (MUI)  
+<h5>Styling: Material-UI (MUI)</h5>
   <img src="https://mui.com/static/logo.png" alt="Material-UI Logo" style="width:100px; height:100px;">
 
-- **Build Tool**: Vite  
+<h5>Build Tool: Vite</h5> 
   <img src="https://vitejs.dev/logo.svg" alt="Vite Logo" style="width:100px; height:100px;">
-
+</p>
 ## 3. User Roles and Permissions
 
 ### Student
