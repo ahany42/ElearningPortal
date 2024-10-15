@@ -88,7 +88,9 @@ const CourseDetails = () => {
     const AddMaterial = ()=>{
         navigate(`/AddMaterial/${course.id}`);
     }
-
+    const AssignInstructor =()=>{
+        showMessage("Coming Soon",true)
+    }
     const StudentsList = async ()=>{
         const params = new URLSearchParams({
             courseId: id,
@@ -174,6 +176,14 @@ const CourseDetails = () => {
                                         Enrolled
                                     </p> :
                                 null
+                        }
+                           {
+                            (currentUser.role === "Admin" || currentUser.role=="SuperAdmin") &&
+                                    <button className="enroll-button-courseDetails bold-text"
+                                            onClick={() => AssignInstructor(course.id)}>
+                                        Assign Instructor
+                                    </button> 
+                                    
                         }
                         <h5 className="course-description">{course.desc}</h5>
                     </DetailsHeaderDiv>
