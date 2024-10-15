@@ -8,7 +8,7 @@ import './UserCard.css';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
-const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin}) => {
+const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin,assignInstructor}) => {
   const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -105,7 +105,7 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, i
         </div>
 
         {
-            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) &&
+            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) && !assignInstructor &&
                 <FontAwesomeIcon className="remove-user-button" icon={faTrash}
                                  onClick={!isAdmin? isStudent? RemoveStudent : RemoveInstructor :
                                             () => RemoveUser(instructor.id)} color="red"/>

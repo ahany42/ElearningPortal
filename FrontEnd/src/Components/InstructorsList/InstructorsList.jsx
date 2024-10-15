@@ -38,7 +38,7 @@ const InstructorsList = () => {
             setInstructorsList(response.data);
             route.state = {instructorsList: response.data, isAdmin: true};
 
-        } else {
+        } else if(!route.state.assignInstructor) {
             const response = await fetch(`${Front_ENV.Back_Origin}/getCourseUsersList?${params}`, {
                 method: 'GET',
                 headers: {
@@ -53,6 +53,19 @@ const InstructorsList = () => {
             }
             setInstructorsList(response.data);
             route.state = {instructorsList: response.data};
+        }
+        else{
+                const response = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': getCookie('token') || '',
+                    }
+                })
+                    .then(response => response.json());
+                    setInstructorsList(response.data);
+                    route.state =  {instructorsList: response.data, assignInstructor: true}
+        
         }
     }
 
@@ -70,7 +83,7 @@ const InstructorsList = () => {
         <>
             <button className="goBackBtn" style={{top: "35px", left: "85px"}}
                     onClick={() => {
-                        route.state.isAdmin?
+                        route.state.isAdmin || route.state.assignInstructor?
                             navigate('/InstructorsPage')
                         :
                             navigate(`/CourseDetails/${id}`)
@@ -82,12 +95,12 @@ const InstructorsList = () => {
                 <span>Back</span>
             </button>
             <div className="d-flex flex-column mt-5">
-                <h5 className="sub-title">{instructorsList.length} Course Instructors: </h5>
+                <h5 className="sub-title">{route.state.assignInstructor? "":instructorsList.length} {route.state.isAdmin?"Instructors" : route.state.assignInstructor? "Assign Instructors":"Course Instructors"} </h5>
                 {!instructorsList.length && <Placeholder text="No Instructors Added" img={NoInstructorsImg}/>}
                 {instructorsList.map(instructor => (
                     <UserCard setUpdateList={setUpdateList} updateList={updateList}
                               isStudent={false} instructor={instructor} key={instructor.id}
-                              student={false} isAdmin={route.state.isAdmin}/>
+                              student={false} isAdmin={route.state.isAdmin} assignInstructor={route.state.assignInstructor}/>
                 ))}
             </div>
         </>

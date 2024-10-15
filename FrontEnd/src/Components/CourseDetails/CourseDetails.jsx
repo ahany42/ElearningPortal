@@ -97,7 +97,7 @@ const CourseDetails = () => {
                 }
             })
                 .then(response => response.json());
-            navigate(`/AddMaterial/${courseId}`, {state: {instructorsList: response.data, assignInstructor: true}})
+            navigate(`/AssignInstructor/${courseId}`, {state: {instructorsList: response.data, assignInstructor: true}})
     }
     const StudentsList = async ()=>{
         const params = new URLSearchParams({
