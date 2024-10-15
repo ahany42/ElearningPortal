@@ -1,110 +1,111 @@
-import {useEffect, useState, useContext} from "react";
+import { useEffect, useState, useContext } from "react";
 import { CurrentUserContext } from "../../App";
 import { toast } from 'react-toastify';
 import { jwtDecode } from "jwt-decode";
 import 'react-toastify/dist/ReactToastify.css';
-import {Button,FormControl,InputLabel,OutlinedInput,TextField,InputAdornment,Box,IconButton} from "@mui/material";
+import { Button, FormControl, InputLabel, OutlinedInput, TextField, InputAdornment, Box, IconButton } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { NavLink, useNavigate } from "react-router-dom";
 import { setCookie } from "../Cookie/Cookie.jsx";
+import './Login.css';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [activeErrors, setActiveErrors] = useState([]);
   const [formData, setFormData] = useState({
-      username: '',
-      password: ''
+    username: '',
+    password: ''
   });
   const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
-    useEffect(() => {
-        if (error && !activeErrors.includes(error)) {
-            setActiveErrors([...activeErrors, error]);
-            toast.error(error, {
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                onClose: () => {
-                    setError('') // Reset the error message
-                    setActiveErrors(prevState => prevState.filter(e => e !== error))
-                }
-            });
+  useEffect(() => {
+    if (error && !activeErrors.includes(error)) {
+      setActiveErrors([...activeErrors, error]);
+      toast.error(error, {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        onClose: () => {
+          setError('') // Reset the error message
+          setActiveErrors(prevState => prevState.filter(e => e !== error))
         }
-    }, [error]);
+      });
+    }
+  }, [error]);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   // Handle keypress for Enter key navigation
   const handleKeyPress = (e, field) => {
-      if (e.key === 'Enter') {
-          e.preventDefault();
-          if (!e.target.value) {
-              setError(' Please enter your ' + field);
-              return;
-          }
-          if (field === 'username') {
-              setError('');
-              // Move focus to the password field
-              e.target.parentElement.parentElement.nextElementSibling.children[1].children[0].focus()
-          } else if (field === 'password') {
-              // Submit the form when pressing Enter on the password field
-              handleSubmit(e);
-          }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (!e.target.value) {
+        setError(' Please enter your ' + field);
+        return;
       }
+      if (field === 'username') {
+        setError('');
+        // Move focus to the password field
+        e.target.parentElement.parentElement.nextElementSibling.children[1].children[0].focus()
+      } else if (field === 'password') {
+        // Submit the form when pressing Enter on the password field
+        handleSubmit(e);
+      }
+    }
   };
 
   const handleSubmit = async (event) => {
-      event.preventDefault();
-      setError('');
-      try {
-          const response = await fetch('http://localhost:3008/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(formData),
-          });
+    event.preventDefault();
+    setError('');
+    try {
+      const response = await fetch('http://localhost:3008/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-          const data = await response.json();
-          if (!data.error) {
-              toast.success(data.message, {
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  style: {
-                      userSelect: 'none',
-                      gap: '10px',
-                      padding: '20px',
-                  }
-              });
-
-              // Successful login, redirect to courses
-              setCookie('token', data.data);
-              setIsAuthenticated(true);
-              setCurrentUser(jwtDecode(data.data));
-              navigate('/courses');
-          } else {
-              // Show error message
-              setError(data.error);
-              setIsAuthenticated(false);
+      const data = await response.json();
+      if (!data.error) {
+        toast.success(data.message, {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: {
+            userSelect: 'none',
+            gap: '10px',
+            padding: '20px',
           }
-      } catch (error) {
-          console.warn(error)
-          setError(error);
-          setIsAuthenticated(false);
+        });
+
+        // Successful login, redirect to courses
+        setCookie('token', data.data);
+        setIsAuthenticated(true);
+        setCurrentUser(jwtDecode(data.data));
+        navigate('/courses');
+      } else {
+        // Show error message
+        setError(data.error);
+        setIsAuthenticated(false);
       }
+    } catch (error) {
+      console.warn(error)
+      setError(error);
+      setIsAuthenticated(false);
+    }
   };
 
   return (
     <>
-      <Box sx={{ width: "700px", margin: "80px auto" }}>
+      <Box className="login-container">
         <h4 className="mb-3">Login to your account</h4>
         <form onSubmit={handleSubmit}>
           {/* Username Field */}
@@ -229,3 +230,4 @@ const Login = () => {
 };
 
 export default Login;
+
