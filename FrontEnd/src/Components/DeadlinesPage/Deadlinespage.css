@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 25px;
+  flex-direction: column;
 }
 
 .deadlines-table {
@@ -171,4 +172,26 @@
 .add-deadline {
   top: 50%;
   transform: translateY(-50%);
+}
+@media (min-width: 768px) {
+  .button-group {
+    flex-direction: row; /* Row layout for larger screens */
+  }
+}
+@media (max-width: 768px) {
+  .deadlines-table {
+    width: 100%; /* Makes the table full-width on smaller screens */
+  }
+}
+@media (max-width: 576px) {
+  .view-btn {
+    font-size: 0.8rem; /* Smaller button text on mobile */
+    padding: 8px 16px;
+  }
+}
+@media (max-width: 576px) {
+  .switch-app label {
+    font-size: 0.9rem; /* Smaller switch text on mobile */
+    padding: 10px;
+  }
 }

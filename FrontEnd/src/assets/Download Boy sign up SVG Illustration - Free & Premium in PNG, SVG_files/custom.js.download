@@ -1,0 +1,1423 @@
+var doLogin = false;
+
+function MakeTrue() {
+    doLogin = true;
+}
+
+function onSignIn(googleUser) {
+    if (doLogin) {
+        var profile = googleUser.getBasicProfile();
+        var id_token = googleUser.getAuthResponse().id_token;
+        DoSignIN(id_token);
+    }
+}
+
+
+
+function DoSignIN(id_token) {
+    // console.log('himanshu1');
+    $('.error-message, .success-message').html('').addClass('d-none');
+    $('#social_login_wrap .dark-message').removeClass('d-none');
+    $.ajax({
+        type: 'POST',
+        url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+        data: {
+            'action': 'VerifyGoogleAuth',
+            'id_token': id_token
+        },
+        success: function (serverResponse) {
+            $('#social_login_wrap .dark-message').addClass('d-none');
+            var result = jQuery.parseJSON(serverResponse);
+            //console.log(result.status);
+            if (result.status == "fail") {
+                $('#social_login_wrap .error-message').html(result.msg).removeClass('d-none');
+                alert(result.msg);
+            } else {
+                // google_code_call(ajax_url);
+                $.ajax({
+                    type: 'POST',
+                    url: ajax_url,
+                    data: {
+                        'action': 'get_user_id_ajax',                            
+                    },
+                    success: function (response) {
+                        if(response != ''){
+                            window.dataLayer = window.dataLayer || [];
+                            window.dataLayer.push({
+                                'event': 'signin',
+                                'user_id': response
+                            });             
+                        }
+                    }
+                });
+
+                var url = $('a.navbar-brand:eq(0)').attr('href');
+                $('.navbar_btn').html('<div class="navbar_btn order-lg-2 d-sm-block d-none"><a href="'+url+'/my-account" class="btn btn-dark min_ut">My account</a></div>');
+                if($('#signupmodal').hasClass('user-from-plan-button')){
+                    $('#social_login_wrap .success-message').html('Redirecting....').removeClass('d-none');
+                    $.ajax({
+                        type: 'POST',
+                        url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+                        data: {
+                            'action': 'check_plan_ajax',                            
+                        },
+                        success: function (response) {
+                            if(response == 0){
+                                window.location.href += "#checkout-plan-modal";
+                                location.reload();
+                            }else{
+                                window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                            }   
+                        }
+                    });
+                    
+                }else if($('#signupmodal').hasClass('user-from-free-download-button')) {
+                    // console.log('downloader-data-same-page');
+                    $('#social_login_wrap .success-message').html('Redirecting....').removeClass('d-none');
+                    $('body').addClass('logged-in');
+                    $('#signupmodal').modal('hide');
+                    jQuery('.single-individual-product button.purchase-icon').trigger('click');
+                    // window.location.href += "#checkout";
+                    // location.reload();
+                    return false;
+                }else if ($('#signupmodal').hasClass('user-from-download-button')) {
+                    $('#social_login_wrap .success-message').html('Redirecting....').removeClass('d-none');
+                    //window.location.href += "#checkout";
+                    location.reload();
+                } else {
+                    $('#social_login_wrap .success-message').html('Login Successful!').removeClass('d-none');
+                    $('#signupmodal').modal('hide');
+                    //window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                }                
+            }
+        }
+    });
+
+}
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function zipbundlefile() {
+    //setup an array of AJAX options,
+    //each object will specify information for a single AJAX request
+    var ajaxes = [],
+        current = 0;
+
+    $('.purchase-icon').hide();
+    $('.progress').removeClass('d-none');
+    ajaxes.push({
+        'url': $('.product_img').attr('data-action'),
+        'data': {
+            'parent_id': $('.product_img').attr('data-id'),
+            'action': 'genrate_root_folder'
+        }
+    });
+
+    var s = 1;
+    $('.load-svg').each(function () {
+        var $this = $(this);        
+        var backup_svg = $(this).html();
+        jQuery(this).find('svg svg.mark-sign').remove(); 
+        var text = $(this).html();
+        jQuery(this).html(backup_svg);
+        var svgText = text.replaceAll($('body').attr('data-primary'), (getCookie('PrimaryColor') != "") ? getCookie('PrimaryColor') : $('body').attr('data-primary')).replaceAll($('body').attr('data-secondary'), (getCookie('SecondaryColor') != "") ? getCookie('SecondaryColor') : $('body').attr('data-secondary'));
+        
+        var img = new Image();
+        var base64path = "";
+        img.onload = function () {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            var ctxt = canvas.getContext("2d");
+            ctxt.fillStyle = "#ffffff00";
+            ctxt.fillRect(0, 0, canvas.width, canvas.height);
+            ctxt.drawImage(img, 0, 0);
+            base64path = canvas.toDataURL("image/png");
+
+
+            ajaxes.push({
+                'url': $('.product_img').attr('data-action'),
+                'data': {
+                    'product_img': base64path,
+                    'product_id': $this.attr('data-icon'),
+                    'is_single': $this.attr('data-single'),
+                    'parent_id': $('.product_img').attr('data-id'),
+                    'action': 'single_product_download'
+                }
+            });
+            UpdateProgressBar(2);
+            if ($('.load-svg').length == s) {
+                ajaxes.push({
+                    'url': $('.product_img').attr('data-action'),
+                    'data': {
+                        'parent_id': $('.product_img').attr('data-id'),
+                        'action': 'genrate_root_folder_zip'
+                    }
+                });
+
+                //run the AJAX function for the first time once `document.ready` fires
+                do_ajax();
+
+
+            }
+
+            s++;
+        };
+        img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svgText);
+    })
+
+
+
+
+    //declare your function to run AJAX requests
+    function do_ajax() {
+        // console.log(ajaxes);
+        //check to make sure there are more requests to make
+
+        if (current < ajaxes.length) {
+            var current_temp = current + 1;
+            var templength = ajaxes.length;
+            var percetage = 100 / parseInt(templength) * parseInt(current_temp);
+            //console.log('percetage ->' + percetage.toFixed(2));
+            if (percetage > 2) {
+                UpdateProgressBar(percetage.toFixed(2));
+            }
+            $('.purchase-msg .alert').addClass('d-none')
+
+            //make the AJAX request with the given info from the array of objects
+            $.ajax({
+                type: 'POST',
+                url: ajaxes[current].url,
+                data: ajaxes[current].data,
+                success: function (serverResponse) {
+
+                    //once a successful response has been received,
+                    //no HTTP error or timeout reached,
+                    //run the callback for this request
+                    // ajaxes[current].callback(serverResponse);
+
+                    var result = jQuery.parseJSON(serverResponse);
+                    //console.log(result.status);
+                    if (result.status == "fail") {
+                        $('.purchase-msg .alert-danger').text(result.msg).removeClass('d-none');
+                        ('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                    } else if (result.status == "success" && result.msg == 'Zip created successfully') {
+                        var name = jQuery('h1').html();
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'svg_downloaded',
+                            'product_name': name
+                        });
+                        UpdateProgressBar(100);
+                        $('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                        var a = document.createElement("a");
+                        a.href = result.url;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else if (result.status == "success") {
+                        current++;
+                        do_ajax();
+                    } else {
+                        alert("Something went wrong");
+                        ('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                    }
+
+                }
+            });
+        }
+    }
+
+
+}
+
+
+
+function zipbundlefile3d() {
+    //setup an array of AJAX options,
+    //each object will specify information for a single AJAX request
+    var ajaxes = [],
+        current = 0;
+
+    $('.purchase-icon').hide();
+    $('.progress').removeClass('d-none');
+    ajaxes.push({
+        'url': $('.product_img').attr('data-action'),
+        'data': {
+            'parent_id': $('.product_img').attr('data-id'),
+            'action': 'genrate_root_folder'
+        }
+    });
+
+    var s = 1;
+    $('.load-svg').each(function () {
+        var $this = $(this);
+        var text = $(this).html();
+
+
+        ajaxes.push({
+            'url': $('.product_img').attr('data-action'),
+            'data': {
+                'product_img': '',
+                'product_id': $this.attr('data-icon'),
+                'is_single': $this.attr('data-single'),
+                'parent_id': $('.product_img').attr('data-id'),
+                'action': 'single_product_download'
+            }
+        });
+        UpdateProgressBar(2);
+        if ($('.load-svg').length == s) {
+            ajaxes.push({
+                'url': $('.product_img').attr('data-action'),
+                'data': {
+                    'parent_id': $('.product_img').attr('data-id'),
+                    'action': 'genrate_root_folder_zip'
+                }
+            });
+
+            //run the AJAX function for the first time once `document.ready` fires
+            do_ajax();
+
+
+        }
+
+        s++;
+
+    })
+
+
+
+
+    //declare your function to run AJAX requests
+    function do_ajax() {
+        // console.log(ajaxes);
+        //check to make sure there are more requests to make
+
+        if (current < ajaxes.length) {
+            var current_temp = current + 1;
+            var templength = ajaxes.length;
+            var percetage = 100 / parseInt(templength) * parseInt(current_temp);
+            //console.log('percetage ->' + percetage.toFixed(2));
+            if (percetage > 2) {
+                UpdateProgressBar(percetage.toFixed(2));
+            }
+            $('.purchase-msg .alert').addClass('d-none')
+
+            //make the AJAX request with the given info from the array of objects
+            $.ajax({
+                type: 'POST',
+                url: ajaxes[current].url,
+                data: ajaxes[current].data,
+                success: function (serverResponse) {
+
+                    //once a successful response has been received,
+                    //no HTTP error or timeout reached,
+                    //run the callback for this request
+                    // ajaxes[current].callback(serverResponse);
+
+                    var result = jQuery.parseJSON(serverResponse);
+                    //console.log(result.status);
+                    if (result.status == "fail") {
+                        $('.purchase-msg .alert-danger').text(result.msg).removeClass('d-none');
+                        ('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                    } else if (result.status == "success" && result.msg == 'Zip created successfully') {
+                        UpdateProgressBar(100);
+                        $('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                        var a = document.createElement("a");
+                        a.href = result.url;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else if (result.status == "success") {
+                        current++;
+                        do_ajax();
+                    } else {
+                        alert("Something went wrong");
+                        ('.purchase-icon').show();
+                        $('.progress').addClass('d-none');
+                    }
+
+                }
+            });
+        }
+    }
+
+
+}
+
+
+
+function UpdateProgressBar(percentage) {
+    $('.progress-text').text(percentage + '%');
+    $(".progress-bar").css('width', percentage + '%');
+
+}
+
+
+$(document).ready(function () {
+    $('.navbar-toggler').click(function () {
+        $(this).toggleClass('open');
+    });
+
+    if (window.location.hash == "#checkout") {
+        $('#checkout-modal').modal('show');
+    }
+
+    //Color Picker js
+    if ($('.color_picker_wrap').length) {
+
+        var primaryColor = $('body').attr('data-primary');
+        $('.color_picker_wrap').find('[fill="' + primaryColor + '"]').each(function () {
+            $(this).attr('data-primary', 'true');
+        });
+
+        var secondaryColor = $('body').attr('data-secondary');
+        $('.color_picker_wrap').find('[fill="' + secondaryColor + '"]').each(function () {
+            $(this).attr('data-secondary', 'true');
+        });
+
+        //color changer one
+        var colorChanger = undefined;
+        if ($('#colorChanger').length) {
+            colorChanger = document.getElementById('colorChanger');
+            var picker = new ColorPicker(colorChanger, $('body').attr('data-primary'));
+
+            colorChanger.addEventListener('colorChange', function (event) {
+                var color = event.detail.color;
+                //console.log(color);
+                $('#hex_input1').val(color['hex']);
+                if ($('#hex_input3').length) {
+                    $('#hex_input3').val(color['hex']);
+                }
+                $('#colorChanger1').attr('data-color', color['hex']).css('background', color['hex']);
+                setCookie('PrimaryColor', color['hex'], 2);                
+                var changeSVG = document.querySelectorAll('.load-svg [data-primary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color['hex']);
+                }
+                //updatesvgtocanvas();
+            });
+            $('#hex_input').keyup(function () {
+               // console.log($(this).val());
+                $('#hex_input1').val($(this).val());
+                var color = $('#hex_input1').val();
+
+                $('#colorChanger').attr('data-color', color).css('background', color);
+                setCookie('PrimaryColor', color, 2);
+
+                var changeSVG = document.querySelectorAll('[data-primary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color);
+                }
+
+            });
+
+        }
+
+        if (colorChanger != undefined) {
+            jQuery(document).on('keyup', '#hex_input1', function () {
+                ColorPicker(colorChanger, $(this).val());
+                var color = $(this).val();
+                $('#hex_input1').val(color);
+                if ($('#hex_input3').length) {
+                    $('#hex_input3').val(color);
+                }
+                $('#colorChanger1').attr('data-color', color).css('background', color);
+                setCookie('PrimaryColor', color, 2);
+
+                var changeSVG = document.querySelectorAll('[data-primary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color);
+                }
+            })
+        }
+
+        jQuery(document).on("click", ".color-changer", function () {
+            var input_field = jQuery(this).prev();
+            input_field.focus().val(input_field.val());
+        })
+
+        //color changer two
+        var colorChangerTwo = undefined;
+        if ($('#colorChangertwo').length) {
+            colorChangerTwo = document.getElementById('colorChangertwo');
+            var pickerTwo = new ColorPicker(colorChangerTwo, $('body').attr('data-secondary'));
+
+            colorChangerTwo.addEventListener('colorChange', function (event) {
+                var color = event.detail.color;
+                document.getElementById('hex_input2').value = color['hex'];
+                if ($('#hex_input4').length) {
+                    $('#hex_input4').val(color['hex']);
+                }
+                setCookie('SecondaryColor', color['hex'], 2)
+                $('#colorChangertwo2').attr('data-color', color['hex']).css('background', color['hex']);
+                var changeSVG = document.querySelectorAll('.load-svg [data-secondary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color['hex']);
+                }
+                //updatesvgtocanvas();
+            });
+        }
+
+        if (colorChangerTwo != undefined) {
+            jQuery(document).on('keyup', '#hex_input2', function () {
+                ColorPicker(colorChangerTwo, $(this).val());
+                var color = $(this).val();
+                if ($('#hex_input4').length) {
+                    $('#hex_input4').val(color);
+                }
+                setCookie('SecondaryColor', color, 2)
+                $('#colorChangertwo2').attr('data-color', color).css('background', color);
+                var changeSVG = document.querySelectorAll('[data-secondary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color);
+                }
+            })
+        }
+
+
+        //color changer one
+        var colorChanger1 = undefined;
+        if ($('#colorChanger1').length) {
+            colorChanger1 = document.getElementById('colorChanger1');
+            var picker11 = new ColorPicker(colorChanger1, $('body').attr('data-primary'));
+
+            colorChanger1.addEventListener('colorChange', function (event) {
+                var color = event.detail.color;
+                //console.log(color);
+                document.getElementById('hex_input1').value = color['hex'];
+                $('#hex_input3').val(color['hex']);
+                setCookie('PrimaryColor', color['hex'], 2);
+                $('#colorChanger').attr('data-color', color['hex']).css('background', color['hex']);
+
+                var changeSVG = document.querySelectorAll('[data-primary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color['hex']);
+                }
+                picker.colorChange(color['hex'], colorChanger1);
+
+                //updatesvgtocanvas();
+            });
+        }
+
+        if (colorChanger1 != undefined) {
+            jQuery(document).on('keyup', '#hex_input3', function () {
+                ColorPicker(colorChanger1, $(this).val());
+                var color = $(this).val();
+                setCookie('PrimaryColor', color, 2);
+                $('#colorChanger').attr('data-color', color).css('background', color);
+
+                var changeSVG = document.querySelectorAll('[data-primary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color);
+                }
+                picker.colorChange(color, colorChanger1);
+
+            })
+        }
+
+        //color changer two
+        var colorChangerTwo5 = undefined;
+        if ($('#colorChangertwo2').length) {
+            colorChangerTwo5 = document.getElementById('colorChangertwo2');
+            var pickerTwo55 = new ColorPicker(colorChangerTwo5, $('body').attr('data-secondary'));
+
+            colorChangerTwo5.addEventListener('colorChange', function (event) {
+                var color = event.detail.color;
+                document.getElementById('hex_input4').value = color['hex'];
+                $('#hex_input4').val(color['hex']);
+                setCookie('SecondaryColor', color['hex'], 2)
+                $('#colorChangertwo').attr('data-color', color['hex']).css('background', color['hex']);
+                var changeSVG = document.querySelectorAll('[data-secondary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color['hex']);
+                }
+                //updatesvgtocanvas();
+            });
+        }
+
+        if (colorChangerTwo5 != undefined) {
+            jQuery(document).on('keyup', '#hex_input4', function () {
+                ColorPicker(colorChangerTwo5, $(this).val());
+                var color = $(this).val();
+                setCookie('SecondaryColor', color, 2)
+                $('#colorChangertwo').attr('data-color', color).css('background', color);
+                var changeSVG = document.querySelectorAll('[data-secondary="true"]');
+                for (var i = 0; i < changeSVG.length; i++) {
+                    changeSVG[i].setAttribute('fill', color);
+                }
+
+            })
+        }
+
+        if (jQuery(window).innerWidth() < 992) {
+            jQuery(colorChanger).click(function (e) {
+                e.stopPropagation();
+                jQuery('.product_wrap').css('pointerEvents', 'none');
+            });
+            jQuery(colorChangerTwo).click(function (e) {
+                e.stopPropagation();
+                jQuery('.product_wrap').css('pointerEvents', 'none');
+            });
+
+            jQuery('#color_picker').click(function (e) {
+                e.stopPropagation();
+            });
+            jQuery('body').click(function (e) {
+                jQuery('.product_wrap').css('pointerEvents', 'auto');
+            });
+
+        }
+    }
+    //Color Picker js end
+
+    //form toggle js
+    $('#forgorPass').click(function (e) {
+        e.preventDefault();
+        $('#forgotForm').show();
+        $('#loginForm').hide();
+        $('#signupForm').hide();
+    });
+    $('#BacktoLogin').click(function (e) {
+        e.preventDefault();
+        $('#forgotForm').hide();
+        $('#loginForm').show();
+        $('#signupForm').hide();
+    });
+    $('#signupLink').click(function (e) {
+        console.log("Signup");
+        e.preventDefault();
+        $('#forgotForm').hide();
+        $('#loginForm').hide();
+        $('#signupForm').show();
+    });
+    $('#loginLink').click(function (e) {
+        e.preventDefault();
+        $('#loginForm').show();
+        $('#signupForm').hide();
+        $('#forgotForm').hide();
+    });
+    //form toggle js
+    $('.signup_form_js').click(function () {
+        $('#forgotForm').hide();
+        $('#loginForm').hide();
+        $('#signupForm').show();
+    });
+    $('.signin_form_js').click(function () {
+        $('#loginForm').show();
+        $('#forgotForm').hide();
+        $('#signupForm').hide();
+    });
+    //form toggle js end
+
+
+    //Home banner image effect 
+    var slider = new Swiper(".banner_img_slider", {
+        speed: 1500,
+        loop: true,
+        effect: "fade",
+        fadeEffect: {
+            crossFade: true
+        },
+        autoplay: {
+            delay: 2000,
+        },
+        //        stopOnLastSlide: true,
+        allowTouchMove: false
+    });
+    //Home banner image effect end
+    
+    var  collectionSliders = document.querySelectorAll('.collection_block_img_slider');
+    var timings = 500;
+    collectionSliders.forEach(function(item){        
+        var collectionSlider = new Swiper(item, {
+            speed: 1000,
+            slidesPerView: 1,
+            loop: true,
+            effect: "fade",
+            fadeEffect: {
+                crossFade: true
+            },
+            autoplay: {
+                delay: timings,
+                disableOnInteraction: false
+            },
+        });
+        timings = timings + 600;        
+    });
+    
+    var testimonialSlider = new Swiper(".testimonial_block_slider", {
+            speed: 1000,
+            slidesPerView: 1,
+            loop: true,
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".testimonial_block_slider_pagination",
+                clickable: true
+            },
+        });
+
+    //Tooltip js
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    //Tooltip js end
+
+
+    $(document).on('click', '.purchase-icon', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var buttontext = $(this).text();
+        $('#loginForm').fadeIn()
+        if (!$(this).hasClass('old-one')) {
+            if ($('#hex_input1').length) {
+                setCookie('PrimaryColor', $('#hex_input1').val(), 2);
+                setCookie('SecondaryColor', $('#hex_input2').val(), 2);
+            }
+        }
+        $this.text("Processing...")
+        $this.prop('disabled', true);
+        var data = {
+            'action': 'doesuserhavedownloadaccess_ajax',
+            'id': $('.product_img').attr('data-id')
+        };
+        $.post($('.product_img').attr('data-action'), data, function (responce) {
+            if (responce == "true") {
+                if ($('body').hasClass('logged-in')) {                   
+                    zipbundlefile();
+                }else{
+                    $('#signupmodal').addClass('user-from-free-download-button');
+                    $('#signupmodal').modal('show');
+                }    
+            } else {
+                if ($('body').hasClass('logged-in')) {
+                    $('#checkout-modal').modal('show');
+                } else {
+                    $('#signupmodal').addClass('user-from-download-button');
+                    $('#signupmodal').modal('show');
+                }
+            }
+            $this.prop('disabled', false);
+            $this.text(buttontext);
+        })
+
+    })
+
+    $(document).on('click', '.purchase-icon-3d', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var buttontext = $(this).text();
+        $('#loginForm').fadeIn()
+
+        $this.text("Processing...")
+        $this.prop('disabled', true);
+        var data = {
+            'action': 'doesuserhavedownloadaccess_ajax',
+            'id': $('.product_img').attr('data-id')
+        };
+        $.post($('.product_img').attr('data-action'), data, function (responce) {
+            if (responce == "true") {
+                if ($('body').hasClass('logged-in')) {                   
+                    zipbundlefile();
+                }else{
+                    $('#signupmodal').addClass('user-from-free-download-button');
+                    $('#signupmodal').modal('show');
+                }                
+            } else {
+
+                if ($('body').hasClass('logged-in')) {
+                    $('#checkout-modal').modal('show');
+                } else {
+                    $('#signupmodal').addClass('user-from-download-button');
+                    $('#signupmodal').modal('show');
+                }
+            }
+            $this.prop('disabled', false);
+            $this.text(buttontext);
+        })
+
+    })
+
+
+
+
+    $('#forgot-popup-form').on('submit', function (e) {
+
+        var $this = $(this);
+        var email_filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+        var email = $('.email', $this).val();
+        var tg_pwd_nonce = $('#tg_pwd_nonce').val();
+
+        $('.error-message, .success-message', $this).html('').addClass('d-none');
+        var is_valid = true;
+        if (email == '') {
+            is_valid = false;
+        } else if (!email.match(email_filter)) {
+            is_valid = false;
+        }
+
+        if (is_valid == false) {
+            $('.error-message', $this).html('Not all the fields have been filled out correctly!').removeClass('d-none');
+            return false;
+        } else {
+            $('.spinner-border', $this).removeClass('d-none');
+            $('button', $this).prop('disabled', true);
+            var data = {
+                'action': 'forget_password_',
+                'user_input': email,
+                'tg_pwd_nonce': tg_pwd_nonce
+            };
+            $.post($this.attr('action'), data, function (response) {
+                var result = jQuery.parseJSON(response);
+                //console.log(result.status);
+                if (result.status == "fail") {
+                    $('.error-message', $this).html(result.msg).removeClass('d-none');
+                } else {
+                    $("#forgot-popup-form")[0].reset();
+                    $('.success-message', $this).html(result.msg).removeClass('d-none');
+                }
+
+                $('.spinner-border', $this).addClass('d-none');
+                $('button', $this).prop('disabled', false);
+            });
+        }
+        return false;
+    });
+
+
+
+    $('#login-popup-form').on('submit', function (e) {
+        // console.log('himanshu2');
+        var $this = $(this);
+        var email_filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+        var email = $('.email', $this).val();
+        var pws = $('.password', $this).val();
+        var login_nounce_field = $('#login_nounce_field').val();
+
+        $('.error-message, .success-message', $this).html('').addClass('d-none');
+        var is_valid = true;
+        if (email == '') {
+            is_valid = false;
+        } else if (!email.match(email_filter)) {
+            is_valid = false;
+        }
+        if (pws == '') {
+            is_valid = false;
+        }
+        if (is_valid == false) {
+            $('.error-message', $this).html('Not all the fields have been filled out correctly!').removeClass('d-none');
+            return false;
+        } else {
+            $('.spinner-border', $this).removeClass('d-none');
+            $('button', $this).prop('disabled', true);
+            var data = {
+                'action': 'verify_login',
+                'email': email,
+                'pws': pws,
+                'login_nounce_field': login_nounce_field
+            };
+            $.post($this.attr('action'), data, function (response) {
+                if (response != '') {
+                    google_code_call(ajax_url);
+                    if (response == 'success') {
+                        $("#login-popup-form")[0].reset();
+                        var url = $('a.navbar-brand:eq(0)').attr('href');
+                        $('.navbar_btn').html('<div class="navbar_btn order-lg-2 d-sm-block d-none"><a href="'+url+'/my-account" class="btn btn-dark min_ut">My account</a></div>');
+                        if($('#signupmodal').hasClass('user-from-plan-button')){
+                            $('#social_login_wrap .success-message').html('Redirecting....').removeClass('d-none');
+                            $.ajax({
+                                type: 'POST',
+                                url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+                                data: {
+                                    'action': 'check_plan_ajax',                            
+                                },
+                                success: function (response) {
+                                    if(response == 0){
+                                        window.location.href += "#checkout-plan-modal";
+                                        location.reload();
+                                    }else{
+                                        window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                                    }   
+                                }
+                            });
+                        }else if ($('#signupmodal').hasClass('user-from-free-download-button')) {
+                            $('.success-message', $this).html('Redirecting....').removeClass('d-none');
+                            $('body').addClass('logged-in');
+                            $('#signupmodal').modal('hide');
+                            $('.single-individual-product button.purchase-icon').trigger('click');
+                            // window.location.href += "#checkout";
+                            //location.reload();
+                        }else if($('#signupmodal').hasClass('user-from-download-button')) {
+                            $('.success-message', $this).html('Redirecting....').removeClass('d-none');
+                            //window.location.href += "#checkout";
+                            // window.location.href = $('.navbar-brand').attr('href') + '/pricing';
+                            location.reload();
+
+                        } else {
+                            $('.success-message', $this).html('Login Successful!').removeClass('d-none');
+                            $('#signupmodal').modal('hide');
+                            //window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                        }
+
+                    } else {
+                        $('.error-message', $this).html(response).removeClass('d-none');
+                    }
+
+                }
+                $('.spinner-border', $this).addClass('d-none');
+                $('button', $this).prop('disabled', false);
+            });
+        }
+        return false;
+    });
+
+    $('#signup-popup-form').on('submit', function (e) {        
+        e.preventDefault();
+        var $this = $(this);
+        var email_filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+        var yourname = $('#signupForm .yourname').val();
+        var email = $('#signupForm .email').val();
+        var pws = $('#signupForm .password').val();
+        var cpws = $('#signupForm .con-password').val();
+        var register_nounce_field = $('#register_nounce_field').val();
+
+        $('.error-message, .success-message', $this).html('').addClass('d-none');
+        var is_valid = true;
+        if (yourname == '') {
+            is_valid = false;
+        }
+        if (email == '') {
+            is_valid = false;
+        } else if (!email.match(email_filter)) {
+            is_valid = false;
+        }
+        if (pws == '') {
+            is_valid = false;
+        } else if (cpws == '') {
+            is_valid = false;
+        }
+        if (pws != cpws) {
+            is_valid = false;
+        }
+        if (is_valid == false) {
+            $('.error-message', $this).html('Not all the fields have been filled out correctly!').removeClass('d-none');;
+            return false;
+        } else {
+            $('.spinner-border', $this).removeClass('d-none');
+            $('button', $this).prop('disabled', true);
+
+            var data = {
+                'action': 'signup_by_ajax',
+                'email': email,
+                'pws': pws,
+                'yourname': yourname,
+                'register_nounce_field': register_nounce_field
+            };
+            $.post($this.attr('action'), data, function (response) {                
+                var result = jQuery.parseJSON(response);
+                //console.log(result);
+                if (result['error'] != '') {
+                    $('.error-message', $this).html(result['error']).removeClass('d-none');
+                } else if (result['success'] != '') {
+                    google_code_call(ajax_url)
+                    var url = $('a.navbar-brand:eq(0)').attr('href');
+                    $('.navbar_btn').html('<div class="navbar_btn order-lg-2 d-sm-block d-none"><a href="'+url+'/my-account" class="btn btn-dark min_ut">My account</a></div>');
+                    if($('#signupmodal').hasClass('user-from-plan-button')){
+                        $('#social_login_wrap .success-message').html('Redirecting....').removeClass('d-none');
+                        $.ajax({
+                            type: 'POST',
+                            url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+                            data: {
+                                'action': 'check_plan_ajax',                            
+                            },
+                            success: function (response) {
+                                if(response == 0){
+                                    window.location.href += "#checkout-plan-modal";
+                                    location.reload();
+                                }else{
+                                    window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                                }   
+                            }
+                        });
+                    }else if($('#signupmodal').hasClass('user-from-free-download-button')) {
+                        $('.success-message', $this).html('Redirecting....').removeClass('d-none');
+                        $('body').addClass('logged-in');
+                        $('#signupmodal').modal('hide');
+                        jQuery('.single-individual-product button.purchase-icon').trigger('click');
+                        // window.location.href += "#checkout";
+                        // location.reload();
+                    }else if ($('#signupmodal').hasClass('user-from-download-button')) {
+                        $('.success-message', $this).text(result['success']).removeClass('d-none');
+                        //window.location.href += "#checkout";
+                        location.reload();
+                    } else {
+                        $('.success-message', $this).text(result['success']).removeClass('d-none');
+                        $('#signupmodal').modal('hide');
+                        // window.location.href = $('.navbar-brand').attr('href') + '/my-account';
+                    }
+
+
+                    $("#signupForm form")[0].reset();
+                }
+                $('.spinner-border').addClass('d-none');
+                $('button', $this).prop('disabled', false);
+
+                return false;
+            });
+        }
+        return false;
+    });
+
+    function google_code_call(ajax_url){
+        $.ajax({
+            type: 'POST',
+            url: ajax_url,
+            data: {
+                'action': 'get_user_id_ajax',                            
+            },
+            success: function (response) {
+                if(response != ''){
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'signin',
+                        'user_id': response
+                    });             
+                }
+            }
+        });
+    }
+   
+   /* loader more */
+    
+    jQuery.fn.isInViewport = function() {
+        var elementTop = jQuery(this).offset().top;
+        var elementBottom = elementTop + jQuery(this).outerHeight();
+
+        var viewportTop = jQuery(window).scrollTop();
+        var viewportBottom = viewportTop + jQuery(window).height();
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+    jQuery(document).ready(function(){
+        let page = 2;
+        let count_request = 0;
+        let loading = false;
+        if(jQuery('.btn_wrap a[href="#auto-loader-more"]').length != 0){
+            jQuery(window).scroll(function(){
+                let load_more_offset = Math.ceil(jQuery('.btn_wrap a[href="#auto-loader-more"]').offset().top);
+                let val1 = parseFloat(load_more_offset) - jQuery(window).height();
+                let val2 = jQuery(window).scrollTop() + 1000;
+            // console.log(val2+'-'+val1);
+                if( parseFloat(val2) > parseFloat(val1) ){
+                    if(5 == 5 && loading == false && jQuery('.btn_wrap a[href="#auto-loader-more"]').isInViewport() && jQuery('.btn_wrap a[href="#loader-more"]').length > 0 )
+                    {
+                        loading = true;
+                        var $thiss = jQuery('.btn_wrap a[href="#loader-more"]');
+                        var offset = jQuery($thiss).attr('data-offset');
+                        var limit = jQuery($thiss).attr('data-limit');
+                        var cat = jQuery($thiss).attr('data-cat');
+                        let post_type = jQuery($thiss).attr('data-post-type');
+                        var type = jQuery($thiss).attr('data-type');
+                        var not_post = jQuery($thiss).attr('data-not-post');                    
+                        jQuery($thiss).find('.spinner-border').removeClass('d-none');
+                        let $this = $thiss;
+                        var data = {
+                            'action': 'load_induvisual_product_by_ajax',
+                            'page': page,
+                            'offset': offset,
+                            'limit': limit,
+                            'cat': cat,
+                            'post_type': post_type,
+                            'type': type,
+                            'not_post':not_post
+                        };
+                        jQuery.post($thiss.attr('data-ajaxurl'), data, function (result) {
+                            // console.log(result);                    
+                            if (result != 'fail') {
+                                $($this).find('.spinner-border').addClass('d-none');
+                                $('.row.' + post_type).append(result);
+                                page++;
+                                var primaryColor = "#0071f2";
+                                $('.color_picker_wrap').find('[fill="' + primaryColor + '"]').each(function () {
+                                    $(this).attr('data-primary', 'true');
+                                });
+                
+                                var secondaryColor = "#2f2e41";
+                                $('.color_picker_wrap').find('[fill="' + secondaryColor + '"]').each(function () {
+                                    $(this).attr('data-secondary', 'true');
+                                });
+                                var color_ = document.getElementById('hex_input1').value;
+                                var changeSVG = document.querySelectorAll('[data-primary="true"]');
+                                for (var i = 0; i < changeSVG.length; i++) {
+                                    changeSVG[i].setAttribute('fill', color_);
+                                }
+                                var color2 = document.getElementById('hex_input2').value;
+                                var changeSVG = document.querySelectorAll('[data-secondary="true"]');
+                                for (var i = 0; i < changeSVG.length; i++) {
+                                    changeSVG[i].setAttribute('fill', color2);
+                                }
+                                loading = false;
+                                return false;
+                            } else {
+                                // console.log('fail');
+                                $($this).addClass('d-none');
+                                $($this).find('.spinner-border').addClass('d-none');
+                                loading = false;
+                                return false;
+                            }
+                        });									
+
+                    }
+
+                }
+            });
+        } 
+        jQuery('.btn_wrap a[href="#loader-more"]').click(function(){
+
+            var $thiss = jQuery('.btn_wrap a[href="#loader-more"]');
+            var offset = jQuery($thiss).attr('data-offset');
+            var limit = jQuery($thiss).attr('data-limit');
+            var cat = jQuery($thiss).attr('data-cat');
+            let post_type = jQuery($thiss).attr('data-post-type');
+            var type = jQuery($thiss).attr('data-type');
+            var not_post = jQuery($thiss).attr('data-not-post');                   
+            
+            let $this = $thiss;
+            var data = {
+                'action': 'load_induvisual_product_by_ajax',
+                'page': page,
+                'offset': offset,
+                'limit': limit,
+                'cat': cat,
+                'post_type': post_type,
+                'type': type,
+                'not_post':not_post
+            };
+            jQuery(this).find('span:eq(0)').text('Loading');
+            jQuery($thiss).find('.spinner-border').removeClass('d-none');
+            jQuery.post($thiss.attr('data-ajaxurl'), data, function (result) {
+                // console.log(result);    
+                jQuery($this).find('span:eq(0)').text('Load More');                
+                if (result != 'fail') {                    
+                    $($this).find('.spinner-border').addClass('d-none');
+                    $('.row.' + post_type).append(result);
+                    page++;     
+                    return false;
+                } else {
+                    // console.log('fail');
+                    $($this).addClass('d-none');
+                    $($this).find('.spinner-border').addClass('d-none');
+                    loading = false;
+                    return false;
+                }
+            });							
+            return false;
+        });  
+    }); 
+
+    $('#downloadmodal').on('hidden.bs.modal', function () {
+        document.title = jQuery('[property="og:title"]').attr('content');
+        history.pushState({
+            page: jQuery('[property="og:url"]').attr('content')
+        }, jQuery('[property="og:title"]').attr('content'), jQuery('[property="og:url"]').attr('content'));
+    })
+
+
+    $(document).on('click', 'button[data-bs-target="#downloadmodal"]', function (e) {
+        e.preventDefault();
+        //console.log('modal popup');
+        var svg = $(this).find('.svg_block--img').html();
+        var title = $(this).find('.svg_block--content p').text();
+        var dataurl = $(this).attr('data-handle');
+        $('#downloadmodal .modal-body .download_modal_img').html(svg);
+        $('#downloadmodal .modal-body .download_modal_content h4').html(title);
+        $('#downloadmodal .modal-body .download_modal_content .socialshare').each(function () {
+            $(this).attr('href', $(this).attr('data-url') + dataurl);
+
+        });
+
+        $('#downloader-svg').attr('href', $('.navbar-brand').attr('href') + '/product/' + dataurl);
+        $('#downloader-png').attr('href', $('.navbar-brand').attr('href') + '/product/' + dataurl);
+        document.title = title + ' - Delightful illustrations';
+        history.pushState({
+            page: $('.navbar-brand').attr('href') + '/product/' + dataurl
+        }, title + ' - Delightful illustrations', $('.navbar-brand').attr('href') + '/product/' + dataurl);
+
+        return false;
+    });
+    /* dowloader SVG script */
+    $(document).on('click', '#downloader-svg', function (e) {
+        e.preventDefault();
+        exportSVG(document.querySelector("#downloadmodal .download_modal_img svg"), $('.download_modal_content h4').text());
+        return false;
+    });
+
+    /* dowloader PNG script */
+    $(document).on('click', '#downloader-png', function (e) {
+        e.preventDefault();
+        var svgname = $('.download_modal_content h4').text();
+
+        var img = new Image();
+        img.onload = function () {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            var ctxt = canvas.getContext("2d");
+            ctxt.fillStyle = "#ffffff00";
+            ctxt.fillRect(0, 0, canvas.width, canvas.height);
+            ctxt.drawImage(img, 0, 0);
+
+            var a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = svgname + ".png"
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+        var innerSvg = document.querySelector("#downloadmodal .download_modal_img svg");
+        var svgText = (new XMLSerializer()).serializeToString(innerSvg);
+        img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svgText);
+        //console.log("data:image/svg+xml;utf8," + encodeURIComponent(svgText));
+
+        return false;
+    });
+
+    var exportSVG = function (svg, svgname) {
+        // first create a clone of our svg node so we don't mess the original one
+        var clone = svg.cloneNode(true);
+        // parse the styles
+        parseStyles(clone);
+
+        // create a doctype
+        var svgDocType = document.implementation.createDocumentType('svg', "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd");
+        // a fresh svg document
+        var svgDoc = document.implementation.createDocument('http://www.w3.org/2000/svg', 'svg', svgDocType);
+        // replace the documentElement with our clone 
+        svgDoc.replaceChild(clone, svgDoc.documentElement);
+        // get the data
+        var svgData = (new XMLSerializer()).serializeToString(svgDoc);
+        var a = document.createElement("a");
+        a.href = 'data:image/svg+xml; charset=utf8, ' + encodeURIComponent(svgData.replace(/></g, '>\n\r<'));;
+        a.download = svgname + ".svg"
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+    };
+
+    var parseStyles = function (svg) {
+        var styleSheets = [];
+        var i;
+        // get the stylesheets of the document (ownerDocument in case svg is in <iframe> or <object>)
+        var docStyles = svg.ownerDocument.styleSheets;
+
+        // transform the live StyleSheetList to an array to avoid endless loop
+        for (i = 0; i < docStyles.length; i++) {
+            styleSheets.push(docStyles[i]);
+        }
+
+        if (!styleSheets.length) {
+            return;
+        }
+
+        var defs = svg.querySelector('defs') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        if (!defs.parentNode) {
+            svg.insertBefore(defs, svg.firstElementChild);
+        }
+        svg.matches = svg.matches || svg.webkitMatchesSelector || svg.mozMatchesSelector || svg.msMatchesSelector || svg.oMatchesSelector;
+
+
+        // iterate through all document's stylesheets
+        for (i = 0; i < styleSheets.length; i++) {
+            var currentStyle = styleSheets[i]
+
+            var rules;
+            try {
+                rules = currentStyle.cssRules;
+            } catch (e) {
+                continue;
+            }
+            // create a new style element
+            var style = document.createElement('style');
+            // some stylesheets can't be accessed and will throw a security error
+            var l = rules && rules.length;
+            // iterate through each cssRules of this stylesheet
+            for (var j = 0; j < l; j++) {
+                // get the selector of this cssRules
+                var selector = rules[j].selectorText;
+                // probably an external stylesheet we can't access
+                if (!selector) {
+                    continue;
+                }
+
+                // is it our svg node or one of its children ?
+                if ((svg.matches && svg.matches(selector)) || svg.querySelector(selector)) {
+
+                    var cssText = rules[j].cssText;
+                    // append it to our <style> node
+                    style.innerHTML += cssText + '\n';
+                }
+            }
+            // if we got some rules
+            if (style.innerHTML) {
+                // append the style node to the clone's defs
+                defs.appendChild(style);
+            }
+        }
+
+    };
+    jQuery('#searchBtn').click(function (e) {
+        e.preventDefault();
+        jQuery('.header_search_form').addClass('open');
+        jQuery('.header_search_form [type="search"]').focus();
+    });
+    jQuery('#searchCloseBtn').click(function () {
+        jQuery('.header_search_form').addClass('search-transition');
+        jQuery('.header_search_form').removeClass('open');
+        setTimeout(function () {
+            jQuery('.header_search_form').removeClass('search-transition');
+        }, 800);
+    });
+
+    jQuery('a#loader-more-collections').click( function(){
+        var num  = jQuery(this).attr('data-num');
+        var $this  = jQuery(this);
+        var ajax = jQuery(this).attr('data-ajax');
+        var data = {
+            'action': 'load_collections_product_by_ajax',
+            'page': num,
+            'offset': 6,
+            'limit': 6,        
+        };
+        jQuery(this).find('.spinner-border').removeClass('d-none');
+        jQuery.post(ajax, data, function (result) {
+            if(result != ''){
+                jQuery('.all_collection_page .all_collection_wrapper .row').append(result);
+                jQuery($this).attr('data-num',parseInt(num)+1);
+            }else{
+                jQuery($this).hide();
+            }   
+            jQuery($this).find('.spinner-border').addClass('d-none'); 
+        });
+        return false;
+    });
+
+}); //ready
+//Forms, SVG to PNG, Export SVG/PNG js end
+jQuery(document).ready(function() {
+    jQuery(".accordion-container .set > a").on("click", function(e) {
+        e.preventDefault();
+        if (jQuery(this).hasClass("active")) {
+            jQuery(this).removeClass("active");
+            jQuery(this)
+                .siblings(".content")
+                .slideUp(200);
+            jQuery(".accordion-container .set > a i")
+                .removeClass("fa-minus")
+                .addClass("fa-plus");
+        } else {
+            jQuery(".accordion-container .set > a i")
+                .removeClass("fa-minus")
+                .addClass("fa-plus");
+            jQuery(this)
+                .find("i")
+                .removeClass("fa-plus")
+                .addClass("fa-minus");
+            jQuery(".accordion-container .set > a").removeClass("active");
+            jQuery(this).addClass("active");
+            jQuery(".accordion-container .content").slideUp(200);
+            jQuery(this)
+                .siblings(".content")
+                .slideDown(200);
+        }
+    });
+
+    //input file
+    $('input[type="file"]').each(function() {
+        //var label = $(this).parents('.form-group').find('.file-label').html();
+        var label = $('.file-label').html();
+        label = (label) ? label : 'Upload File';
+        $(this).wrap('<div class="input-file"></div>');
+        $(this).before('<span class="file-btn btn btn-primary">' + label + '</span>');
+        $(this).before('<span class="file-selected"></span>');
+        $(this).change(function(e) {
+            var val = $(this).val();
+            var filename = val.replace(/^.*[\\\/]/, '');
+            $(this).siblings('.file-selected').text(filename);
+        });
+    });
+    // Open the file browser when our custom button is clicked.
+    $('.input-file .file-btn').click(function() {
+        $(this).siblings('input[type="file"]').trigger('click');
+    });
+    //drag and drop 
+    var droppedFiles = false;
+    $('.input-file .file-btn').on('dragover dragenter dragleave dragend drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    $('.input-file .file-btn').on('drop', function(e) {
+        droppedFiles = e.originalEvent.dataTransfer.files;
+        $(this).siblings('input[type="file"]').prop('files', droppedFiles);
+        $('.input-file').find('.file-selected').text(droppedFiles[0].name);
+    });
+    //input file end
+});
+
+jQuery(document).ready(function(){
+    jQuery('a[href="#loader-more-tag"]').click(function(){
+        console.log('welcome');
+        var ajaxurl = jQuery(this).attr('data-ajaxurl');
+        var data_tag = jQuery(this).attr('data-tag');
+        var data_not_post = jQuery(this).attr('data-not-post');
+        var data_offset = jQuery(this).attr('data-offset');
+        var data_limit = jQuery(this).attr('data-limit');
+        var data_post_type = jQuery(this).attr('data-post-type');
+        var data_page = parseInt(jQuery(this).attr('data-page'));
+        var data = {
+            'action': 'loader_more_all_product_by_ajax',
+            'page': data_page,
+            'offset': data_offset,
+            'limit': data_limit,
+            'tag': data_tag,
+            'post_type': data_post_type,
+            'not_post':data_not_post
+        };
+        var $this = jQuery(this);
+        jQuery($this).find('.spinner-border').removeClass('d-none');
+        jQuery($this).find('span:eq(0)').text('Loading');
+        jQuery.post(ajaxurl, data, function (result) {
+            console.log(result);
+            jQuery($this).find('.spinner-border').addClass('d-none');
+            jQuery($this).find('span:eq(0)').text('Load More');
+            if(result != ''){
+                jQuery('.svg_block_wrap.color_picker_wrap .row').append(result);
+                data_page++;     
+                jQuery($this).attr('data-page',data_page);       
+                return false;
+            }else{
+                jQuery($this).remove();
+            }    
+        });
+        return false;
+    });
+});

@@ -1,0 +1,154 @@
+jQuery(document).on('click', '.purchase-plan', function (e) {
+    e.preventDefault();
+    var plan_id = $(this).attr('data-planid');
+    var plan_name = $(this).attr('data-name');
+    var plan_currency = $(this).attr('data-currency');
+    var plan_price = $(this).attr('data-price');
+    var plan_type = $(this).attr('data-plan-type');
+
+    $('#checkout-plan-modal').remove('#paymentElement');
+    $('#checkout-plan-modal form#paymentFrm').html('<div id="paymentElement">Loading....</div><button id="submitBtn" class="btn btn-primary"><div class="spinner hidden" id="spinner"></div><span id="buttonText">Pay Now</span></button>');
+
+    var $this = $(this);
+    var buttontext = $(this).text();   
+    $(this).text("Processing...");
+    $(this).prop('disabled', true); 
+    if(plan_name != null){   
+        $('#checkout-plan-modal h4').text(plan_name);
+        $('#checkout-plan-modal input[name="itemname"]').val(plan_name);
+    }
+    $('#checkout-plan-modal input[name="itemid"]').val(plan_id);
+    $('#checkout-plan-modal input[name="price"]').val(plan_price);
+    if(plan_price != null){
+        $('#checkout-plan-modal .checkout_modal_content h2').html(plan_currency+plan_price+'<span>/'+plan_type+'</span>');
+        //  $('#checkout-plan-modal div.badge.bg-primary').text(plan_price+' INR');
+    }    
+    
+    if ($('body').hasClass('logged-in')) {        
+        if(plan_id != null && plan_name != null && plan_price != null){
+            if(jQuery('#checkout-plan-modal.stripe-modal').length != 0){                
+                initialize();   
+                $('#checkout-plan-modal').modal('show');        
+            }else{
+                jQuery('#checkout-plan-modal .checkout_modal_form').html('');
+                $.ajax({
+                    type: 'POST',
+                    url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+                    data: {
+                        'action': 'paypal_code_get_ajax',
+                        'plan_id':plan_id,
+                        'plan_name': plan_name,
+                        'plan_price':plan_price,                        
+                    },
+                    success: function (serverResponse) {
+                        jQuery('#checkout-plan-modal .checkout_modal_form').html(serverResponse);
+                        $('#checkout-plan-modal').modal('show');
+                    }
+                });
+            }
+        }
+        setCookie('popup', '', -3600);
+    } else {
+        setCookie('popup',plan_id);
+        $('#signupmodal').addClass('user-from-plan-button');
+        $('#loginForm').css('display','block');
+        $('#signupmodal').modal('show');
+    }
+    $this.prop('disabled', false);
+    $this.text(buttontext);    
+});
+jQuery(document).ready(function(){
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+    if(getUrlParameter('customer_id') != false){
+        $('#checkout-plan-modal').modal('show');
+    }
+    jQuery('#checkout-plan-modal .btn-close').click(function(){
+        if(getUrlParameter('customer_id') != false){
+            window.location.href ='https://'+window.location.hostname+window.location.pathname;
+        }
+    });
+    if (window.location.hash == "#checkout-plan-modal") {
+        var plan_id = getCookie('popup');    
+        if(plan_id != null){   
+            var plan_name = jQuery('a.purchase-plan[data-planid="'+plan_id+'"]').attr('data-name');
+            var plan_price = jQuery('a.purchase-plan[data-planid="'+plan_id+'"]').attr('data-price');
+            var plan_currency = jQuery('a.purchase-plan[data-planid="'+plan_id+'"]').attr('data-currency');
+            var plan_type = jQuery('a.purchase-plan[data-planid="'+plan_id+'"]').attr('data-plan-type');
+            if(plan_name != null){   
+                $('#checkout-plan-modal h4').text(plan_name);
+                $('#checkout-plan-modal input[name="itemname"]').val(plan_name);
+            }
+            $('#checkout-plan-modal input[name="itemid"]').val(plan_id);
+            $('#checkout-plan-modal input[name="price"]').val(plan_currency+plan_price);
+            if(plan_price != null){
+                $('#checkout-plan-modal .checkout_modal_content h2').html(plan_currency+plan_price+'<span>/'+plan_type+'</span>');
+            }            
+            if(jQuery('#checkout-plan-modal.stripe-modal').length != 0){               
+                initialize(); 
+                $('#checkout-plan-modal').modal('show');          
+            }else{
+                jQuery('#checkout-plan-modal .checkout_modal_form').html('');
+                $.ajax({
+                    type: 'POST',
+                    url: $('.navbar-brand').attr('href') + '/wp-admin/admin-ajax.php',
+                    data: {
+                        'action': 'paypal_code_get_ajax',
+                        'plan_id':plan_id,
+                        'plan_name': plan_name,
+                        'plan_price':plan_price,                        
+                    },
+                    success: function (serverResponse) {
+                        jQuery('#checkout-plan-modal .checkout_modal_form').html(serverResponse);
+                        $('#checkout-plan-modal').modal('show');
+                    }
+                });    
+            }
+        }  
+		var uri = window.location.toString(); 
+		if (uri.indexOf("#") > 0) {
+			var clean_uri = uri.substring(0,uri.indexOf("#"));
+			window.history.replaceState({},document.title, clean_uri);
+		}       
+    }
+    // $('#checkout-plan-modal').modal({
+    //     backdrop: 'static',
+    //     keyboard: false
+    // })
+});  
+
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }

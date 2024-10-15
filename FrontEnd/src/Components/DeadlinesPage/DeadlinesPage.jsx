@@ -52,163 +52,153 @@ const DeadlinesPage = ({ assignments, exams }) => {
   }
 
   return (
-      <>
-        {showForm &&
-            (activeTab === "assignments" ? (
-                <AddAssignment
-                    addHandler={addAssignmentHandler}
-                    showFormHandler={showFormHandler}
-                />
-            ) : (
-                <></> // Add Exam Form
-            ))}
-        <div className="deadlines-container pb-5" ref={CardsContainer}>
-          <div className="button-group position-relative mt-5 mb-5">
-            <input
-                id="switch"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    handleTabClick("exams");
-                  } else {
-                    handleTabClick("assignments");
-                  }
-                }}
-                type="checkbox"
-            />
-            <div className="switch-app">
-              <label htmlFor="switch" className="switch-label">
-                <span className="switch-light">Assignments</span>
-                <span className="switch-dark">Exams</span>
-              </label>
-            </div>
-            {currentUser.role &&
-                (currentUser.role === "Admin" ||
-                    currentUser.role === "SuperAdmin") && (
-                    <button
-                        className="AddButton add-deadline"
-                        onClick={showFormHandler}
-                    >
-                      <FontAwesomeIcon
-                          icon={faPlus}
-                          title={
-                            activeTab === "assignments" ? "Add Assignment" : "Add Exam"
-                          }
-                      />
-                      {activeTab === "assignments" ? "Add Assignment" : "Add Exam"}
-                    </button>
-                )}
+    <>
+      {showForm &&
+        (activeTab === "assignments" ? (
+          <AddAssignment
+            addHandler={addAssignmentHandler}
+            showFormHandler={showFormHandler}
+          />
+        ) : (
+          <></> // Add Exam Form
+        ))}
+      <div className="deadlines-container pb-5" ref={CardsContainer}>
+        <div className="button-group position-relative mt-5 mb-5">
+          <input
+            id="switch"
+            onChange={(e) => {
+              if (e.target.checked) {
+                handleTabClick("exams");
+              } else {
+                handleTabClick("assignments");
+              }
+            }}
+            type="checkbox"
+          />
+          <div className="switch-app">
+            <label htmlFor="switch" className="switch-label">
+              <span className="switch-light">Assignments</span>
+              <span className="switch-dark">Exams</span>
+            </label>
           </div>
+          {currentUser.role &&
+            (currentUser.role === "Admin" ||
+              currentUser.role === "SuperAdmin") && (
+              <button
+                className="AddButton add-deadline"
+                onClick={showFormHandler}
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  title={
+                    activeTab === "assignments" ? "Add Assignment" : "Add Exam"
+                  }
+                />
+                {activeTab === "assignments" ? "Add Assignment" : "Add Exam"}
+              </button>
+            )}
+        </div>
+        <div className="table-responsive">
           <Table striped bordered hover className="deadlines-table">
             <thead>
-            <tr>
-              <th style={{ width: "70px" }}>No</th>
-              <th>Title</th>
-              <th>Course</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>View Details</th>
-            </tr>
+              <tr>
+                <th style={{ width: "70px" }}>No</th>
+                <th>Title</th>
+                <th>Course</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>View Details</th>
+              </tr>
             </thead>
             <tbody>
-            {activeTab === "assignments" ? (
+              {activeTab === "assignments" ? (
                 assignments && assignments.length > 0 ? (
-                    assignments.map((assignment, index) => (
-                        <tr key={uuidv4()}>
-                          <td>
-                            <span className="center-value">{index + 1}</span>
-                          </td>
-                          <td>
-                            <span>{assignment.title || "Not Available"}</span>
-                          </td>
-                          <td>
-                      <span>
-                        {courses.find((c) => c.id === assignment.courseID)
-                            ?.title || "Not available"}
-                      </span>
-                          </td>
-                          <td>
-                            <span>{assignment.startDate || "Not Available"}</span>
-                          </td>
-                          <td>
-                            <span>{assignment.endDate || "Not Available"}</span>
-                          </td>
-                          <td>
-                            <button
-                                className="view-btn"
-                                onClick={() =>
-                                    navigate("/AssignmentPage", {
-                                      state: { aid: assignment.id },
-                                    })
-                                }
-                            >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                    ))
-                ) : (
-                    <>
-                    </>
-                )
-            ) : exams && exams.length > 0 ? (
-                exams.map((exam, index) => (
+                  assignments.map((assignment, index) => (
                     <tr key={uuidv4()}>
                       <td>
                         <span className="center-value">{index + 1}</span>
                       </td>
                       <td>
-                        <span>{exam.title || "Not Available"}</span>
+                        <span>{assignment.title || "Not Available"}</span>
                       </td>
                       <td>
-                    <span>
-                      {courses.find((c) => c.id === exam.courseID)?.title ||
-                          "Not Available"}
-                    </span>
+                        <span>
+                          {courses.find((c) => c.id === assignment.courseID)
+                            ?.title || "Not available"}
+                        </span>
                       </td>
                       <td>
-                        <span>{exam.dueDate || "Not Available"}</span>
+                        <span>{assignment.startDate || "Not Available"}</span>
                       </td>
                       <td>
-                        <span>{exam.dueDate || "Not Available"}</span>
+                        <span>{assignment.endDate || "Not Available"}</span>
                       </td>
                       <td>
                         <button
-                            className="view-btn"
-                            onClick={() =>
-                                navigate("/ExamPage", {
-                                  state: { eid: exam.id },
-                                })
-                            }
+                          className="view-btn"
+                          onClick={() =>
+                            navigate("/AssignmentPage", {
+                              state: { aid: assignment.id },
+                            })
+                          }
                         >
                           View
                         </button>
                       </td>
                     </tr>
+                  ))
+                ) : (
+                  <></>
+                )
+              ) : exams && exams.length > 0 ? (
+                exams.map((exam, index) => (
+                  <tr key={uuidv4()}>
+                    <td>
+                      <span className="center-value">{index + 1}</span>
+                    </td>
+                    <td>
+                      <span>{exam.title || "Not Available"}</span>
+                    </td>
+                    <td>
+                      <span>
+                        {courses.find((c) => c.id === exam.courseID)?.title ||
+                          "Not Available"}
+                      </span>
+                    </td>
+                    <td>
+                      <span>{exam.dueDate || "Not Available"}</span>
+                    </td>
+                    <td>
+                      <span>{exam.dueDate || "Not Available"}</span>
+                    </td>
+                    <td>
+                      <button
+                        className="view-btn"
+                        onClick={() =>
+                          navigate("/ExamPage", {
+                            state: { eid: exam.id },
+                          })
+                        }
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
                 ))
-            ) : (
-                <>
-                </>
-            )}
+              ) : (
+                <></>
+              )}
             </tbody>
           </Table>
-          {(exams.length === 0) && (activeTab === "exams")?
-           
-                    (<Placeholder
-                        img={NoExamImg}
-                        text="You are all caumkmkght up!"
-                    />)
-              :(null)
-          }
-               {(assignments.length === 0) && (activeTab === "assignments") ?
-           
-           (<Placeholder
-               img={NoExamImg}
-               text="You are all caught up!"
-           />)
-     :(null)
- }
         </div>
-      </>
+        {exams.length === 0 && activeTab === "exams" ? (
+          <Placeholder img={NoExamImg} text="You are all caumkmkght up!" />
+        ) : null}
+        {assignments.length === 0 && activeTab === "assignments" ? (
+          <Placeholder img={NoExamImg} text="You are all caught up!" />
+        ) : null}
+      </div>
+    </>
   );
 };
 
