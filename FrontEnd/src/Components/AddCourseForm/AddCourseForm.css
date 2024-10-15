@@ -18,8 +18,26 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); 
 }
 
-.form-container-addCourse button:active {
+.form-container-addCourse .AddCourseButton:active, .form-container-addCourse .CancelButton:active {
     scale: 0.95;
+}
+
+.AddCourse-Reset-Image-Button:hover {
+    color: red !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+    user-select: none;
+}
+
+.AddCourse-Image-Button-frame {
+    cursor: text;
+    width: max-content;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: inherit;
+    background-color: transparent;
+    border: 2px solid #274546;
 }
 
 .form-container-addCourse .form {

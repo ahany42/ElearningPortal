@@ -18,6 +18,24 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
+.EditCourse-Reset-Image-Button:hover {
+    color: red !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+    user-select: none;
+}
+
+.EditCourse-Image-Button-frame {
+    cursor: text;
+    width: max-content;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: inherit;
+    background-color: transparent;
+    border: 2px solid #274546;
+}
+
 .form-container-editCourse button:active {
     scale: 0.95;
 }

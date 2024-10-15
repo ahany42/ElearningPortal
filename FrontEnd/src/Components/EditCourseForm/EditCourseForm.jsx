@@ -2,36 +2,74 @@ import React, { useState, useEffect, useContext } from "react";
 import {CurrentUserContext} from "../../App.jsx";
 import { v4 } from 'uuid';
 import './EditCourseForm.css';
+import { Button } from "@mui/material";
+import { getCookie } from "../Cookie/Cookie.jsx";
+import Front_ENV from "../../../Front_ENV.jsx";
+import Loader from "../Loader/Loader.jsx";
 
 let errorList = [];
 
-const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
+const EditCourseForm = ({ id, title, desc, hours, image, showEditFormHandler}) => {
     const [ form, setForm ] = useState({
         title: "",
         desc: "",
         hours: "",
+        image: image
     });
+
     const [ courseData, setCourseData ] = useState({});
     const { showMessage, setCourses } = useContext(CurrentUserContext);
+    const [ loading, setLoading ] = useState(false);
 
-    const editCourseHandler = (id, updatedCourse) => {
+    const editCourseHandler = async (id, updatedCourse) => {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('title', updatedCourse.title);
+        formData.append('desc', updatedCourse.desc);
+        formData.append('hours', updatedCourse.hours);
+        formData.append('image', updatedCourse.image);
+
+        const response =
+            await fetch(`${Front_ENV.Back_Origin}/update-course/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'authorization': getCookie('token') || '',
+                },
+                body: formData,
+            }).then(response => response.json());
+
+        if (response.error) {
+            showMessage(response.error, true);
+            return;
+        }
+
+        setLoading(false);
+
         setCourses( prevState => {
             return prevState.map((course) => {
                 if (course.id === id) {
-                    return { ...course, ...updatedCourse };
+                    return { ...course, ...response.data };
                 }
                 return course;
             });
         });
+
+        showMessage(response.message, false);
+        showEditFormHandler();
     };
 
     useEffect(() => {
-        setForm({ title, desc, hours });
-         setCourseData({ id, title, desc, hours});
+        setForm({ title, desc, hours, image });
+        setCourseData({ id, title, desc, hours});
     }, []);
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+
+        if (e.target.name === "image") {
+            setForm({ ...form, image: e.target.files[0] }); // Store the image file
+        } else {
+            setForm({ ...form, [e.target.name]: e.target.value });
+        }
 
         if (e.target.name === 'hours' && e.target.value && e.target.value < 1) {
             if (!errorList.includes('Hours must be greater than 0')) {
@@ -74,14 +112,12 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!e.target.checkValidity()) return;
         if (errorList.length) return;
 
-        editCourseHandler(courseData.id, form);
-        showMessage("Course updated successfully", false);
-        showEditFormHandler();
+        await editCourseHandler(courseData.id, form);
     };
 
     return (
@@ -108,13 +144,51 @@ const EditCourseForm = ({ id, title, desc, hours, showEditFormHandler}) => {
                     <label htmlFor="desc" className="green-text bold-text">Description</label>
                     <textarea onChange={handleChange} value={form.desc} name="desc" id="desc" rows="10" cols="50" required/>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="hours" className="green-text bold-text">Hours</label>
-                    <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required/>
+                <div className="d-flex gap-3">
+                    <div className="form-group" style={{width: "80%"}}>
+                        <label htmlFor="image" style={{padding: "0 6px"}}
+                               className="green-text bold-text d-flex justify-content-between">
+                            <span>Image</span>
+                            {
+                                form.image &&
+                                <span className="EditCourse-Reset-Image-Button" onClick={() => {
+                                    setForm({...form, image: null})
+                                }}>
+                                    Reset
+                                </span>
+                            }
+                        </label>
+                        <div className="AddCourse-Image-Button-frame">
+                            <Button disabled={!!form.image} className="m-auto" onClick={() => {
+                                document.getElementById('image').click();
+                            }} variant="outlined">
+                                {form.image ? 'Image Added' : 'Choose Image'}
+                            </Button>
+                            <input onChange={handleChange} style={{padding: "10px"}}
+                                   disabled={form.image}
+                                   hidden
+                                   onClick={e => {
+                                       if (e.pageX !== 0) {
+                                           e.preventDefault();
+                                       }
+                                   }}
+                                   type="file" id="image" name="image" required/>
+                        </div>
+                    </div>
+                    <div className="form-group w-100">
+                        <label htmlFor="hours" className="green-text bold-text">Hours</label>
+                        <input onChange={handleChange} value={form.hours} type="number"
+                               className="flex-grow-1" id="hours" name="hours" required/>
+                    </div>
                 </div>
+                {/*<div className="form-group">*/}
+                {/*    <label htmlFor="hours" className="green-text bold-text">Hours</label>*/}
+                {/*    <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required/>*/}
+                {/*</div>*/}
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
                     <button className="btn AddCourseButton"
-                            disabled={errorList.length > 0 || !form.title || !form.desc || !form.hours}
+                            disabled={errorList.length > 0 || !form.title ||
+                                !form.desc || !form.hours}
                             type="submit">
                         Save
                     </button>

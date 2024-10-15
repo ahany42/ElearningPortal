@@ -8,7 +8,7 @@ import './UserCard.css';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
-const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,isAdmin}) => {
+const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin}) => {
   const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -63,8 +63,29 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,is
       }
   }
 
-  const ViewProgress = ()=>{
-    navigate(`/ViewProgress/${student.id}/${student.name}`)
+  const RemoveUser = async () => {
+      const isConfirmed = await confirmationToast("Are You Sure You Want to remove instructor?");
+      if (isConfirmed) {
+          const response = await fetch(`${Front_ENV.Back_Origin}/deleteUser/${instructor.id}`, {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'authorization': getCookie("token") || ""
+              }
+          })
+              .then(response => response.json());
+
+          if (response.error) {
+              showMessage(response.error, true);
+          } else {
+              setUpdateList(!updateList);
+              showMessage(response.message, false);
+          }
+      }
+  }
+
+  const ViewProgress = ()=> {
+      navigate(`/ViewProgress/${student.id}/${student.name}`, {state: {courseID: id}});
   }
 
   return (
@@ -84,9 +105,10 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,is
         </div>
 
         {
-            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) && !isAdmin &&
+            ((currentUser.role === "Admin")||(currentUser.role === "SuperAdmin")) &&
                 <FontAwesomeIcon className="remove-user-button" icon={faTrash}
-                                 onClick={isStudent? RemoveStudent : RemoveInstructor} color="red"/>
+                                 onClick={!isAdmin? isStudent? RemoveStudent : RemoveInstructor :
+                                            () => RemoveUser(instructor.id)} color="red"/>
         }
         {
             ((currentUser.role === "Student") && isStudent && (currentUser.id === student.id)) &&
@@ -102,13 +124,13 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,is
                     Progress
                 </button>
         }
-         {
-            // isAdmin is immutated 
-            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") && !isAdmin &&
-                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
-                        onClick={ViewProgress}>
-                    Progress
-                </button>
+        {
+           // isAdmin is immutated
+           (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") && !isAdmin && isStudent &&
+               <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                       onClick={ViewProgress}>
+                   Progress
+               </button>
         } 
     </div>
 </div>

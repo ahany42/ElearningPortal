@@ -7,7 +7,6 @@ import { useNavigate } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import NoAssignmentImg from '../../assets/Student.svg';
 import NoExamImg from '../../assets/Student.svg';
 import Placeholder from "../Placeholder/Placeholder";
 import AddAssignment from "../AddAssignment/AddAssignment";

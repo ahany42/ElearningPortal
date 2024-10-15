@@ -320,18 +320,16 @@ module.exports.getUser = async (req, res, next) => {
 module.exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findOneAndDelete({ _id: id }); // Use _id for MongoDB document ID
+    const user = await User.findOneAndDelete({ id: id });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" }); // Use 404 status for not found
+      return res.status(200).json({ message: "User not found" });
     }
-    res
-      .status(200)
-      .json({ message: `User (${user.name}) deleted successfully` }); // Use 200 status for successful deletion
+    res.status(201)
+        .json({ message: `User (${user.name}) deleted successfully` });
   } catch (error) {
-    console.log(`ERROR IN: deleteUser function => ${error}`);
-    res.status(500).json({ error: "Unexpected Error Occurred" }); // Use 500 status for server error
-    next(error);
+    res.status(200).json({ error: "Unexpected Error Occurred" }); // Use 500 status for server error
+    next(`ERROR IN: deleteUser function => ${error}`);
   }
 };
 

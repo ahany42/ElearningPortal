@@ -19,14 +19,30 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
 
     const EditCourse = (id)=>{
         showEditFormHandler();
-        setCourseEdit({id, title, desc, hours});
+        setCourseEdit({id, title, desc, hours, image});
     }
 
     const DeleteCourseHandler = async (courseId) => {
         const isConfirmed = await confirmationToast("Are You sure you want to delete course?");
+        if (!isConfirmed) return;
+
+        const response = await fetch(`${Front_ENV.Back_Origin}/delete-course/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie("token") || ""
+            }
+        }).then(response => response.json());
+
+        if (response.error) {
+            showMessage(response.error, true);
+            return;
+        }
+
         setCourses((prevState) =>
             prevState.filter((course) => course.id !== courseId)
         );
+
         showMessage("Course deleted successfully", false);
     };
 

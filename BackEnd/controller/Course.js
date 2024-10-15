@@ -69,7 +69,58 @@ class CourseController {
                                    duration: hours
                             });
 
-                     res.status(201).json({data: course, message: `Course (${title}) created successfully`});
+                     const newCourse = await Course.aggregate([
+                            {
+                                      $match: { id: course.id }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'instructor_courses',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'instructors',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                         from: 'student_courses',
+                                         localField: '_id',
+                                         foreignField: 'courseID',
+                                         as: 'students',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'exams',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'examCount',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'assignments',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'assignmentCount',
+                                   }
+                            },
+                            {
+                                   $project: {
+                                          title: 1,
+                                          desc: 1,
+                                          id: 1,
+                                          hours: 1,
+                                          image: 1,
+                                          numInstructors: { $size: '$instructors' },
+                                          numStudents: { $size: '$students' },
+                                          materialCount: { $add: [{ $size: '$examCount' },
+                                                        { $size: '$assignmentCount' }] } // Sum of exams and assignments
+                                   }
+                            }
+                     ]);
+
+                     res.status(201).json({data: newCourse[0], message: `Course (${title}) created successfully`});
               } catch (error) {
                      res.status(200).json({ error: error.message });
                      next(`ERROR IN: Create Course function => ${error.message}`);
@@ -129,13 +180,96 @@ class CourseController {
                             await Instructor_Course.findOneAndDelete({courseID: updatedCourse._id});
                      }
 
-                     updatedCourse.save();
+                     await updatedCourse.save();
 
-                     res.status(201).json({data: updatedCourse, message: `Course (${title}) updated successfully`});
+                     const updatedCourseData = await Course.aggregate([
+                            {
+                                   $match: { id: updatedCourse.id }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'instructor_courses',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'instructors',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'student_courses',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'students',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'exams',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'examCount',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'assignments',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'assignmentCount',
+                                   }
+                            },
+                            {
+                                   $project: {
+                                          title: 1,
+                                          desc: 1,
+                                          id: 1,
+                                          hours: 1,
+                                          image: 1,
+                                          numInstructors: { $size: '$instructors' },
+                                          numStudents: { $size: '$students' },
+                                          materialCount: { $add: [{ $size: '$examCount' },
+                                                        { $size: '$assignmentCount' }] } // Sum of exams and assignments
+                                   }
+                            }
+                     ]);
+
+                     res.status(201).json({data: updatedCourseData[0], message: `Course (${title}) updated successfully`});
               } catch (error) {
                      res.status(200).json({ error: error.message });
                      next(`ERROR IN: Update Course function => ${error.message}`);
               }
+       }
+
+       async deleteCourse(req, res, next) {
+                try {
+                       const {courseId} = req.params;
+
+                       const course = await Course.findOneAndDelete({id: courseId});
+                       if (!course) {
+                              return res.status(200).json({error: "Invalid course"});
+                       }
+
+                       // Delete the course image (file) from the file system
+                       if (course.image && fs.existsSync(course.image)) {
+                              fs.unlink(course.image, (err) => {
+                                     if (err) {
+                                            next(`WARNING IN: Delete Course Image Function => ${err}`);
+                                     }
+                              });
+                       }
+
+                       // Delete the associated exams and assignments
+                       await Exam.deleteMany({courseID: course._id});
+                       await Assignment.deleteMany({courseID: course._id});
+                       await Student_Course.deleteMany({courseID: course._id});
+                       await Instructor_Course.deleteMany({courseID: course._id});
+
+                       res.status(201).json({data: course,
+                              message: `Course (${course.title}) deleted successfully`});
+                } catch (error) {
+                       res.status(200).json({error: error.message});
+                       next(`ERROR IN: Delete Course function => ${error.message}`);
+                }
        }
 
        async enrollCourse(req, res, next) {
@@ -240,6 +374,22 @@ class CourseController {
                                    }
                             },
                             {
+                                   $lookup: {
+                                          from: 'exams',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'examCount',
+                                   }
+                            },
+                            {
+                                   $lookup: {
+                                          from: 'assignments',
+                                          localField: '_id',
+                                          foreignField: 'courseID',
+                                          as: 'assignmentCount',
+                                   }
+                            },
+                            {
                                    // Join with Instructor_Course to get the number of instructors
                                    $lookup: {
                                           from: 'instructor_courses',
@@ -258,6 +408,8 @@ class CourseController {
                                           image: 1,
                                           numStudents: { $size: '$students' }, // Count students
                                           numInstructors: { $size: '$instructors' }, // Count instructors
+                                          materialCount: { $add: [{ $size: '$examCount' },
+                                                        { $size: '$assignmentCount' }] } // Sum of exams and assignments
                                    }
                             }
                      ]);
@@ -347,11 +499,13 @@ class CourseController {
                                    }
                             ]);
 
-                            // Mark which courses the user is enrolled in
-                            Allcourses = Allcourses.map(course => {
-                                   const isEnrolled = Mycourses.some(myCourseId => String(myCourseId) === String(course._id));
-                                   return { ...course, isEnrolled };
-                            });
+                            if (user.role.toLowerCase() === "student" || user.role.toLowerCase() === "instructor") {
+                                   // Mark which courses the user is enrolled in
+                                   Allcourses = Allcourses.map(course => {
+                                          const isEnrolled = Mycourses.some(myCourseId => String(myCourseId) === String(course._id));
+                                          return { ...course, isEnrolled };
+                                   });
+                            }
 
                             return res.status(201).json({ data: Allcourses });
 

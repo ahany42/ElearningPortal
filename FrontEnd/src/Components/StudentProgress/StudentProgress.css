@@ -1,6 +1,18 @@
 .student-progress-table{
     min-width: 900px;
-    margin: 30px;
+}
+
+.student-progress-table-container {
+    width: fit-content;
+    min-width: 900px;
+    margin: 30px auto;
+    border-radius: 20px;
+    border: 1px solid;
+    padding: 15px;
+}
+
+.student-progress-table td {
+    vertical-align: middle;
 }
 
 .student-progress-container {
@@ -12,16 +24,28 @@
     gap: 1.5rem;
 }
 
-.on-time{
+.stud-prog-hover-cell span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2D3480;
+    user-select: none;
+}
+
+.on-time {
     background: #b4b4b4;
-    padding: 0 5px;
+    padding: 2px 5px;
     border-radius: 10px; 
     width:80px;
+    margin: 5px 4px;
+    text-align: center;
 }
-.late{
+
+.late {
+    text-align: center;
     background: #b4b4b4;
-    padding: 0 5px;
+    padding: 2px 5px;
     border-radius: 10px; 
     width:80px;
     color:red;
+    margin: 5px 4px;
 }

@@ -194,7 +194,11 @@ function App() {
 
   // Fetch courses / assignments / exams from the database
   useEffect(() => {
-    fetchAll();
+    try {
+      fetchAll();
+    } catch (e) {
+        showMessage(e.message, true);
+    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -271,11 +275,6 @@ function App() {
     }
   }, [routes]);
 
-  const addCourseHandler = (newCourse) => {
-    setCourses((prevState) => {
-      return [...prevState, newCourse];
-    });
-  };
   const addAssignmentHandler = (newAssignment) => {
     setAssignments((prevState) => {
       return [...prevState, newAssignment];
@@ -422,7 +421,6 @@ function App() {
                 element={
                   <CoursesPage
                     courses={courses}
-                    addCourseHandler={addCourseHandler}
                   />
                 }
               />
@@ -432,7 +430,6 @@ function App() {
                   <CoursesPage
                     mode="MyCourses"
                     courses={myCourses}
-                    addCourseHandler={addCourseHandler}
                   />
                 }
               />
@@ -506,64 +503,6 @@ function App() {
     </CurrentUserContext.Provider>
   );
 }
-
-const INITIAL_COURSES = [
-  {
-    id: "e55d8be9-d517-4fdb-a813-7314410d920f",
-    title: "html&css",
-    desc: "basics of frontend",
-    hours: 2,
-  },
-  {
-    id: "6ad77ebe-1397-4903-8360-ad58a9d18679",
-    title: "js",
-    desc: "javascript content",
-    hours: 3,
-  },
-  {
-    id: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-    title: "react",
-    desc: "important of react",
-    hours: 4,
-  },
-  {
-    id: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-    title: "node.js",
-    desc: "basics of backend",
-    hours: 5,
-  },
-];
-const INITIAL_MY_COURSES = [
-  {
-    id: "e55d8be9-d517-4fdb-a813-7314410d920f",
-    title: "html&css",
-    desc: "basics of frontend",
-    hours: 2,
-  },
-];
-
-const INITIAL_ASSIGNMENTS = [
-  {
-    id: "8c75ead5-1d28-4168-afe4-896ec95ae7e3",
-    title: "Assignment 1",
-    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
-    startDate: "2024-09-28",
-    endDate: "2024-10-01",
-    duration: "76", // Duration in hours
-    document: null,
-    description: "This is a React assignment",
-  },
-  {
-    id: "263b8b3d-9b82-4512-8392-5b1971fdba39",
-    title: "Assignment 2",
-    courseID: "d3db210c-ab71-46b4-8f0d-bf028f6be506",
-    startDate: "2024-09-28",
-    endDate: "2024-09-30",
-    duration: "48", // Duration in hours
-    document: null,
-    description: "This is a Node.js assignment",
-  },
-];
 
 const INITIAL_EXAMS = [
   {
@@ -698,108 +637,6 @@ const INITIAL_MATERIALS = [
     instructorName: "Prof. Michael Brown",
     startDate: "20 Dec 24",
     announcement: "Grades are Out!",
-  },
-];
-
-const INITIAL_STUDENTS_LIST = [
-  {
-    id: 1,
-    name: "John Doe",
-    username: "john_doe1",
-    imgPath: "",
-  },
-  {
-    id: 2,
-    name: "Emily Smith",
-    username: "emily_smi",
-    imgPath: "",
-  },
-  {
-    id: 3,
-    name: "Michael Johnson",
-    username: "michael_j",
-    imgPath: "",
-  },
-  {
-    id: 4,
-    name: "Sophia Williams",
-    username: "sophia_wi",
-    imgPath: "",
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    username: "david_bro",
-    imgPath: "",
-  },
-  {
-    id: 6,
-    name: "Olivia Garcia",
-    username: "olivia_ga",
-    imgPath: "",
-  },
-  {
-    id: "933831c7-41de-4deb-ad57-129d0e9ed3ca",
-    name: "Aly Hany",
-    username: "alyhany04",
-    imgPath: "",
-  },
-  {
-    id: 8,
-    name: "Lily Anderson",
-    username: "lily_and",
-    imgPath: "",
-  },
-  {
-    id: 9,
-    name: "James Lee",
-    username: "james_lee",
-    imgPath: "",
-  },
-  {
-    id: 10,
-    name: "Amelia Taylor",
-    username: "amelia_ta",
-    imgPath: "",
-  },
-  {
-    id: 11,
-    name: "Lucas White",
-    username: "lucas_whi",
-    imgPath: "",
-  },
-  {
-    id: 12,
-    name: "Isabella Harris",
-    username: "isabella_",
-    imgPath: "",
-  },
-];
-
-const INITIAL_INSTRUCTORS_LIST = [
-  {
-    id: 1,
-    name: "Alice Cooper",
-    username: "alice_coo",
-    imgPath: "InstructorImg",
-  },
-  {
-    id: 2,
-    name: "Bob Johnson",
-    username: "bob_johns",
-    imgPath: "",
-  },
-  {
-    id: 3,
-    name: "Charlie Brown",
-    username: "charlie_b",
-    imgPath: "",
-  },
-  {
-    id: 4,
-    name: "Diane Evans",
-    username: "diane_eva",
-    imgPath: "",
   },
 ];
 
