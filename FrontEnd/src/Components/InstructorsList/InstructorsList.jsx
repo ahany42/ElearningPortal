@@ -83,10 +83,11 @@ const InstructorsList = () => {
         <>
             <button className="goBackBtn" style={{top: "35px", left: "85px"}}
                     onClick={() => {
-                        route.state.isAdmin || route.state.assignInstructor?
+                        route.state.isAdmin ?
                             navigate('/InstructorsPage')
                         :
-                            navigate(`/CourseDetails/${id}`)
+                            navigate(`/Courses`)
+            
                     }}>
                 <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
                     <path
