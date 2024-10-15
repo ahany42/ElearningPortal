@@ -51,7 +51,16 @@ const AddCourseForm = ({ showFormHandler }) => {
         const { name, value, files } = e.target;
 
         if (name === 'image') {
-            setForm({ ...form, image: files[0] }); // Store the image file
+            // validate image size (maximum => 3mb) & type
+            if (files[0].size > 1024 * 1024 * 3) {
+                showMessage('Image size exceeds 3MB', true);
+                return;
+            }
+            if (!files[0].type.startsWith('image')) {
+                showMessage('Invalid image file', true);
+                return;
+            }
+            setForm({ ...form, [name]: files[0] });
         } else {
             setForm({ ...form, [name]: value });
         }
@@ -160,6 +169,7 @@ const AddCourseForm = ({ showFormHandler }) => {
                                     </Button>
                                     <input onChange={handleChange} style={{padding: "10px"}}
                                            disabled={form.image}
+                                           accept={'image/*'}
                                            hidden
                                            onClick={e => {
                                                if (e.pageX !== 0) {

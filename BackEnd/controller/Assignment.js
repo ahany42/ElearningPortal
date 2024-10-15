@@ -436,57 +436,113 @@ class AssignmentController {
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {
-            const assignments = await Assignment.find().populate('courseID', 'id');
             const user = await User.findOne({ id: req.user.id });
 
-            if (user.role.toLowerCase() === "student") {
-                let myAssignments = [];
-                for (const assignment of assignments) {
-                    if (await Student_Course.findOne({ studentID: user._id, courseID: assignment.courseID })) {
-                        myAssignments.push({
-                            id: assignment.id,
-                            title: assignment.title,
-                            startDate: assignment.startDate,
-                            endDate: assignment.endDate,
-                            duration: assignment.duration,
-                            document: assignment.document,
-                            description: assignment.description,
-                            courseID: assignment.courseID.id
-                        });
+            // Determine the role of the user
+            const role = user.role.toLowerCase();
+
+            // Create an aggregation pipeline
+            let matchStage = {};
+
+            if (role === "student") {
+                // Filter assignments for the student
+                matchStage = {
+                    $lookup: {
+                        from: 'student_courses',
+                        localField: 'courseID',
+                        foreignField: 'courseID',
+                        as: 'studentCourses',
+                        pipeline: [
+                            { $match: { studentID: user._id } }
+                        ]
+                    }
+                };
+            } else if (role === "instructor") {
+                // Filter assignments for the instructor
+                matchStage = {
+                    $lookup: {
+                        from: 'instructor_courses',
+                        localField: 'courseID',
+                        foreignField: 'courseID',
+                        as: 'instructorCourses',
+                        pipeline: [
+                            { $match: { instructorID: user._id } }
+                        ]
+                    }
+                };
+            }
+
+            // Aggregation pipeline for assignments
+            const assignments = await Assignment.aggregate([
+                {
+                    $lookup: {
+                        from: 'courses',
+                        localField: 'courseID',
+                        foreignField: '_id',
+                        as: 'course'
+                    }
+                },
+                {
+                    $unwind: '$course'
+                },
+                ...(Object.keys(matchStage).length ? [matchStage] : []),
+                {
+                    $addFields: {
+                        courseID: '$course.id'
+                    }
+                },
+                {
+                    $project: {
+                        id: 1,
+                        title: 1,
+                        startDate: {
+                            $dateToString: {
+                                format: "%d-%m-%Y\n(%H:%M)",
+                                date: "$startDate",
+                                timezone: "Egypt"
+                            }
+                        },
+                        endDate: {
+                            $dateToString: {
+                                format: "%d-%m-%Y\n(%H:%M)",
+                                date: "$endDate",
+                                timezone: "Egypt"
+                            }
+                        },
+                        duration: 1,
+                        document: 1,
+                        description: 1,
+                        courseID: 1,
+                        studentCourses: 1,
+                        instructorCourses: 1
                     }
                 }
-                return res.status(201).json({ data: myAssignments });
-            } else if (user.role.toLowerCase() === "instructor") {
-                let myAssignments = [];
-                for (const assignment of assignments) {
-                    if (await Instructor_Course.findOne({ studentID: user._id, courseID: assignment.courseID })) {
-                        myAssignments.push({
-                            id: assignment.id,
-                            title: assignment.title,
-                            startDate: assignment.startDate,
-                            endDate: assignment.endDate,
-                            duration: assignment.duration,
-                            document: assignment.document,
-                            description: assignment.description,
-                            courseID: assignment.courseID.id
-                        });
+            ]);
+
+            // Filter results based on the user's role
+            let filteredAssignments = assignments;
+            if (role === "student") {
+                filteredAssignments = assignments.filter((assignment, i) => {
+                    if (assignment.studentCourses.length > 0) {
+                        ['_id', 'studentCourses'].forEach(prop =>
+                            delete assignments[i][prop]);
+                        return true;
                     }
-                }
-                return res.status(201).json({ data: myAssignments });
-            } else {
-                return res.status(201).json({ data:
-                        assignments.map(assignment => ({
-                            id: assignment.id,
-                            title: assignment.title,
-                            startDate: assignment.startDate,
-                            endDate: assignment.endDate,
-                            duration: assignment.duration,
-                            document: assignment.document,
-                            description: assignment.description,
-                            courseID: assignment.courseID.id
-                        }))
+                    return false;
+                });
+            } else if (role === "instructor") {
+                filteredAssignments = assignments.filter((assignment, i) => {
+                    if (assignment.instructorCourses.length > 0) {
+                        ['_id', 'instructorCourses'].forEach(prop =>
+                            delete assignments[i][prop]);
+                        return true;
+                    }
+                    return false;
                 });
             }
+
+            // Return the filtered assignments
+            return res.status(201).json({ data: filteredAssignments });
 
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
@@ -505,14 +561,14 @@ class AssignmentController {
             }
 
             return res.status(201).json({data: {
-                    id: assignment.id,
-                    title: assignment.title,
-                    startDate: assignment.startDate,
-                    endDate: assignment.endDate,
-                    duration: assignment.duration,
-                    document: assignment.document,
-                    courseID: assignment.courseID.id
-                }});
+                id: assignment.id,
+                title: assignment.title,
+                startDate: assignment.startDate,
+                endDate: assignment.endDate,
+                duration: assignment.duration,
+                document: assignment.document,
+                courseID: assignment.courseID.id
+            }});
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Get Assignment By ID Function => ${err}`);
