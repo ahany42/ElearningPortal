@@ -8,7 +8,7 @@ import './UserCard.css';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
-const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin,assignInstructor}) => {
+const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin,assignInstructor,courseId}) => {
   const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -83,6 +83,27 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, i
           }
       }
   }
+const AssignInstructor = async (id)=>{
+    const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': getCookie("token") || ""
+        },
+        body: JSON.stringify({
+            userId: instructor.id,
+            courseId: courseId,
+            duration:1
+        })
+})
+  .then(response => response.json());
+  if (response.error) {
+    showMessage(response.error, true);
+} else {
+    setUpdateList(!updateList);
+    showMessage(response.message, false);
+}
+ }
 
   const ViewProgress = ()=> {
       navigate(`/ViewProgress/${student.id}/${student.name}`, {state: {courseID: id}});
@@ -125,13 +146,20 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, i
                 </button>
         }
         {
-           // isAdmin is immutated
            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") && !isAdmin && isStudent &&
                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
                        onClick={ViewProgress}>
                    Progress
                </button>
         } 
+        {
+            (assignInstructor &&
+                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                onClick={()=>AssignInstructor(instructor.id)}>
+                Assign
+               </button>
+            )
+        }
     </div>
 </div>
   )

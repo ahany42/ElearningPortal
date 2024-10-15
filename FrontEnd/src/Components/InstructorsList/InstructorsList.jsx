@@ -12,7 +12,7 @@ const InstructorsList = () => {
     const { showMessage } = useContext(CurrentUserContext);
     const [ instructorsList, setInstructorsList ] = useState([]);
     const [ updateList, setUpdateList ] = useState(false);
-    const {id} = useParams();
+    const {id,CourseId} = useParams();
     const navigate = useNavigate();
     const route = useLocation();
 
@@ -100,7 +100,7 @@ const InstructorsList = () => {
                 {instructorsList.map(instructor => (
                     <UserCard setUpdateList={setUpdateList} updateList={updateList}
                               isStudent={false} instructor={instructor} key={instructor.id}
-                              student={false} isAdmin={route.state.isAdmin} assignInstructor={route.state.assignInstructor}/>
+                              student={false} isAdmin={route.state.isAdmin} assignInstructor={route.state.assignInstructor} courseId ={CourseId}/>
                 ))}
             </div>
         </>
