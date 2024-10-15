@@ -7,13 +7,13 @@ This eLearning platform enables users to enroll in courses, submit assignments, 
 The platform is developed using the MERN stack along with additional tools like bcrypt for password encryption, express-rate-limiter for rate limiting, Vite for fast builds, Bootstrap, and Material-UI (MUI) for styling:
 
 - **Frontend**: React.js  
-  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React Logo" style="width:100px; height:100px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="100px" height="100px"/>&nbsp;
 
 - **Backend**: Node.js with Express.js  
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" alt="Express Logo" style="width:100px; height:100px;">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" width="100px" height="100px"/>&nbsp;
 
 - **Database**: MongoDB  
-  <img src="https://webimages.mongodb.com/_com_assets/cms/mongodb-logo-rgb-j6w271g1xn.jpg" alt="MongoDB Logo" style="width:100px; height:100px;">
+ <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg" width="100px" height="100px"/>&nbsp;
 
 - **Authentication**: JWT (JSON Web Token)  
   <img src="https://jwt.io/img/pic_logo.svg" alt="JWT Logo" style="width:100px; height:100px;">
@@ -49,7 +49,6 @@ The platform is developed using the MERN stack along with additional tools like 
 
 ### Super Admin
 - **Full Admin Access**: Super Admins have all the capabilities of Admins.
-- **Advanced User Management**: Super Admins can also manage admins and their permissions.
 
 ## 4. Core Features
 
@@ -80,16 +79,16 @@ The platform is developed using the MERN stack along with additional tools like 
 
 ## 6. Frontend Overview
 
-The frontend is built using **React.js** with Material-UI for component styling. It provides a user-friendly interface for navigating the platform. Each user role has a dedicated dashboard with role-specific features and actions.
+The frontend is built using **React.js** with Material-UI and Bootstrap for component styling. Providing a user-friendly interface for navigating the platform. Each user role has a dedicated dashboard with role-specific features and actions.
 
 ## 7. Database Schema
 
-The platform uses **MongoDB** as the primary database, with the following collections:
-- **Users**: Stores details about students, instructors, admins, and super admins.
-- **Courses**: Stores course information, including the materials, exams, and student enrollment data.
-- **Assignments**: Stores submitted assignments for each course.
-- **Exams**: Stores MCQ exams and model answers.
-- **Progress**: Tracks students' progress across courses.
+The platform uses *MongoDB* as the primary database, with the following collections:
+- *Users*: Stores details about students, instructors, admins, and super admins.
+- *Courses*: Stores course information, including the materials, exams, and student enrollment data.
+- *Assignments*: Stores submitted assignments for each course.
+- *Exams*: Stores MCQ exams and model answers.
+- *Posts*: Stores the Announcements added by instructors
 
 ## 8. Deployment
 
