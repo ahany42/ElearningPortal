@@ -510,6 +510,7 @@ const INITIAL_EXAMS = [
     title: "Midterm Exam",
     courseID: "6ad77ebe-1397-4903-8360-ad58a9d18679",
     dueDate: "2024-09-30",
+    startDate: "2024-09-28",
     description: "This is a React assignment",
   },
   {
@@ -518,6 +519,7 @@ const INITIAL_EXAMS = [
     courseID: "e55d8be9-d517-4fdb-a813-7314410d920f",
     dueDate: "2024-10-05",
     description: "This is a Node.js assignment",
+    startDate:"2024-10-01"
   },
 ];
 
