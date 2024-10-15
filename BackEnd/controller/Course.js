@@ -302,7 +302,10 @@ class CourseController {
                          });
 
                      if (userCourse) {
+                            if(user.role === "student")
                             return res.status(200).json({error: "You are already enrolled in this course"});
+                            else 
+                            return res.status(200).json({error: "Instructor is already assigned to this course"});
                      }
 
                      await model.create({
@@ -310,14 +313,24 @@ class CourseController {
                             courseID: course._id,
                             duration
                      });
-
-                     res.status(201).json({
-                            data: {
-                                   course: course.id,
-                                   user: user.id,
-                                   duration
-                            }, message: `You Enrolled Successfully in ${course.title}`
-                     });
+                     if(user.role === "student"){
+                            res.status(201).json({
+                                   data: {
+                                          course: course.id,
+                                          user: user.id,
+                                          duration
+                                   }, message: `You Enrolled Successfully in ${course.title}`
+                            });
+                     }
+                     else{
+                            res.status(201).json({
+                                   data: {
+                                          course: course.id,
+                                          user: user.id,
+                                          duration
+                                   }, message: `Instructor Assigned Successfully to ${course.title}`
+                            });
+                     }
               } catch (error) {
                      res.status(200).json({error: error.message});
                      next(`ERROR IN: Enroll Course function => ${error.message}`);
