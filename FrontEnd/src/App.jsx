@@ -452,6 +452,10 @@ function App() {
                 path="/CurrentInstructors"
                 element={<InstructorsList/>}
               />
+              <Route
+                path="/AssignInstructor/:CourseId"
+                element={<InstructorsList/>}
+              />
               <Route path="/logout" element={<Logout />} />
               <Route path="/AddMaterial/:id" element={<AddMaterial />} />
               <Route

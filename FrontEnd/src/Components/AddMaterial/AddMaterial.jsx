@@ -6,6 +6,7 @@ import { useNavigate,useParams } from 'react-router';
 import ExamImg from '../../assets/Grades.svg';
 import AssignmentImg from '../../assets/Student.svg';
 import AnnouncementImg from '../../assets/Announcement.svg';
+import NotFoundImg from '../../assets/'
 import './AddMaterial.css';
 
 const AddMaterial = () => {

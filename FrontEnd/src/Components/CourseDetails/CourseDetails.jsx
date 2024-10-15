@@ -88,8 +88,16 @@ const CourseDetails = () => {
     const AddMaterial = ()=>{
         navigate(`/AddMaterial/${course.id}`);
     }
-    const AssignInstructor =()=>{
-        showMessage("Coming Soon",true)
+    const AssignInstructor = async(courseId)=>{
+            const response = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': getCookie('token') || '',
+                }
+            })
+                .then(response => response.json());
+            navigate(`/AddMaterial/${courseId}`, {state: {instructorsList: response.data, assignInstructor: true}})
     }
     const StudentsList = async ()=>{
         const params = new URLSearchParams({
