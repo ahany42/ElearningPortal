@@ -72,7 +72,7 @@ const Header = () => {
                    onDragStart={(e) => e.preventDefault()}>
               <div className="logo">E-Learning</div>
           </NavLink>
-        <div className="icon-group">
+        <div className="header-icon-group">
             {
                 pages.map((page) => (
                     currentUser.role && page.role && page.role.includes(currentUser.role.toLowerCase())?
@@ -132,7 +132,7 @@ const Header = () => {
         </div>
         <Box sx={{ display:
               { xs: 'flex', sm: 'flex', md: 'none',
-                '@media (max-width: 768px)': { display: 'flex' }, '@media (min-width: 769px)': { display: 'none' } } }}>
+                '@media (max-width: 987px)': { display: 'flex' }, '@media (min-width: 987px)': { display: 'none' } } }}>
           <MuiIconButton
               size="large"
               aria-label="account of current user"
@@ -157,8 +157,8 @@ const Header = () => {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none', '@media (max-width: 768px)':
-                      { display: 'block' }, '@media (min-width: 769px)': { display: 'none' } } }}
+              sx={{ display: { xs: 'block', md: 'none', '@media (max-width: 987px)':
+                      { display: 'block' }, '@media (min-width: 987px)': { display: 'none' } } }}
           >
             {burgerListPages.map((page) => (
                 currentUser.role && page.role && page.role.includes(currentUser.role.toLowerCase())?

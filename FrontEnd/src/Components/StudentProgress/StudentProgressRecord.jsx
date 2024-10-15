@@ -8,7 +8,8 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
     const { courses } = useContext(CurrentUserContext);
 
     return (
-        <tr style={ highlighted? { background: "yellow" } : {} }
+        <tr style={ highlighted? { background: "yellow", transition: "all 0.1s ease-in-out" }
+                    : { transition: "all 0.1s ease-in-out"} }
             onMouseEnter={(e) => {
                 if (e.target.tagName === "TD") {
                     e.target.parentElement.style.background = "yellow";
@@ -23,15 +24,15 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
                     e.target.style.background = "";
                 }
             }}>
-            <td className="stud-prog-hover-cell" style={{ paddingLeft: "15px" }}>
-                <span onClick={() => {
+            <td className="stud-prog-hover-cell" style={{ paddingLeft: "15px", borderRadius: "20px 0 0 20px" }}>
+                <span title="Course Name" onClick={() => {
                     navigate(`/CourseDetails/${courses.find(c => c.title === courseName).id}`)
                 }}>
                     {courseName}
                 </span>
             </td>
             <td className="stud-prog-hover-cell">
-                <span onClick={() => {
+                <span title={`${record.isExam? "Exam" : "Assignment"} Name`} onClick={() => {
                     record.isExam?
                         navigate("/ExamPage", {
                             state: { eid: record.id },
@@ -50,7 +51,7 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
             <td>
                 <h6 className={record.isSubmitted ? "on-time bold-text blue-text" : "late bold-text"}>{record.isSubmitted ? "Yes" : "No"}</h6>
             </td>
-            <td>
+            <td style={{ borderRadius: "0 20px 20px 0" }}>
                 {(record.isSubmitted) && !isNaN(record.grade) ?
                     parseFloat(record.grade).toFixed(2) : "-"}
             </td>

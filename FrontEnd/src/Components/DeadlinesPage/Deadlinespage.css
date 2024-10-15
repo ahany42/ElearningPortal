@@ -139,6 +139,9 @@
 }
 /* End Switch Button */
 
+.deadlines-table th {
+  vertical-align: middle;
+}
 
 /* Targets the 5th column (Assignments/Exams View) */
 .deadlines-table th:nth-child(5),
@@ -173,6 +176,16 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+@media (max-width: 970px) {
+  .deadlines-table td span {
+    font-size: 0.9rem; /* Smaller text on smaller screens */
+  }
+  .deadlines-table th {
+    font-size: 0.9rem; /* Smaller text on smaller screens */
+  }
+}
+
 @media (min-width: 768px) {
   .button-group {
     flex-direction: row; /* Row layout for larger screens */
@@ -191,7 +204,8 @@
 }
 @media (max-width: 576px) {
   .switch-app label {
-    font-size: 0.9rem; /* Smaller switch text on mobile */
-    padding: 10px;
+    font-size: 0.9rem;
+    padding: 15px 20px;
+    width: 230px;
   }
 }

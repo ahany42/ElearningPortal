@@ -28,13 +28,7 @@ const DeadlinesPage = ({ assignments, exams }) => {
     }
     setShowForm(!showForm);
   };
-  function convertToDDMMYYYY(dateString) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
+
   useEffect(() => {
     if (showForm) {
       window.scrollBy(0, 228)
@@ -134,10 +128,22 @@ const DeadlinesPage = ({ assignments, exams }) => {
                         </span>
                       </td>
                       <td>
-                        <span>{convertToDDMMYYYY(assignment.startDate) || "Not Available"}</span>
+                        {
+                          assignment.startDate?
+                              assignment.startDate.split("\n").map((line, index) => (
+                                <span key={uuidv4()}>{line}<br /></span>
+                              ))
+                          : <span>Not Available</span>
+                        }
                       </td>
                       <td>
-                        <span>{convertToDDMMYYYY(assignment.endDate) || "Not Available"}</span>
+                        {
+                          assignment.endDate?
+                              assignment.endDate.split("\n").map((line, index) => (
+                                  <span key={uuidv4()}>{line}<br /></span>
+                              ))
+                              : <span>Not Available</span>
+                        }
                       </td>
                       <td>
                         <button
@@ -172,10 +178,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
                       </span>
                     </td>
                     <td>
-                      <span>{convertToDDMMYYYY(exam.dueDate) || "Not Available"}</span>
+                      <span>{exam.dueDate || "Not Available"}</span>
                     </td>
                     <td>
-                      <span>{convertToDDMMYYYY(exam.startDate)|| "Not Available"}</span>
+                      <span>{exam.dueDate || "Not Available"}</span>
                     </td>
                     <td>
                       <button
