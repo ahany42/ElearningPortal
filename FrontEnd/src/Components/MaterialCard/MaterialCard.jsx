@@ -9,7 +9,7 @@ import {getCookie} from "../Cookie/Cookie.jsx";
 import './MaterialCard.css'
 
 const MaterialCard = ({material}) => {
-  const { showMessage, INITIAL_MATERIALS , setExams , editableExam , setIsEditing,confirmationToast} = useContext(CurrentUserContext);
+  const { showMessage, INITIAL_MATERIALS , setExams , editableExam , setIsEditing,confirmationToast,currentUser} = useContext(CurrentUserContext);
     /* for testing */
   const seeMore = true;
   const handleSeeMore = () => {
@@ -101,7 +101,7 @@ return (
             </h6>
           </div>
         </div>
-        { CurrentUserContext.role==="Instructor"  &&
+        { currentUser.role==="Instructor"  &&
         <div className="course-icons-materialCard admin-icons">
           <FontAwesomeIcon
             icon={faEdit}
