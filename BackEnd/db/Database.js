@@ -204,6 +204,7 @@ const Post = mongoose.model(
   new mongoose.Schema({
     id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
+    announcement: { type: String, required: true },
     courseId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",

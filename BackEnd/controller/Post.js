@@ -19,12 +19,16 @@ module.exports = {
   createPost: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { announcementText, creatorId } = req.body;
-      if (!announcementText || announcementText === "") {
+      const { title, announcement, creatorId } = req.body;
+
+      if (!title || title === "") {
+        return res.status(200).json({ error: "Title is required" });
+      }
+      if (!announcement || announcement === "") {
         return res.status(200).json({ error: "Announcement text is required" });
       }
       if (!id || id === "") {
-        return res.status(200).json({ error: "Course id is required" });
+        return res.status(200).json({ error: "Course ID is required" });
       }
 
       const user = await findUserById(creatorId);
@@ -60,13 +64,16 @@ module.exports = {
           }
         }
       }
+
       const postId = uuidv4();
       const post = new Post({
         id: postId,
-        title: announcementText,
+        title,
+        announcement,
         courseId: course._id,
         creatorId: user._id,
       });
+
       await post.save();
       res.status(201).json({ message: "Post created successfully" });
     } catch (err) {
@@ -78,7 +85,8 @@ module.exports = {
   updatePost: async (req, res, next) => {
     try {
       const { userId } = req.params;
-      const { id, newTitle } = req.body;
+      const { id, newTitle, newAnnouncement } = req.body;
+
       if (!userId || userId === "") {
         return res.status(200).json({ error: "User ID is required" });
       }
@@ -89,27 +97,28 @@ module.exports = {
       if (!id || id === "") {
         return res.status(200).json({ error: "Post ID is required" });
       }
-
       if (!newTitle || newTitle === "") {
         return res.status(200).json({ error: "Title is required" });
       }
+      if (!newAnnouncement || newAnnouncement === "") {
+        return res.status(200).json({ error: "Announcement text is required" });
+      }
 
       const post = await Post.findOne({ id });
-
       if (!post) {
         return res.status(200).json({ error: "Post not found" });
       }
 
-      const postCreator = await User.findOne({
-        _id: post.creatorId,
-      });
+      const postCreator = await User.findOne({ _id: post.creatorId });
       if (user.id !== postCreator.id) {
         return res.status(200).json({ error: "User not authorized" });
       }
 
       post.title = newTitle;
+      post.announcement = newAnnouncement;
       post.editedAt = Date.now();
       post.isEdited = true;
+
       await post.save();
       res.status(201).json({ message: "Post updated successfully" });
     } catch (err) {
