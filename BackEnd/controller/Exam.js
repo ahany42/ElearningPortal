@@ -8,19 +8,6 @@ const {
   Instructor_Course,
 } = require("../db/Database");
 const { v4: uuidv4 } = require("uuid");
-/*
-    Functions to be implemented:
-    - createExam               DONE
-    - addQuestions             DONE
-    - getExams                 DONE
-    - getExam                  DONE
-    - updateExam               DONE
-    - updateQuestion           DONE
-    - deleteExam               DONE
-    - deleteQuestion           DONE
-    - SolveExam                DONE
-    - getStudentExams          DONE
-*/
 async function findCOurseIdByTitle(title) {
   return Course.findOne({ title: title }).then((course) => {
     if (!course) return null;
@@ -139,11 +126,9 @@ module.exports.getExamsforStudents = async (req, res, next) => {
     }
     const examsId = studentExams.map((exam) => exam.examID);
     const examList = await Exam.find({ _id: { $in: examsId } });
-    console.log(examList);
     const examsInfo = [];
     for (const exam of examList) {
       const course = await Course.findOne({ _id: exam.courseID }); // Await the findOne method
-      console.log(course.title); // Now this should log the title correctly
       examsInfo.push({
         courseTitle: course.title,
         title: exam.title,

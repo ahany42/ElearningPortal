@@ -206,7 +206,6 @@ class AssignmentController {
             if (!assignment) {
                 return res.status(200).json({ error: "Assignment not found" });
             }
-            console.log(assignment._id, student._id)
 
             // Check if the student has already submitted an answer for this assignment
             const existingAnswer =

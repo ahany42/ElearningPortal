@@ -27,12 +27,10 @@ module.exports = {
         return res.status(200).json({ error: "User not found" });
       }
       const post = await Post.findOne({ id: postID });
-      console.log(post.courseId);
       if (!post) {
         return res.status(200).json({ error: "Post not found" });
       }
       const PostCourse = await Course.findOne(post.courseId);
-      console.log(PostCourse);
       if (
         user.role.toLowerCase() !== "admin" &&
         user.role.toLowerCase() !== "superadmin"
@@ -90,7 +88,6 @@ module.exports = {
       }
       const comment = await Comment.findOne({ id: commentId });
       const commentCreator = await User.findOne({ _id: comment.creatorId });
-      console.log(commentCreator);
       if (commentCreator.id !== user.id) {
         return res.status(200).json({ error: "User not authorized" });
       }
@@ -118,7 +115,6 @@ module.exports = {
       const user = await User.findOne({ id: userId });
       const comment = await Comment.findOne({ id: commentId });
       const commentCreator = await User.findOne({ _id: comment.creatorId });
-      console.log(commentCreator);
       if (user.id !== commentCreator.id) {
         return res.status(200).json({ error: "user not authorized" });
       }
@@ -145,7 +141,6 @@ module.exports = {
       if (!user) {
         return res.status.send(200, "user is not found!");
       }
-      console.log(user);
       if (!post) {
         return res.status.send(200, "post is not found!");
       }

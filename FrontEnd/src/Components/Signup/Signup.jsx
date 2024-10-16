@@ -128,8 +128,8 @@ const SignUp = ({isInstructor,adminId}) => {
 
 
   return (
-    <>
-      <Box sx={{ width: "700px", margin: "100px auto" }}>
+
+     <Box sx={{ margin: "0 auto", maxWidth: "700px",padding: {xs: 2, sm: 3, md: 4, },  }} >
         {isInstructor ? <h4 className="mb-3">Add New Instructor</h4>:<h4 className="mb-3">Create New Account</h4>}
         <form onSubmit={handleSubmit}>
           <TextField
@@ -375,7 +375,7 @@ const SignUp = ({isInstructor,adminId}) => {
           </NavLink>}
         </form>
       </Box>
-    </>
+  
   );
 }
 

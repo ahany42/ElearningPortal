@@ -7,12 +7,12 @@ router.post(
   "/createComment/:creatorId",
   verifyToken(),
   Controller.createComment
-); //verified
-router.get("/getComments/:userId", verifyToken(), Controller.getComments); //verified
-router.put("/updateComment/:userId", verifyToken(), Controller.updateComment); //verified
+);
+router.get("/getComments/:userId", verifyToken(), Controller.getComments); 
+router.put("/updateComment/:userId", verifyToken(), Controller.updateComment); 
 router.delete(
   "/deleteComment/:userId",
   verifyToken(),
   Controller.deleteComment
-); //verified
+); 
 module.exports = router;

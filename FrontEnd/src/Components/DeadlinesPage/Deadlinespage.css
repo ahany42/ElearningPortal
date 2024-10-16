@@ -1,6 +1,74 @@
-.deadlines-container {
-  padding: 20px;
-  transition: all 0.3s ease-in-out;
+.deadlines-table{
+  width: 90%;
+  margin: auto;
+}
+.deadlines-table td, 
+.deadlines-table th {
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word
+}
+.center-value {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+
+.view-btn {
+  margin: 0.5rem auto;
+  display: block;
+  border-radius: 50px;
+  padding: 10px 20px;
+  background-color: #fb8928;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.view-btn:hover {
+  background-color: #ff7043;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.view-btn:active {
+  transform: scale(0.98); 
+}
+
+@media (max-width: 768px) {
+  .deadlines-table-container {
+    overflow-x: auto; 
+  }
+
+  .deadlines-table {
+    width: 150%;
+  }
+
+  .deadlines-table td, 
+  .deadlines-table th {
+    padding: 8px 12px; 
+    font-size: 0.85rem;
+  }
+
+  .deadlines-table td span {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .deadlines-table {
+    width: 180%; 
+  }
+
+  .deadlines-table td, 
+  .deadlines-table th {
+    padding: 6px 10px;
+    font-size: 0.8rem; 
+  }
 }
 
 .button-group {
@@ -11,24 +79,13 @@
   flex-direction: column;
 }
 
-.deadlines-table {
-  margin: auto;
-  width: 80%;
-}
-
-#color_mode {
-  cursor: auto;
-}
-
 .deadlines-table th {
   background-color: #2d3480;
   color: white;
-}
-
-.deadlines-table th {
   padding: 10px;
   text-align: center;
 }
+
 .deadlines-table td {
   position: relative;
   vertical-align: middle;
@@ -41,14 +98,6 @@
   overflow-wrap: anywhere;
 }
 
-.center-value {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) !important;
-}
-
-/* Switch Button */
 .switch-app {
   --light-col: #e8e8e8;
   --dark-col: #26242e;
@@ -92,6 +141,62 @@
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* Remaining switch styles here */
+
+/* Table specific styles */
+.deadlines-table th {
+  vertical-align: middle;
+}
+
+.deadlines-table th:nth-child(5),
+.deadlines-table td:nth-child(5) {
+  width: 1%;
+  white-space: nowrap;
+}
+.switch-app {
+  --light-col: #e8e8e8;
+  --dark-col: #26242e;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 35px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  background-color: #d8d7d1;
+  border-radius: 30px;
+  overflow: hidden;
+  user-select: none;
+  margin: 0 auto;
+}
+
+.switch-label {
+  box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.15);
+  width: 290px;
+  padding: 18px 26px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+
+  font-size: 1.1rem;
+  font-weight: bolder;
+  color: var(--dark-col);
+  display: flex;
+  justify-content: space-between;
+}
+
+.switch-label::before {
+  content: "";
+  position: absolute;
+  width: 60%;
+  inset: 0;
+  border-radius: inherit;
+  display: block;
+  z-index: -1;
+  background-color: #fb8928;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
 #switch {
   appearance: none;
 }
@@ -100,11 +205,13 @@
   transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-#switch:checked + .switch-app label span.switch-light, #switch:checked + .switch-app label span.switch-dark {
+#switch:checked + .switch-app label span.switch-light, 
+#switch:checked + .switch-app label span.switch-dark {
   color: var(--dark-col);
 }
 
-#switch:not(:checked) + .switch-app label span.switch-light, #switch:checked + .switch-app label span.switch-dark {
+#switch:not(:checked) + .switch-app label span.switch-light, 
+#switch:checked + .switch-app label span.switch-dark {
   color: var(--light-col);
 }
 
@@ -116,6 +223,7 @@
 #switch:checked + .switch-app::before {
   box-shadow: 0 0 0 150px var(--dark-col);
 }
+
 /* Circle */
 #switch:checked + .switch-app .circle::before {
   transform: scale(1);
@@ -136,76 +244,4 @@
 
 #switch:checked + .switch-app .icons .battery {
   background-color: var(--light-col);
-}
-/* End Switch Button */
-
-.deadlines-table th {
-  vertical-align: middle;
-}
-
-/* Targets the 5th column (Assignments/Exams View) */
-.deadlines-table th:nth-child(5),
-.deadlines-table td:nth-child(5) {
-  width: 1%;
-  white-space: nowrap;
-}
-.view-btn {
-  margin: 0.5rem auto;
-  display: block;
-  border-radius: 50px;
-  padding: 10px 20px;
-  background-color: #fb8928;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.view-btn:hover {
-  background-color: #ff7043;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
-}
-
-.view-btn:active {
-  transform: scale(0.98); /* Button presses in slightly when clicked */
-}
-
-.add-deadline {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-@media (max-width: 970px) {
-  .deadlines-table td span {
-    font-size: 0.9rem; /* Smaller text on smaller screens */
-  }
-  .deadlines-table th {
-    font-size: 0.9rem; /* Smaller text on smaller screens */
-  }
-}
-
-@media (min-width: 768px) {
-  .button-group {
-    flex-direction: row; /* Row layout for larger screens */
-  }
-}
-@media (max-width: 768px) {
-  .deadlines-table {
-    width: 100%; /* Makes the table full-width on smaller screens */
-  }
-}
-@media (max-width: 576px) {
-  .view-btn {
-    font-size: 0.8rem; /* Smaller button text on mobile */
-    padding: 8px 16px;
-  }
-}
-@media (max-width: 576px) {
-  .switch-app label {
-    font-size: 0.9rem;
-    padding: 15px 20px;
-    width: 230px;
-  }
 }

@@ -56,7 +56,6 @@ const pathsNotRequireAuthentication = [
   "/ResetPassword",
 ];
 
-// Paths that require specific roles (From URL)
 const pathsRoleBased = [
   {
     path: /^\/deadline$/,
@@ -127,7 +126,6 @@ function App() {
   const routes = useLocation();
 
   const fetchCourses = async () => {
-    // Fetch courses for the student
     const response = await fetch(`http://localhost:3008/getCourses`, {
       method: "POST",
       headers: {
@@ -147,7 +145,6 @@ function App() {
   };
 
   const fetchAssignments = async () => {
-    // Fetch assignments for the student
     const response = await fetch(`http://localhost:3008/getAssignments/`, {
       method: "GET",
       headers: {
@@ -163,7 +160,6 @@ function App() {
   };
 
   const fetchExams = async () => {
-    // Fetch exams for the student
     const response = await fetch(`http://localhost:3008/course-exams/`, {
       method: "GET",
       headers: {
@@ -183,16 +179,13 @@ function App() {
     await fetchCourses();
     if (currentUser.id) {
       await fetchAssignments();
-      // fetchExams();
-      setExams(INITIAL_EXAMS); // To be replaced with the fetchExams function
+      setExams(INITIAL_EXAMS);
     } else {
       setAssignments([]);
       setExams([]);
     }
     setLoading(false);
   };
-
-  // Fetch courses / assignments / exams from the database
   useEffect(() => {
     try {
       fetchAll();
@@ -229,12 +222,8 @@ function App() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    // Disable loader when the page is loaded (if it was loading)
     loading && setLoading(false);
-
-    // Limit access to specific routes based on user role
     const pathRole = pathsRoleBased.find((e) => e.path.test(routes.pathname));
-
     if (
       currentUser.role &&
       pathRole &&
@@ -243,8 +232,6 @@ function App() {
       showMessage("You are not authorized to access this page", true);
       navigate("/");
     }
-
-    // Redirect to previous route if the user is already authenticated
     if (
       pathsNotRequireAuthentication.includes(routes.pathname) &&
       isAuthenticated
@@ -252,8 +239,6 @@ function App() {
       showMessage("You are already logged in", true);
       navigate("/");
     }
-
-    // Redirect to login page if the user is not authenticated
     if (
       pathsRequireAuthentication.includes(routes.pathname) &&
       !isAuthenticated
@@ -261,8 +246,6 @@ function App() {
       showMessage("You must login first", true);
       navigate("/login");
     }
-
-    // Hide header and footer for specific pages
     if (
       pathsWithNoHeaderAndFooter.includes(routes.pathname) ||
       document
