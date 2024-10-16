@@ -77,7 +77,7 @@ const ExamQuestions = () => {
         }
       );
       const result = await response.json();
-      showMessage(result, null);
+      showMessage(result.message, false);
       navigate(`/deadline/`);
     } catch (error) {
       console.error("Error submitting answers:", error);
@@ -123,9 +123,9 @@ const ExamQuestions = () => {
           }
         );
         const result = await response.json();
-        showMessage(result, null);
-      } catch (error) {
-      }
+        console.log(result);
+        showMessage(result.message, false);
+      } catch (error) {}
       setEditingIndex(null); // Save and exit editing mode
     } else {
       setEditingIndex(index);
@@ -146,12 +146,12 @@ const ExamQuestions = () => {
         }
       );
       const result = await response.json();
+      showMessage(result.message, false);
       setExam((prevExam) => ({
         ...prevExam,
         questions: prevExam.questions.filter((_, idx) => idx !== index),
       }));
-    } catch (error) {
-    }
+    } catch (error) {}
   };
   return (
     <>
