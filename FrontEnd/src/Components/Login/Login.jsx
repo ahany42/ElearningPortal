@@ -86,7 +86,6 @@ const Login = () => {
           }
         });
 
-        // Successful login, redirect to courses
         setCookie('token', data.data);
         setIsAuthenticated(true);
         setCurrentUser(jwtDecode(data.data));

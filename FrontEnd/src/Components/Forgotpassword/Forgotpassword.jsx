@@ -40,21 +40,21 @@ const ForgotPassword = () => {
   };
 
   return (
-    <>
-      <Box sx={{ width: "700px", margin: "80px auto" }}>
+    
+     <Box sx={{ margin: "0 auto",  width: "100%", maxWidth: "700px",padding: {xs: 2, sm: 3, md: 4, },  }} >
         <h4 className="mb-3">Reset your password</h4>
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
           <TextField
             label="Email"
             name="email"
-            fullWidth
             type="email"
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
             required
+            fullWidth
             sx={{
               my: 2,
               "& .MuiOutlinedInput-root": {
@@ -98,7 +98,7 @@ const ForgotPassword = () => {
           </NavLink>
         </form>
       </Box>
-    </>
+    
   );
 };
 
