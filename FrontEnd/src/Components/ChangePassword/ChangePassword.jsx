@@ -130,8 +130,8 @@ const ChangePassword = () => {
                     <span>Back</span>
                 </button>
             }
-            <Box sx={{width: "700px", margin: "80px auto"}}>
-                {
+     <Box sx={{ margin: "0 auto",  width: "100%", maxWidth: "700px",padding: {xs: 2, sm: 3, md: 4, },  }} >
+     {
                     passwordError ? (
                         <>
                             <h4>Set your new password</h4>
