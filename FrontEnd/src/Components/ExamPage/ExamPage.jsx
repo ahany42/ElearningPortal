@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 import { Select, MenuItem } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../App";
 import "./ExamPage.css";
 
 const ExamPage = ({ exams }) => {
-  // console.log(exams);
+  console.log(exams);
   const navigate = useNavigate();
   const location = useLocation();
   const { showMessage, currentUser, setExams, courses } =
@@ -28,7 +28,6 @@ const ExamPage = ({ exams }) => {
     dueDate: "",
     description: "",
   });
-
   const [isEditing, setIsEditing] = useState(false);
   const [editableExam, setEditableExam] = useState(exam);
 
@@ -54,36 +53,82 @@ const ExamPage = ({ exams }) => {
     }
   }, [exams, location.state]);
   //page only for student
-  // const deleteExamHandler = (examID) => {
-  //   setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
-  //   showMessage("Exam deleted successfully", false);
-  //   navigate("/deadline");
-  // };
+  const deleteExamHandler = async (examId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3008/deleteExam/${examId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getCookie("token"),
+          },
+        }
+      );
 
-  //page only for student
-  // const editExamHandler = () => {
-  //   if (!editableExam.title || !editableExam.dueDate) {
-  //     showMessage("Title and date are required.", true);
-  //     return;
-  //   }
+      if (response.ok) {
+        setExams((prevState) => prevState.filter((exam) => exam.id !== examId));
+        showMessage("Exam deleted successfully", false);
+        navigate("/deadline");
+      } else {
+        const data = await response.json();
+        showMessage(data.error, true);
+      }
+    } catch (error) {
+      console.error("Error deleting exam:", error);
+      showMessage("Unexpected Error Occurred", true);
+    }
+  };
+  const editExamHandler = async () => {
+    if (!editableExam.title || !editableExam.dueDate) {
+      showMessage("Title and date are required.", true);
+      return;
+    }
 
-  //   setExams((prevExams) =>
-  //     prevExams.map((e) =>
-  //       e.id === exam.id
-  //         ? {
-  //             ...e,
-  //             title: editableExam.title,
-  //             courseID: courses.find((c) => c.title === editableExam.course)
-  //               ?.id,
-  //             dueDate: editableExam.dueDate,
-  //             description: editableExam.description,
-  //           }
-  //         : e
-  //     )
-  //   );
-  //   setIsEditing(false);
-  //   showMessage("Exam updated successfully", false);
-  // };
+    try {
+      const response = await fetch(
+        `http://localhost:3008/updateExam/${exam.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${yourToken}`,
+          },
+          body: JSON.stringify({
+            title: editableExam.title,
+            sDate: editableExam.startDate,
+            duration: editableExam.duration,
+            eDate: editableExam.endDate,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      if (response.ok) {
+        setExams((prevExams) =>
+          prevExams.map((e) =>
+            e.id === exam.id
+              ? {
+                  ...e,
+                  title: editableExam.title,
+                  courseID: courses.find((c) => c.title === editableExam.course)
+                    ?.id,
+                  dueDate: editableExam.dueDate,
+                  description: editableExam.description,
+                }
+              : e
+          )
+        );
+        setIsEditing(false);
+        showMessage("Exam updated successfully", false);
+      } else {
+        showMessage(result.error, true);
+      }
+    } catch (error) {
+      console.error("Error updating exam:", error);
+      showMessage("Unexpected Error Occurred", true);
+    }
+  };
 
   const solveExamHandler = () => {
     navigate(`/examQuestions/${exam.id}`);
@@ -112,7 +157,8 @@ const ExamPage = ({ exams }) => {
           {/* Admin Edit/Delete Icons */}
           {currentUser.role &&
             (currentUser.role === "Admin" ||
-              currentUser.role === "SuperAdmin") && (
+              currentUser.role === "SuperAdmin" ||
+              currentUser.role === "Instructor") && (
               <div
                 className="admin-icons"
                 style={{ position: "absolute", top: "10px", right: "20px" }}
@@ -267,5 +313,7 @@ const ExamPage = ({ exams }) => {
     </Container>
   );
 };
+
+//page only for student
 
 export default ExamPage;

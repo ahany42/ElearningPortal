@@ -210,6 +210,7 @@ module.exports.getExamQuestions = async (req, res, next) => {
     responsedQuestionData = [];
     for (const question of questions) {
       responsedQuestionData.push({
+        id: question.id,
         title: question.title,
         answers: question.answers,
         correctAnswer: question.correctAnswer,
@@ -290,7 +291,7 @@ module.exports.updateQuestion = async (req, res, next) => {
       return res.status(200).json({ error: "Question not found" });
     }
     const { title, answers, indexOfCorrectAnswer } = req.body;
-    if (!title || !answers || !indexOfCorrectAnswer) {
+    if (!title || !answers || indexOfCorrectAnswer === undefined) {
       return res.status(200).json({ error: "All fields are required" });
     }
     if (question.title != title) {
@@ -343,7 +344,7 @@ module.exports.finishSolvingExam = async (req, res, next) => {
       return res.status(200).json({ error: "Exam not found" });
     }
     const { studentId, grade, submissionDate } = req.body;
-    if (!studentId || !grade || !submissionDate) {
+    if (!studentId || !submissionDate) {
       return res.status(200).json({ error: "All fields are required" });
     }
     const student = await User.findOne({ id: studentId });

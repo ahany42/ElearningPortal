@@ -18,12 +18,12 @@ function findCourseById(Id) {
 module.exports = {
   createPost: async (req, res, next) => {
     try {
-      const { creatorId } = req.params;
-      const { title, courseId } = req.body;
-      if (!title || title === "") {
-        return res.status(200).json({ error: "Title is required" });
+      const { id } = req.params;
+      const { announcementText, creatorId } = req.body;
+      if (!announcementText || announcementText === "") {
+        return res.status(200).json({ error: "Announcement text is required" });
       }
-      if (!courseId || courseId === "") {
+      if (!id || id === "") {
         return res.status(200).json({ error: "Course id is required" });
       }
 
@@ -32,7 +32,7 @@ module.exports = {
         return res.status(200).json({ error: "User not found" });
       }
 
-      const course = await findCourseById(courseId);
+      const course = await findCourseById(id);
       if (!course) {
         return res.status(200).json({ error: "Course not found" });
       }
@@ -60,10 +60,10 @@ module.exports = {
           }
         }
       }
-      const id = uuidv4();
+      const postId = uuidv4();
       const post = new Post({
-        id,
-        title,
+        id: postId,
+        title: announcementText,
         courseId: course._id,
         creatorId: user._id,
       });
@@ -159,8 +159,9 @@ module.exports = {
 
   getPosts: async (req, res, next) => {
     try {
-      const { courseId, userId } = req.body;
-      if (!courseId || courseId === "") {
+      const { id } = req.params;
+      const { userId } = req.body;
+      if (!id || id === "") {
         return res.status(200).json({ error: "Course ID is required" });
       }
 
@@ -172,7 +173,7 @@ module.exports = {
       if (!user) {
         return res.status(200).json({ error: "User not found" });
       }
-      const course = await Course.findOne({ id: courseId });
+      const course = await Course.findOne({ id: id });
       if (!course) {
         return res.status(200).json({ error: "Course not found" });
       }
