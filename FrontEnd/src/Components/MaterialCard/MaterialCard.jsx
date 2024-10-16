@@ -99,9 +99,6 @@ const MaterialCard = ({ material }) => {
       }
     }
   };
-  const editAnnouncementHandler = () => {
-    showMessage(" edit announcement coming soon", false);
-  };
   const deleteAssignmentHandler = async ({ assignmentId }) => {
     const isConfirmed = await confirmationToast(
       "Are You Sure You Want to delete assignment?"
@@ -230,14 +227,6 @@ const MaterialCard = ({ material }) => {
               </div>
               {currentUser.role === "Instructor" && (
                 <div className="course-icons-materialCard admin-icons">
-                  {/* <FontAwesomeIcon
-                    icon={faEdit}
-                    style={{ cursor: "pointer" }}
-                    className="edit-icon"
-                    onClick={() =>
-                      editAnnouncementHandler(INITIAL_MATERIALS.id)
-                    }
-                  /> */}
                   <FontAwesomeIcon
                     icon={faTrash}
                     style={{ color: "red", cursor: "pointer" }}
