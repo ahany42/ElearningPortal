@@ -99,7 +99,7 @@ const DeadlinesPage = ({ assignments, exams }) => {
             )}
         </div>
         <div className="table-responsive">
-          <Table striped bordered hover className="deadlines-table">
+          {!((assignments.length === 0 && activeTab === "assignments")|| (exams.length === 0 && activeTab === "exams")) &&<Table striped bordered hover className="deadlines-table">
             <thead>
               <tr>
                 <th style={{ width: "70px" }}>No</th>
@@ -201,10 +201,10 @@ const DeadlinesPage = ({ assignments, exams }) => {
                 <></>
               )}
             </tbody>
-          </Table>
+          </Table>}
         </div>
         {exams.length === 0 && activeTab === "exams" ? (
-          <Placeholder img={NoExamImg} text="You are all caumkmkght up!" />
+          <Placeholder img={NoExamImg} text="You are all caught up!" />
         ) : null}
         {assignments.length === 0 && activeTab === "assignments" ? (
           <Placeholder img={NoExamImg} text="You are all caught up!" />
