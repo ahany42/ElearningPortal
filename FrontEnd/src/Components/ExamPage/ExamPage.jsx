@@ -75,7 +75,6 @@ const ExamPage = ({ exams }) => {
         showMessage(data.error, true);
       }
     } catch (error) {
-      console.error("Error deleting exam:", error);
       showMessage("Unexpected Error Occurred", true);
     }
   };
@@ -125,7 +124,6 @@ const ExamPage = ({ exams }) => {
         showMessage(result.error, true);
       }
     } catch (error) {
-      console.error("Error updating exam:", error);
       showMessage("Unexpected Error Occurred", true);
     }
   };
@@ -314,6 +312,5 @@ const ExamPage = ({ exams }) => {
   );
 };
 
-//page only for student
 
 export default ExamPage;

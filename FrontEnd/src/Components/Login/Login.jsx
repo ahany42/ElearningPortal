@@ -97,7 +97,6 @@ const Login = () => {
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.warn(error)
       setError(error);
       setIsAuthenticated(false);
     }

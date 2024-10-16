@@ -48,7 +48,6 @@ const AddQuestions = ({id , examTitle}) => {
   const handleSubmit = (formData)=>{
     if(handleAddQuestion(formData)){
       showMessage("Save Form Coming soon",false);
-      console.log(questionsList);
       fetch('http://localhost:3008/addQuestions',{
             method:'POST',
             headers: {
@@ -81,9 +80,6 @@ const AddQuestions = ({id , examTitle}) => {
     answers:['','','',''],
     indexOfCorrectAnswer:'',
   })
-  const debug=()=>{
-    console.log(questionsList)
-  }
   return (
       <>
         <Box sx={{width: '80%', margin: '80px auto'}}>
@@ -92,7 +88,7 @@ const AddQuestions = ({id , examTitle}) => {
             <Question formData={formData} setFormData={setFormData} questionCount={questionCount}/>
           </form>
           <button className="add-question-button AddButton" onClick={()=>handleAddQuestion (formData)}>
-            <FontAwesomeIcon icon={faPlus} title="Add Question" onClick={debug}/>
+            <FontAwesomeIcon icon={faPlus} title="Add Question"/>
             Another Question
           </button>
           <Button variant="contained" className="stepper-button pascalCase-text" onClick = {()=>handleSubmit(formData)} >
