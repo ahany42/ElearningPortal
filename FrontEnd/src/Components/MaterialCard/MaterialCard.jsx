@@ -137,7 +137,7 @@ return (
             </h6>
           </div>
         </div>{" "}
-        { CurrentUserContext.role==="Instructor" &&
+        { currentUser.role==="Instructor" &&
         <div className="course-icons-materialCard admin-icons">
           <FontAwesomeIcon
             icon={faEdit}
@@ -171,7 +171,7 @@ return (
               </div>
               <h6 className="material-date">{material.startDate}</h6>
             </div>
-            { CurrentUserContext.role==="Instructor" &&
+            { currentUser.role==="Instructor" &&
             <div className="course-icons-materialCard admin-icons">
               <FontAwesomeIcon
                 icon={faEdit}
