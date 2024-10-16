@@ -159,6 +159,7 @@ const AssignmentPage = ({ assignments }) => {
                 assignment.title || "No Assignment Available"
             )}
           </Typography>
+
           {/* Assignment Information */}
           <Table className="table table-bordered">
             <thead>

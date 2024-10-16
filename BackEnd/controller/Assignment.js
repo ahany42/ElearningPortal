@@ -432,6 +432,244 @@ class AssignmentController {
         }
     }
 
+    // Get all course materials
+    async getCourseMaterials(req, res, next) {
+        try {
+            const { courseId } = req.query;
+
+            const course = await Course.findOne({ id: courseId });
+            if (!course || !course.id) {
+                return res.status(200).json({ error: "Course ID is required" });
+            }
+
+            // Aggregation pipeline to get course materials
+            const courseMaterials = await Course.aggregate([
+                {
+                    $match: { _id: new mongoose.Types.ObjectId(course._id) }
+                },
+                {
+                    $lookup: {
+                        from: "assignments",
+                        localField: "_id",
+                        foreignField: "courseID",
+                        as: "assignments"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "assignmentanswers",
+                        localField: "assignments._id",
+                        foreignField: "assignmentID",
+                        as: "assignmentAnswers"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "exams",
+                        localField: "_id",
+                        foreignField: "courseID",
+                        as: "exams"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "studentexams",
+                        localField: "exams._id",
+                        foreignField: "examID",
+                        as: "examAnswers"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "posts",
+                        localField: "_id",
+                        foreignField: "courseId",
+                        as: "posts"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "posts.creatorId",
+                        foreignField: "_id",
+                        as: "postCreators"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "instructor_courses",
+                        localField: "_id",
+                        foreignField: "courseID",
+                        as: "instructorCourses"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "instructorCourses.instructorID",
+                        foreignField: "_id",
+                        as: "instructors"
+                    }
+                },
+                {
+                    $project: {
+                        assignments: {
+                            $map: {
+                                input: "$assignments",
+                                as: "assignment",
+                                in: {
+                                    id: "$$assignment.id",
+                                    materialType: "assignment",
+                                    submitted: {
+                                        $cond: {
+                                            if: {
+                                                $gt: [
+                                                    {
+                                                        $size: {
+                                                            $filter: {
+                                                                input: { $ifNull: ["$assignmentAnswers", []] },
+                                                                as: "answer",
+                                                                cond: { $eq: ["$$answer.assignmentID", "$$assignment._id"] }
+                                                            }
+                                                        }
+                                                    },
+                                                    0
+                                                ]
+                                            },
+                                            then: true,
+                                            else: false
+                                        }
+                                    },
+                                    title: "$$assignment.title",
+                                    startDate: {
+                                        $dateToString: {
+                                            format: "%d %b %Y (%H:%M)",
+                                            date: "$$assignment.startDate"
+                                        }
+                                    },
+                                    endDate: {
+                                        $dateToString: {
+                                            format: "%d %b %Y (%H:%M)",
+                                            date: "$$assignment.endDate"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        exams: {
+                            $map: {
+                                input: "$exams",
+                                as: "exam",
+                                in: {
+                                    id: "$$exam.id",
+                                    materialType: "exam",
+                                    submitted: {
+                                        $cond: {
+                                            if: {
+                                                $gt: [
+                                                    {
+                                                        $size: {
+                                                            $filter: {
+                                                                input: { $ifNull: ["$examAnswers", []] },
+                                                                as: "answer",
+                                                                cond: { $eq: ["$$answer.examID", "$$exam._id"] }
+                                                            }
+                                                        }
+                                                    },
+                                                    0
+                                                ]
+                                            },
+                                            then: true,
+                                            else: false
+                                        }
+                                    },
+                                    title: "$$exam.title",
+                                    startDate: {
+                                        $dateToString: {
+                                            format: "%d %b %Y (%H:%M)",
+                                            date: "$$exam.startDate"
+                                        }
+                                    },
+                                    endDate: {
+                                        $dateToString: {
+                                            format: "%d %b %Y (%H:%M)",
+                                            date: "$$exam.endDate"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        posts: {
+                            $map: {
+                                input: "$posts",
+                                as: "post",
+                                in: {
+                                    id: "$$post._id",
+                                    materialType: "post",
+                                    creator: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$postCreators",
+                                                    as: "creator",
+                                                    cond: { $eq: ["$$creator._id", "$$post.creatorId"] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    },
+                                    createdAt: {
+                                        $dateToString: {
+                                            format: "%d %b %Y (%H:%M)",
+                                            date: "$$post.createdAt"
+                                        }
+                                    },
+                                    editedAt: {
+                                        $cond: {
+                                            if: { $ifNull: ["$$post.editedAt", false] },
+                                            then: {
+                                                $dateToString: {
+                                                    format: "%d %b %Y (%H:%M)",
+                                                    date: "$$post.editedAt"
+                                                }
+                                            },
+                                            else: null
+                                        }
+                                    },
+                                    description: "$$post.title"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        materials: {
+                            $concatArrays: ["$assignments", "$exams", "$posts"]
+                        }
+                    }
+                },
+                {
+                    $unwind: "$materials"
+                },
+                {
+                    $group: {
+                        _id: "$materials.id",
+                        material: { $first: "$materials" }
+                    }
+                },
+                {
+                    $replaceRoot: { newRoot: "$material" }
+                }
+            ]);
+
+            return res.status(201).json({ data: courseMaterials });
+        } catch (err) {
+            res.status(200).json({ error: "Unexpected Error Occurred" });
+            next(`ERROR IN: getCourseMaterials function => ${err}`);
+        }
+    }
+
     // Get all assignments
     async getAllAssignments(req, res, next) {
         try {

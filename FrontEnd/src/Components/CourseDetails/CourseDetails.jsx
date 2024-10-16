@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router";
 import styled from 'styled-components';
 import CoursePlaceHolder from '../../assets/Course_Placeholder.svg';
@@ -15,6 +15,7 @@ import AccessDenied from '../../assets/AccessDenied.svg';
 import CaughtUp from '../../assets/Grades.svg';
 import Front_ENV from "../../../Front_ENV.jsx";
 import {getCookie} from "../Cookie/Cookie.jsx";
+import Loader from "../Loader/Loader.jsx";
 
 const DetailsHeaderDiv = styled.div`
       position: relative;
@@ -38,19 +39,42 @@ const DetailsHeaderDiv = styled.div`
 const CourseDetails = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-    const { currentUser, showMessage, courses, fetchCourses, isAuthenticated, confirmationToast } =
-        useContext(CurrentUserContext);
+    const { currentUser, showMessage, courses, fetchCourses, materials,
+        isAuthenticated, confirmationToast, setMaterials } = useContext(CurrentUserContext);
+    const [ loader, setLoader ] = useState(true);
     const route = useLocation();
-    //for testing
-    const totalExams = 0;
-    //for testing
-    const totalAssignments = 1;
-    //for testing
-    const totalAnnouncements = 0;
     const course = courses.find(course => course.id === id);
 
+    const fetchMaterials = async () => {
+        const params = new URLSearchParams({
+            courseId: id,
+        });
+        // Fetch materials for the student
+        const response = await fetch(`http://localhost:3008/getCourseMaterials?${params}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: getCookie("token") || "",
+            },
+        }).then((res) => res.json());
+
+        setTimeout(() => setLoader(false), 500);
+
+        if (response.data) {
+            setMaterials(response.data);
+        } else {
+            setMaterials([]);
+            showMessage(response.error, true);
+        }
+    }
+
+    const fetchData = async () => {
+        await fetchCourses();
+        await fetchMaterials();
+    }
+
     useEffect(() => {
-        fetchCourses();
+        fetchData();
     }, [route]);
 
 
@@ -192,7 +216,7 @@ const CourseDetails = () => {
                                 null
                         }
                            {
-                            (currentUser.role === "Admin" || currentUser.role=="SuperAdmin") &&
+                            (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
                                     <button className="enroll-button-courseDetails bold-text"
                                             onClick={() => AssignInstructor(course.id)}>
                                         Assign Instructor
@@ -204,15 +228,19 @@ const CourseDetails = () => {
                     {
                         currentUser.role && (course.isEnrolled || currentUser.role.toLowerCase() === "admin" ||
                                                                   currentUser.role.toLowerCase() === "superadmin") ?
-                            <div className="course-material card-body">
+                            <div className="course-material card-body"
+                                 style={loader? {minHeight: "400px", background: "#d8d8d8"} : {}}>
                                 <h5>Added Material:</h5>
                                 {
-                                    (totalAnnouncements + totalAssignments + totalExams !== 0) ?
-                                        <div className="material-list">
-                                            <CourseMaterial/>
-                                        </div>
+                                    loader ?
+                                        <Loader/>
                                     :
-                                        <Placeholder text="You're all caught up" img={CaughtUp}/>
+                                        materials.length ?
+                                            <div className="material-list">
+                                                <CourseMaterial/>
+                                            </div>
+                                        :
+                                            <Placeholder text="You're all caught up" img={CaughtUp}/>
                                 }
                             </div>
                         :

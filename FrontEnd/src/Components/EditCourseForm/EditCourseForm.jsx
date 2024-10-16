@@ -5,6 +5,7 @@ import './EditCourseForm.css';
 import { Button } from "@mui/material";
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
+import axios from "axios";
 
 let errorList = [];
 
@@ -18,10 +19,26 @@ const EditCourseForm = ({ id, title, desc, hours, image, showEditFormHandler}) =
 
     const [ courseData, setCourseData ] = useState({});
     const { showMessage, setCourses } = useContext(CurrentUserContext);
-    const [ loading, setLoading ] = useState(false);
 
     const editCourseHandler = async (id, updatedCourse) => {
-        setLoading(true);
+        if (typeof form.image === 'string') {
+            // Fetch the file as a blob
+            const imageReponse = await axios.get(`${Front_ENV.Back_Origin}/${form.image}`, {
+                responseType: 'blob',
+            });
+
+            // Extract the filename from the file path
+            const filename = form.image.split('/').pop();
+            console.log(form.image.split('\\'))
+
+            // Convert the blob into a File object
+            const file = new File([imageReponse.data], filename, {
+                type: imageReponse.data.type,
+            });
+
+            updatedCourse.image = file;
+        }
+
         const formData = new FormData();
         formData.append('title', updatedCourse.title);
         formData.append('desc', updatedCourse.desc);
@@ -41,8 +58,6 @@ const EditCourseForm = ({ id, title, desc, hours, image, showEditFormHandler}) =
             showMessage(response.error, true);
             return;
         }
-
-        setLoading(false);
 
         setCourses( prevState => {
             return prevState.map((course) => {
@@ -171,7 +186,7 @@ const EditCourseForm = ({ id, title, desc, hours, image, showEditFormHandler}) =
                                            e.preventDefault();
                                        }
                                    }}
-                                   type="file" id="image" name="image" required/>
+                                   type="file" id="image" name="image"/>
                         </div>
                     </div>
                     <div className="form-group w-100">

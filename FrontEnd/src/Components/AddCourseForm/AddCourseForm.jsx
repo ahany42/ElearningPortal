@@ -176,7 +176,7 @@ const AddCourseForm = ({ showFormHandler }) => {
                                                    e.preventDefault();
                                                }
                                            }}
-                                           type="file" id="image" name="image" required/>
+                                           type="file" id="image" name="image"/>
                                 </div>
                             </div>
                             <div className="form-group w-100">
@@ -187,7 +187,7 @@ const AddCourseForm = ({ showFormHandler }) => {
                         </div>
                         <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
                             <button className="btn AddCourseButton"
-                                    disabled={errorList.length || !form.hours || !form.desc || !form.title || !form.image}
+                                    disabled={errorList.length || !form.hours || !form.desc || !form.title}
                                     type="submit">
                                 Add
                             </button>

@@ -84,48 +84,54 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,
           }
       }
   }
-const AssignInstructor = async (id)=> {
-    const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'authorization': getCookie("token") || ""
-        },
-        body: JSON.stringify({
-            userId: instructor.id,
-            courseId: courseId,
-            duration: 1
-        })
-    })
-        .then(response => response.json());
-    if (response.error) {
-        showMessage(response.error, true);
-    } else {
-        setUpdateList(!updateList);
-        showMessage(response.message, false);
-    }
-}
+    const AssignInstructor = async ()=> {
+        const isConfirmed = await confirmationToast(`Are you sure you want to assign ${instructor.name}?`);
+        if (!isConfirmed) return;
 
-const UnAssignInstructor = async (id)=> {
-    const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'authorization': getCookie("token") || ""
-        },
-        body: JSON.stringify({
-            userId: instructor.id,
-            courseId: courseId
+        const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie("token") || ""
+            },
+            body: JSON.stringify({
+                userId: instructor.id,
+                courseId: courseId,
+                duration: 1
+            })
         })
-    })
-        .then(response => response.json());
-    if (response.error) {
-        showMessage(response.error, true);
-    } else {
-        setUpdateList(!updateList);
-        showMessage(response.message, false);
+            .then(response => response.json());
+        if (response.error) {
+            showMessage(response.error, true);
+        } else {
+            setUpdateList(!updateList);
+            showMessage(response.message, false);
+        }
     }
-}
+
+    const UnAssignInstructor = async ()=> {
+        const isConfirmed = await confirmationToast(`Are you sure you want to unassign ${instructor.name}?`);
+        if (!isConfirmed) return;
+
+        const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': getCookie("token") || ""
+            },
+            body: JSON.stringify({
+                userId: instructor.id,
+                courseId: courseId
+            })
+        })
+            .then(response => response.json());
+        if (response.error) {
+            showMessage(response.error, true);
+        } else {
+            setUpdateList(!updateList);
+            showMessage(response.message, false);
+        }
+    }
 
   const ViewProgress = ()=> {
       navigate(`/ViewProgress/${student.id}/${student.name}`, {state: {courseID: id}});
@@ -178,12 +184,12 @@ const UnAssignInstructor = async (id)=> {
             (assignInstructor && isAssigned !== undefined && (
                 !isAssigned ?
                     <button className=" enroll-text enroll-button bold-text blue-text progress-button"
-                            onClick={() => AssignInstructor(instructor.id)}>
+                            onClick={AssignInstructor}>
                         Assign
                     </button>
                 :
                     <button className=" enroll-text enroll-button bold-text blue-text progress-button"
-                            onClick={() => UnAssignInstructor(instructor.id)}>
+                            onClick={UnAssignInstructor}>
                         Unassign
                     </button>
             ))

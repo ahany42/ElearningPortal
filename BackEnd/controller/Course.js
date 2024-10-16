@@ -10,7 +10,11 @@ const storage = multer.diskStorage({
               cb(null, 'static/courses'); // Folder where images will be stored
        },
        filename: function (req, file, cb) {
-              cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
+              let fileName = file.originalname;
+              if (/^(\d+(?:_\d+)*)_/.test(file.originalname)) {
+                     fileName = file.originalname.replace(/^(\d+(?:_\d+)*)_/, '');
+              }
+              cb(null, `${Date.now()}_${fileName.replaceAll(' ', '_')}`); // Naming the file
        }
 });
 
@@ -133,6 +137,7 @@ class CourseController {
                      const { title, desc, hours, instructorId } = req.body;
                      const { courseId } = req.params;
                      const image = req.file ? req.file.path : null; // Store image path from multer
+                     console.log(image)
 
                      const course = await Course.findOne({ id: courseId });
                      if (!course) {

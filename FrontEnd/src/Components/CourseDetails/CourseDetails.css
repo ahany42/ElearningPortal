@@ -67,6 +67,11 @@
 .course-material{
     height: fit-content !important;
 }
+.material-list{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 .add-material{
 top:20px;
 }

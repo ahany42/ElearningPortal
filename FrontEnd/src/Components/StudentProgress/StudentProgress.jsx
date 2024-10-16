@@ -6,6 +6,7 @@ import Placeholder from '../Placeholder/Placeholder.jsx';
 import CaughtUp from '../../assets/Grades.svg';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import './StudentProgress.css';
+import Front_ENV from "../../../Front_ENV.jsx";
 
 const StudentProgress = () => {
   const { currentUser, showMessage, courses } = useContext(CurrentUserContext);
@@ -17,7 +18,7 @@ const StudentProgress = () => {
   const route = useLocation();
 
   useEffect(() => {
-    fetch(`http://localhost:3008/getStudentProgress?studentID=${studentId}`, {
+    fetch(`${Front_ENV.Back_Origin}/getStudentProgress?studentID=${studentId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ const StudentProgress = () => {
                       progress.map(record => {
                         const course = courses.find(course => course.id === record.course);
                         return (
-                            route.state && route.state.courseID === record.course ?
+                            route.state && (route.state.courseID === record.course) ?
                                 <StudentProgressRecord highlighted={true} key={record.id} record={record}
                                                        courseName={course.title}/>
                                 :

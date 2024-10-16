@@ -9,16 +9,11 @@ const CourseMaterial = () => {
   const { materials } = useContext(CurrentUserContext);
   return(
     <>
-      {materials.length > 0 ? (
+      {
         materials.map((material) => (
           <MaterialCard key={material.id} material={material} />
         ))
-      ) : (
-        <Placeholder
-          img={NoMaterialsImg}
-          text="No materials available."
-        />
-      )}
+      }
     </>
   );
 };
