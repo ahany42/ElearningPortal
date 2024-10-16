@@ -1,19 +1,19 @@
 import { useState, useEffect, useContext } from "react";
 import {Container,Card,CardContent,Typography,Button,Table,TextField} from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons"; // Import a valid icon
 import { Select, MenuItem } from "@mui/material";
 import { CurrentUserContext } from "../../App";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./AssignmentPage.css";
+import { set } from "date-fns";
 
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { showMessage, currentUser, setAssignments, courses } = useContext(CurrentUserContext);
-
+  const [uploadFile,setUploadFile] = useState(false);
+  const [file, setFile] = useState(null);
   const [assignment, setAssignment] = useState({
     title: "",
     courseID: "",
@@ -93,14 +93,48 @@ const AssignmentPage = ({ assignments }) => {
     setIsEditing(false);
     showMessage("Assignment updated successfully", false);
   };
- const comingSoon = ()=>{
-  alert("Coming Soon")
+ const SubmitAssignment= ()=>{
+ setUploadFile(true);
  }
  const ViewAssignment = ()=>{
   navigate(`ViewPdf/${assignment.document}/${assignment.title}`)
  }
+ const handleFileChangePdf = (event) => {
+  const selectedFile = event.target.files[0];
+  if (selectedFile && selectedFile.type === 'application/pdf') {
+    setFile(selectedFile);
+  } else {
+    alert('Please upload a valid PDF file.');
+  }
+};
+ const handleSubmitPdf = async (event) => {
+  event.preventDefault();
+  if (!file) {
+    showMessage("Please Attach PDF File",true);
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('pdf', file);
+  // to be linked with backend
+  try {
+    const response = await axios.post('', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if(response.error){
+      showMessage(response.error,true);
+    }
+    else{
+      showMessage(response.message,false);
+    }
+  } catch (error) {
+  }
+};
   return (
-    <Container
+    <>
+    {!uploadFile ?<Container
       maxWidth="md"
       style={{ marginTop: "2rem", position: "relative" }}
     >
@@ -125,30 +159,6 @@ const AssignmentPage = ({ assignments }) => {
                 assignment.title || "No Assignment Available"
             )}
           </Typography>
-          {/* page only viewed by student */}
-          {/* { currentUser.role && (currentUser.role === "Admin" || currentUser.role === "SuperAdmin") &&
-              <div
-                  className="course-icons admin-icons d-flex gap-2 mt-2"
-                  style={{ marginBottom: "1rem", right: "20px", top: "10px" }}>
-                {
-                  !isEditing && (
-                    <>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        style={{ cursor: "pointer", marginRight: "10px" }}
-                        onClick={() => setIsEditing(true)}
-                      />
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => DeleteAssignment(assignment.id)}
-                      />
-                    </>
-                  )
-                }
-              </div>
-          } */}
-
           {/* Assignment Information */}
           <Table className="table table-bordered">
             <thead>
@@ -298,7 +308,7 @@ const AssignmentPage = ({ assignments }) => {
                 {(currentUser.role==="Student") && <Button
                   variant="contained"
                   style={{ backgroundColor: "#2196f3" }}
-                  onClick={comingSoon}
+                  onClick={SubmitAssignment}
                   className="pascalCase-text green-bg"
                 >
                   Submit
@@ -311,7 +321,17 @@ const AssignmentPage = ({ assignments }) => {
           </div>
         </CardContent>
       </Card>
-    </Container>
+    </Container>:<>
+    <div className="pdf-upload-container">
+      <h2>Upload PDF</h2>
+      <form onSubmit={handleSubmitPdf}>
+        <input type="file" accept="application/pdf" onChange={handleFileChangePdf} />
+        <button type="submit">Upload</button>
+      </form>
+      {file && <p>Selected file: {file.name}</p>}
+    </div>
+  </>}
+    </>
   );
 };
 
