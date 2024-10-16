@@ -34,7 +34,7 @@ const MaterialCard = ({ material }) => {
   };
   const deleteExamHandler = async (examID) => {
     const isConfirmed = await confirmationToast(
-      "Are You Sure You Want to remove student?"
+      "Are You Sure You Want to delete exam?"
     );
     if (isConfirmed) {
       const response = await fetch(
@@ -70,7 +70,6 @@ const MaterialCard = ({ material }) => {
       "Are You Sure You Want to Delete This Announcement?"
     );
     if (isConfirmed) {
-      showMessage("Deleting announcement...", false);
       try {
         const response = await fetch(
           `http://localhost:3008/deletePost/${userId}`,
@@ -87,15 +86,12 @@ const MaterialCard = ({ material }) => {
         );
         const data = await response.json();
         console.log(data);
-        if (response.ok) {
-          showMessage("Announcement deleted successfully!", true);
+        if (response.error) {
+          showMessage(response.error, true);
           // Update your UI to reflect the deleted announcement
         } else {
           const data = await response.json();
-          showMessage(
-            data.error || "An error occurred. Please try again later.",
-            false
-          );
+          showMessage(data.message ,false);
         }
       } catch (err) {
         showMessage("An error occurred. Please try again later.", false);
@@ -106,14 +102,33 @@ const MaterialCard = ({ material }) => {
   const editAnnouncementHandler = () => {
     showMessage(" edit announcement coming soon", false);
   };
-  const deleteAssignmentHandler = async () => {
+  const deleteAssignmentHandler = async ({ assignmentId }) => {
     const isConfirmed = await confirmationToast(
-      "Are You Sure You Want to remove student?"
+      "Are You Sure You Want to delete assignment?"
     );
+  
     if (isConfirmed) {
-      showMessage("delete assignment coming soon", false);
+      const response = await fetch(`http://localhost:3008/deleteAssignment/${assignmentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: getCookie("token"), 
+        },
+        body: JSON.stringify({
+          id: assignmentId,
+        }),
+      });
+  
+      const data = await response.json();
+      console.log(data);
+  
+      if (data.error) { 
+        showMessage(data.error, true);
+      } else {
+        showMessage(data.message, false);
+      }
     }
-  };
+  };  
   const editAssignmentHandler = () => {
     showMessage(" edit assignment coming soon", false);
   };
@@ -189,7 +204,7 @@ const MaterialCard = ({ material }) => {
               <FontAwesomeIcon
                 icon={faTrash}
                 style={{ color: "red", cursor: "pointer" }}
-                onClick={() => deleteAssignmentHandler(INITIAL_MATERIALS.id)}
+                onClick={() => deleteAssignmentHandler(material.id)}
               />
             </div>
           )}
@@ -215,14 +230,14 @@ const MaterialCard = ({ material }) => {
               </div>
               {currentUser.role === "Instructor" && (
                 <div className="course-icons-materialCard admin-icons">
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faEdit}
                     style={{ cursor: "pointer" }}
                     className="edit-icon"
                     onClick={() =>
                       editAnnouncementHandler(INITIAL_MATERIALS.id)
                     }
-                  />
+                  /> */}
                   <FontAwesomeIcon
                     icon={faTrash}
                     style={{ color: "red", cursor: "pointer" }}
