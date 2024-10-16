@@ -60,7 +60,7 @@ const DeadlinesPage = ({ assignments, exams }) => {
             showFormHandler={showFormHandler}
           />
         ) : (
-          <></> // Add Exam Form
+          <></> 
         ))}
       <div className="deadlines-container pb-5" ref={CardsContainer}>
         <div className="button-group position-relative mt-5 mb-5">

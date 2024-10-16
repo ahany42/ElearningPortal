@@ -6,12 +6,9 @@ import { getCookie } from "../Cookie/Cookie.jsx";
 import { jwtDecode } from "jwt-decode";
 
 const AddAnnouncement = ({ courses }) => {
-  console.log(courses);
   const myToken = getCookie("token");
   const userId = jwtDecode(myToken).id;
-  console.log(myToken);
   const { id } = useParams();
-  console.log(id);
   const [formData, setFormData] = useState({
     announcementText: "",
     creatorId: userId,
@@ -19,7 +16,6 @@ const AddAnnouncement = ({ courses }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    // alert("Coming Soon");
     e.preventDefault();
     if (formData.announcementText !== "") {
       const response = await fetch(`http://localhost:3008/createPost/${id}`, {
@@ -31,7 +27,6 @@ const AddAnnouncement = ({ courses }) => {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log(data);
       //   if (response.status === 201) {
       //     navigate(`/AddMaterial/${id}`);
       //   } else {

@@ -39,7 +39,6 @@ const SignUp = ({isInstructor,adminId}) => {
     password: "",
     confirmpassword: "",
     userId:isInstructor?adminId : 0,
-      //userId is the admin id
 
   });
   const { setIsAuthenticated, setCurrentUser, showMessage, setLoading } = useContext(CurrentUserContext);

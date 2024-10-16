@@ -124,10 +124,7 @@ const ExamQuestions = () => {
         );
         const result = await response.json();
         showMessage(result, null);
-
-        // navigate(`/courses/`);
       } catch (error) {
-        console.error("Error submitting answers:", error);
       }
       setEditingIndex(null); // Save and exit editing mode
     } else {
@@ -149,13 +146,11 @@ const ExamQuestions = () => {
         }
       );
       const result = await response.json();
-      console.log(result);
       setExam((prevExam) => ({
         ...prevExam,
         questions: prevExam.questions.filter((_, idx) => idx !== index),
       }));
     } catch (error) {
-      console.error("Error deleting question:", error);
     }
   };
   return (

@@ -5,7 +5,6 @@ import './EditCourseForm.css';
 import { Button } from "@mui/material";
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
-import Loader from "../Loader/Loader.jsx";
 
 let errorList = [];
 
@@ -181,10 +180,6 @@ const EditCourseForm = ({ id, title, desc, hours, image, showEditFormHandler}) =
                                className="flex-grow-1" id="hours" name="hours" required/>
                     </div>
                 </div>
-                {/*<div className="form-group">*/}
-                {/*    <label htmlFor="hours" className="green-text bold-text">Hours</label>*/}
-                {/*    <input onChange={handleChange} value={form.hours} type="number" id="hours" name="hours" required/>*/}
-                {/*</div>*/}
                 <div className='d-flex flex-column justify-content-between mt-2 mb-2'>
                     <button className="btn AddCourseButton"
                             disabled={errorList.length > 0 || !form.title ||

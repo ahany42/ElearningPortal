@@ -31,7 +31,6 @@ const AssignmentPage = ({ assignments }) => {
       const assignedData = assignments.find((el) => el.id === location.state.aid);
       if (assignedData) {
         setAssignment(assignedData);
-        console.log(assignedData)
         setEditableAssignment({
           id: assignedData.id,
           title: assignedData.title,

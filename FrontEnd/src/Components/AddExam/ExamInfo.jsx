@@ -27,7 +27,6 @@ const ExamInfo = ({ handleNext,id}) => {
         if(formData.title && formData.duration && formData.sDate && formData.eDate){
             if(new Date(formData.sDate) > new Date(formData.eDate)){
                 showMessage("End date Should be after start date",true);
-                console.log(formData)
             }
             else if(selectedDate < currentDate){
                 showMessage("The date must be now or later",true);
@@ -61,7 +60,6 @@ const ExamInfo = ({ handleNext,id}) => {
                         });
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                     });
             }
         }

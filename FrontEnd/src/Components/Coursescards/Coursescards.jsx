@@ -10,8 +10,6 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { v4 } from 'uuid';
 import './Coursescards.css'
 import EditCourseForm from "../EditCourseForm/EditCourseForm.jsx";
-import ENV from "../../../Front_ENV.jsx";
-import PDFViewer from "../PDFViewer/PDFViewer.jsx";
 
 const CoursesCards = ({ courses, mode}) => {
     const [showForm, setShowForm] = useState(false);

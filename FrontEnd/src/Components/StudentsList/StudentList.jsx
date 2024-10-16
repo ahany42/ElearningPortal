@@ -10,7 +10,7 @@ import Front_ENV from "../../../Front_ENV.jsx";
 
 const StudentList = () => {
     const {id} = useParams();
-    const { currentUser, showMessage } = useContext(CurrentUserContext);
+    const { showMessage } = useContext(CurrentUserContext);
     const [studentsList, setStudentsList] = useState([]);
     const [updateList, setUpdateList] = useState(false);
     const navigate = useNavigate();

@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router';
-import { CurrentUserContext } from '../../App';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
