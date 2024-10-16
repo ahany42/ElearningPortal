@@ -20,6 +20,10 @@
     vertical-align: middle;
 }
 
+.student-progress-table tr:hover:not(:has(th:first-child)) {
+    background-color: yellow;
+}
+
 .student-progress-container {
     display: flex;
     justify-content: center;

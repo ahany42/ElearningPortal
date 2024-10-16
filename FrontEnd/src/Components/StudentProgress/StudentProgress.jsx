@@ -43,7 +43,7 @@ const StudentProgress = () => {
             <button
                 className="goBackBtn"
                 style={{top: "15px", left: "30px"}}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/CourseDetails/${route.state.courseID}`)}
             >
               <svg
                   height="16"

@@ -55,7 +55,7 @@ const InstructorsList = () => {
             route.state = {instructorsList: response.data};
         }
         else{
-                const response = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor`, {
+                const response = await fetch(`${Front_ENV.Back_Origin}/getUsers?role=Instructor&courseID=${CourseId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -83,10 +83,15 @@ const InstructorsList = () => {
         <>
             <button className="goBackBtn" style={{top: "35px", left: "85px"}}
                     onClick={() => {
-                        route.state.isAdmin ?
-                            navigate('/InstructorsPage')
+                        route.pathname.includes("AssignInstructor") ?
+                            navigate(`/CourseDetails/${CourseId}`)
                         :
-                            navigate(`/Courses`)
+                            (
+                                route.state.isAdmin ?
+                                    navigate('/InstructorsPage')
+                                :
+                                    navigate(`/CourseDetails/${id}`)
+                            )
             
                     }}>
                 <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
@@ -101,7 +106,8 @@ const InstructorsList = () => {
                 {instructorsList.map(instructor => (
                     <UserCard setUpdateList={setUpdateList} updateList={updateList}
                               isStudent={false} instructor={instructor} key={instructor.id}
-                              student={false} isAdmin={route.state.isAdmin} assignInstructor={route.state.assignInstructor} courseId ={CourseId}/>
+                              student={false} isAdmin={route.state.isAdmin} isAssigned={instructor.isAssigned}
+                              assignInstructor={route.state.assignInstructor} courseId ={CourseId}/>
                 ))}
             </div>
         </>

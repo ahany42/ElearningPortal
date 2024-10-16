@@ -9,24 +9,10 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
 
     return (
         <tr style={ highlighted? { background: "yellow", transition: "all 0.1s ease-in-out" }
-                    : { transition: "all 0.1s ease-in-out"} }
-            onMouseEnter={(e) => {
-                if (e.target.tagName === "TD") {
-                    e.target.parentElement.style.background = "yellow";
-                } else {
-                    e.target.style.background = "yellow";
-                }
-            }}
-            onMouseLeave={(e) => {
-                if (e.target.tagName === "TD") {
-                    e.target.parentElement.style.background = "";
-                } else {
-                    e.target.style.background = "";
-                }
-            }}>
+                    : { transition: "all 0.1s ease-in-out"} }>
             <td className="stud-prog-hover-cell" style={{ paddingLeft: "15px", borderRadius: "20px 0 0 20px" }}>
                 <span title="Course Name" onClick={() => {
-                    navigate(`/CourseDetails/${courses.find(c => c.title === courseName).id}`)
+                    navigate(`/CourseDetails/${courses.find(c => c.title === courseName).id}`, {state: {progress: true}})
                 }}>
                     {courseName}
                 </span>

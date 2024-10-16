@@ -1,9 +1,8 @@
 const {
   User,
-  Session,
-  Assignment,
-  AssignmentAnswer,
+  Course,
 } = require("../db/Database");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { Secret_Key } = require("../../env");
 const { v4: uuidv4 } = require("uuid");
@@ -155,8 +154,68 @@ module.exports.register = async (req, res, next) => {
 
 module.exports.getUsers = async (req, res, next) => {
   try {
-    const { role } = req.query;
+    const { role, courseID } = req.query;
     if (role && (role === "Admin" || role === "Student" || role === "Instructor")) {
+
+      if (role === "Instructor" && courseID) {
+        let course = await Course.findOne({ id: courseID });
+
+        if (!course) {
+            return res.status(200).json({ error: "Course not found" });
+        }
+
+        let users = await User.aggregate([
+          {
+            $match: { role: "Instructor" }
+          },
+          {
+            $lookup: {
+              from: "instructor_courses",
+              localField: "_id",
+              foreignField: "instructorID",
+              as: "assignedCourses"
+            }
+          },
+          {
+            $addFields: {
+              isAssigned: {
+                $cond: {
+                  if: {
+                    $gt: [
+                      {
+                        $size: {
+                          $filter: {
+                            input: "$assignedCourses",
+                            as: "course",
+                            cond: { $eq: ["$$course.courseID", new mongoose.Types.ObjectId(course._id)] }
+                          }
+                        }
+                      },
+                      0
+                    ]
+                  },
+                  then: true,
+                  else: false
+                }
+              }
+            }
+          },
+          {
+            $project: {
+              id: 1,
+              name: 1,
+              gender: 1,
+              email: 1,
+              username: 1,
+              role: 1,
+              isAssigned: 1
+            }
+          }
+        ]);
+
+        return res.status(201).json({ data: users });
+      }
+
       let users = await User.find({ role });
       users = users.map(({id, name, gender, email, username, role}) => {
         return {

@@ -8,7 +8,8 @@ import './UserCard.css';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import Front_ENV from "../../../Front_ENV.jsx";
 
-const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, isAdmin,assignInstructor,courseId}) => {
+const UserCard = ({isStudent , student, instructor, updateList, setUpdateList,
+                      isAdmin,assignInstructor, courseId, isAssigned}) => {
   const { currentUser, showMessage, confirmationToast } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -83,7 +84,7 @@ const UserCard = ({isStudent , student, instructor, updateList, setUpdateList, i
           }
       }
   }
-const AssignInstructor = async (id)=>{
+const AssignInstructor = async (id)=> {
     const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
         method: 'POST',
         headers: {
@@ -93,17 +94,38 @@ const AssignInstructor = async (id)=>{
         body: JSON.stringify({
             userId: instructor.id,
             courseId: courseId,
-            duration:1
+            duration: 1
         })
-})
-  .then(response => response.json());
-  if (response.error) {
-    showMessage(response.error, true);
-} else {
-    setUpdateList(!updateList);
-    showMessage(response.message, false);
+    })
+        .then(response => response.json());
+    if (response.error) {
+        showMessage(response.error, true);
+    } else {
+        setUpdateList(!updateList);
+        showMessage(response.message, false);
+    }
 }
- }
+
+const UnAssignInstructor = async (id)=> {
+    const response = await fetch(`${Front_ENV.Back_Origin}/unenroll-course`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': getCookie("token") || ""
+        },
+        body: JSON.stringify({
+            userId: instructor.id,
+            courseId: courseId
+        })
+    })
+        .then(response => response.json());
+    if (response.error) {
+        showMessage(response.error, true);
+    } else {
+        setUpdateList(!updateList);
+        showMessage(response.message, false);
+    }
+}
 
   const ViewProgress = ()=> {
       navigate(`/ViewProgress/${student.id}/${student.name}`, {state: {courseID: id}});
@@ -153,15 +175,21 @@ const AssignInstructor = async (id)=>{
                </button>
         } 
         {
-            (assignInstructor &&
-                <button className=" enroll-text enroll-button bold-text blue-text progress-button"
-                onClick={()=>AssignInstructor(instructor.id)}>
-                Assign
-               </button>
-            )
+            (assignInstructor && isAssigned !== undefined && (
+                !isAssigned ?
+                    <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                            onClick={() => AssignInstructor(instructor.id)}>
+                        Assign
+                    </button>
+                :
+                    <button className=" enroll-text enroll-button bold-text blue-text progress-button"
+                            onClick={() => UnAssignInstructor(instructor.id)}>
+                        Unassign
+                    </button>
+            ))
         }
     </div>
-</div>
+    </div>
   )
 }
 
