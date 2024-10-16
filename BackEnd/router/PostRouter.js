@@ -6,5 +6,5 @@ const router = Router();
 router.post("/createPost/:id", verifyToken(), Controller.createPost); //verified
 router.post("/getPosts/:id", verifyToken(), Controller.getPosts); //verified
 router.put("/updatePost/:userId", verifyToken(), Controller.updatePost); //verified
-router.delete("/deletePost/:userId", verifyToken(), Controller.deletePost); //verified
+router.delete("/deletePost", verifyToken(), Controller.deletePost); //verified
 module.exports = router;

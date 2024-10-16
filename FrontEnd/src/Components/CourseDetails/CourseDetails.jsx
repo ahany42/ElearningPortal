@@ -74,6 +74,10 @@ const CourseDetails = () => {
     }
 
     useEffect(() => {
+        if (id === `undefined` || !id) {
+            navigate('/Courses');
+            return;
+        }
         fetchData();
     }, [route]);
 

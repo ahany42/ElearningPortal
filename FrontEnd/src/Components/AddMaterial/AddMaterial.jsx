@@ -18,7 +18,7 @@ const AddMaterial = () => {
         navigate(`/AddAssignment/${id}`);
     }
     const AddExam = ()=>{
-        navigate(`/AddExam/${id}`);
+        navigate(`/AddExam/${id}`, {state: {activeStep: 0}});
     }
     const AddAnnouncement = ()=>{
         navigate(`/AddAnnouncement/${id}`)

@@ -129,19 +129,18 @@ module.exports = {
 
   deletePost: async (req, res) => {
     try {
-      const { userId } = req.params;
-      const { id } = req.body;
-      if (!userId || userId === "") {
+      const { userID, postID } = req.query;
+      if (!userID || userID === "") {
         return res.status(200).json({ error: "User ID is required" });
       }
-      if (!id || id === "") {
+      if (!postID || postID === "") {
         return res.status(200).json({ error: "Post ID is required" });
       }
-      const post = await Post.findOne({ id });
+      const post = await Post.findOne({ id: postID });
       if (!post) {
         return res.status(200).json({ error: "Post not found" });
       }
-      const user = await User.findOne({ id: userId });
+      const user = await User.findOne({ id: userID });
       if (!user) {
         return res.status(200).json({ error: "User not found" });
       }
@@ -157,7 +156,7 @@ module.exports = {
           return res.status(200).json({ error: "User not authorized" });
         }
       }
-      await Post.deleteOne({ id });
+      await Post.deleteOne({ id: postID });
       res.status(201).json({ message: "Post deleted successfully" });
     } catch (err) {
       res.status(200).json({ error: "Unexpected Error Occurred" });

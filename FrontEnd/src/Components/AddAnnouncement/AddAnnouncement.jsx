@@ -4,6 +4,7 @@ import { Button, TextField, Box } from "@mui/material";
 import { useParams, useNavigate } from "react-router";
 import { getCookie } from "../Cookie/Cookie.jsx";
 import { jwtDecode } from "jwt-decode";
+import Front_ENV from "../../../Front_ENV.jsx";
 
 const AddAnnouncement = ({ courses }) => {
   const myToken = getCookie("token");
@@ -18,7 +19,7 @@ const AddAnnouncement = ({ courses }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.announcementText !== "") {
-      const response = await fetch(`http://localhost:3008/createPost/${id}`, {
+      const response = await fetch(`${Front_ENV.Back_Origin}/createPost/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

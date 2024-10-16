@@ -27,27 +27,25 @@ const MaterialCard = ({ material }) => {
         setSeeMore(!seeMore);
     };
 
-    const deleteExamHandler = async (examID) => {
+    const deleteExamHandler = async () => {
         const isConfirmed = await confirmationToast(
             "Are You Sure You Want to remove this exam?"
         );
         if (isConfirmed) {
             const response = await fetch(
-                `${Front_ENV.Back_Origin}/deleteExam/${examID}`,
+                `${Front_ENV.Back_Origin}/deleteExam/${material.id}`,
                 {
-                    method: "POST",
+                    method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
                         authorization: getCookie("token"),
-                    },
-                    body: {
-                        examId: examID,
-                    },
+                    }
                 }
-            );
-            if (response.status === 201) {
-                setExams((prevState) => prevState.filter((exam) => exam.id !== examID));
+            ).then((res) => res.json());
+            if (!response.error) {
+                setExams((prevState) => prevState.filter((exam) => exam.id !== material.id));
                 showMessage(response.message, false);
+                navigate(`/CourseDetails/${params.id}`);
             } else {
                 showMessage(response.error, true);
             }
@@ -55,27 +53,24 @@ const MaterialCard = ({ material }) => {
     };
 
     const deleteAnnouncementHandler = async (ids) => {
-        let id = "32e33491-9827-4363-b4e4-a20362c83560";
-        let userId = jwtDecode(getCookie("token")).id;
-
         const isConfirmed = await confirmationToast(
             "Are You Sure You Want to Delete This Announcement?"
         );
 
         if (isConfirmed) {
-            showMessage("Deleting announcement...", false);
             try {
+                const params = new URLSearchParams({
+                    userID: currentUser.id,
+                    postID: material.id,
+                });
                 const response = await fetch(
-                    `${Front_ENV.Back_Origin}/deletePost/${userId}`,
+                    `${Front_ENV.Back_Origin}/deletePost?${params}`,
                     {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: getCookie("token"), // Assuming you use JWT authentication
-                        },
-                        body: JSON.stringify({
-                            id: id,
-                        }),
+                            Authorization: getCookie("token") || "", // Assuming you use JWT authentication
+                        }
                     }
                 ).then((res) => res.json());
 
@@ -123,8 +118,8 @@ const MaterialCard = ({ material }) => {
         showMessage("Edit announcement coming soon", null);
     }
 
-    const editExamHandler = () => {
-        showMessage("Edit exam coming soon", null);
+    const editExamHandler = async () => {
+        navigate(`/examQuestions/${material.id}`, {state: {courseID: params.id}});
     };
 
     return (
@@ -160,7 +155,7 @@ const MaterialCard = ({ material }) => {
                             <FontAwesomeIcon
                                 icon={faTrash}
                                 style={{color: "red", cursor: "pointer"}}
-                                onClick={() => deleteExamHandler(materials.id)}
+                                onClick={deleteExamHandler}
                             />
                         </div>}
                 </div>

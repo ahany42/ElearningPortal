@@ -1,25 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {Stepper,Step,StepLabel,Box,} from '@mui/material';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 const steps = ['Exam Info', 'Add Questions'];
 import AddQuestions from './AddQuestions';
 import ExamInfo from './ExamInfo';
 import { useParams } from 'react-router';
 import './AddExam.css';
+
 const AddExam = () => {
     const {id} = useParams();
     const [activeStep, setActiveStep] = useState(0);
     const [formData, setFormData] = useState({});
     const [examTitleValue,setExamTitleValue] = useState();
     const navigate = useNavigate();
+    const route = useLocation();
+
     const handleNext = (examTitle) => {
+        navigate(`/AddExam/${id}`, {state: {activeStep: ++route.state.activeStep}});
+        console.log(route.state.activeStep)
         setExamTitleValue(examTitle);
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        // setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        navigate(`/AddExam/${id}`, {state: {activeStep: --route.state.activeStep}});
+        // setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
+
+    console.log(route.state.activeStep)
+
 
     return (
         <Box sx={{ width: "100%" }}>
@@ -40,7 +49,7 @@ const AddExam = () => {
                 <span>Back</span>
             </button>
             <Box sx={{ width: "80%", margin: "80px auto" }}>
-                <Stepper activeStep={activeStep}>
+                <Stepper activeStep={route.state.activeStep}>
                     {steps.map((label, index) => (
                         <Step key={label}>
                             <StepLabel
@@ -73,7 +82,7 @@ const AddExam = () => {
             </Box>
 
             <Box sx={{ mt: 2, mb: 2 }}>
-                {activeStep === 0 ? (
+                {route.state.activeStep === 0 ? (
                     <ExamInfo
                         handleNext={handleNext}
                         formData={formData}

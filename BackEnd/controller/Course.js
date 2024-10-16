@@ -366,7 +366,10 @@ class CourseController {
                          return res.status(200).json({ error: "You are not enrolled in this course" });
                      }
 
-                     res.status(201).json({ data: userCourse, message: `${user.name} is Unenrolled Successfully` });
+                     user.role === "student" ?
+                         res.status(201).json({ data: userCourse, message: `${user.name} is Unenrolled Successfully` })
+                     :
+                         res.status(201).json({ data: userCourse, message: `${user.name} is Unassigned Successfully` })
               } catch (error) {
                      res.status(200).json({error: error.message});
                      next(`ERROR IN: Unenroll Course function => ${error.message}`);

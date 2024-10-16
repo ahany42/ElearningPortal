@@ -1,52 +1,48 @@
-import {Button,TextField,Box} from "@mui/material";
-import { DateTimePicker , LocalizationProvider} from '@mui/x-date-pickers';
+import { Button, TextField, Box } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useContext,useState } from "react";
+import { useContext, useState } from "react";
 import { CurrentUserContext } from '../../App';
-import {getCookie} from "../Cookie/Cookie.jsx";
+import { getCookie } from "../Cookie/Cookie.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './AddExam.css';
+import Front_ENV from "../../../Front_ENV.jsx";
 
-const ExamInfo = ({ handleNext,id}) => {
+const ExamInfo = ({ handleNext, id }) => {
     const [sDate, setSDate] = useState(null);
     const [eDate, setEDate] = useState(null);
-    const { courses,showMessage } = useContext(CurrentUserContext);
-    const currentCourse = courses.find(course=>course.id===id);
-    const [formData,setFormData] = useState({
-        title:'',
-        courseTitle:currentCourse.title,
-        sDate:null,
-        duration:'',
-        eDate:null
+    const { courses, showMessage } = useContext(CurrentUserContext);
+    const currentCourse = courses.find(course => course.id === id);
+    const [formData, setFormData] = useState({
+        title: '',
+        courseTitle: currentCourse ? currentCourse.title : '',
+        sDate: null,
+        duration: '',
+        eDate: null
+    });
 
-    })
-    const handleExamInfo = (examTitle)=>{
+    const handleExamInfo = (examTitle) => {
         const selectedDate = new Date(formData.sDate).getTime();
         const currentDate = new Date().getTime();
-        if(formData.title && formData.duration && formData.sDate && formData.eDate){
-            if(new Date(formData.sDate) > new Date(formData.eDate)){
-                showMessage("End date Should be after start date",true);
-            }
-            else if(selectedDate < currentDate){
-                showMessage("The date must be now or later",true);
-            }
-            else if(isNaN(formData.duration)){
-                showMessage("Invalid Duration",true);
-            }
-            else if(formData.duration<=0){
-                showMessage("Invalid Duration",true);
-            }
-            else{
-                fetch('http://localhost:3008/createExam',{
-                        method:'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            authorization:getCookie("token")
-                        },
-                        body: JSON.stringify(formData)
-                    }
-                )
+        if (formData.title && formData.duration && formData.sDate && formData.eDate) {
+            if (new Date(formData.sDate) > new Date(formData.eDate)) {
+                showMessage("End date Should be after start date", true);
+            } else if (selectedDate < currentDate) {
+                showMessage("The date must be now or later", true);
+            } else if (isNaN(formData.duration)) {
+                showMessage("Invalid Duration", true);
+            } else if (formData.duration <= 0) {
+                showMessage("Invalid Duration", true);
+            } else {
+                fetch(`${Front_ENV.Back_Origin}/createExam`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        authorization: getCookie("token") || ""
+                    },
+                    body: JSON.stringify(formData)
+                })
                     .then(response => {
                         return response.json().then(data => {
                             if (response.status === 201) {
@@ -59,14 +55,13 @@ const ExamInfo = ({ handleNext,id}) => {
                             }
                         });
                     })
-                    .catch(error => {
-                    });
+                    .catch(error => { });
             }
-        }
-        else{
-            showMessage("Please Fill All Fields",true);
+        } else {
+            showMessage("Please Fill All Fields", true);
         }
     }
+
     return (
         <div>
             <Box sx={{ width: "80%", margin: "80px auto" }}>
@@ -79,7 +74,7 @@ const ExamInfo = ({ handleNext,id}) => {
                         type="text"
                         value={formData.title}
                         onChange={(e) => {
-                            setFormData({ ...formData, title: e.target.value })
+                            setFormData({ ...formData, title: e.target.value });
                             toast.dismiss();
                         }}
                         required
@@ -109,7 +104,7 @@ const ExamInfo = ({ handleNext,id}) => {
                         readOnly
                         fullWidth
                         type="text"
-                        value={currentCourse.title || "Course Not Available"}
+                        value={currentCourse ? currentCourse.title : '"Course Not Available"'}
                         InputProps={{
                             readOnly: true,
                         }}
@@ -179,32 +174,7 @@ const ExamInfo = ({ handleNext,id}) => {
                                 onChange={(newDate) => {
                                     setFormData({ ...formData, sDate: newDate });
                                 }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        x={{
-                                            my: 2,
-                                            "& .MuiOutlinedInput-root": {
-                                                "& fieldset": {
-                                                    borderColor: "grey ",
-                                                },
-                                                "&:hover fieldset": {
-                                                    borderColor: "#274546 !important",
-                                                },
-                                                "&.Mui-focused fieldset": {
-                                                    borderColor: "#274546 !important",
-                                                },
-                                            },
-                                            "& .MuiInputLabel-root": {
-                                                "&.Mui-focused": {
-                                                    color: "#274546 !important",
-                                                },
-                                            },
-                                        }}
-                                    />
-                                )}
-                                InputProps={{ sx: {} }}
-                                PopperProps={{ sx: {} }}
+                                slots={{ textField: (params) => <TextField {...params} /> }}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -214,39 +184,14 @@ const ExamInfo = ({ handleNext,id}) => {
                                 onChange={(newDate) => {
                                     setFormData({ ...formData, eDate: newDate });
                                 }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        x={{
-                                            my: 2,
-                                            "& .MuiOutlinedInput-root": {
-                                                "& fieldset": {
-                                                    borderColor: "grey ",
-                                                },
-                                                "&:hover fieldset": {
-                                                    borderColor: "#274546 !important",
-                                                },
-                                                "&.Mui-focused fieldset": {
-                                                    borderColor: "#274546 !important",
-                                                },
-                                            },
-                                            "& .MuiInputLabel-root": {
-                                                "&.Mui-focused": {
-                                                    color: "#274546 !important",
-                                                },
-                                            },
-                                        }}
-                                    />
-                                )}
-                                InputProps={{ sx: {} }}
-                                PopperProps={{ sx: {} }}
+                                slots={{ textField: (params) => <TextField {...params} /> }}
                             />
                         </LocalizationProvider>
                     </Box>
                 </form>
                 <Button
                     variant="contained"
-                    onClick={()=>handleExamInfo(formData.title)}
+                    onClick={() => handleExamInfo(formData.title)}
                     className="stepper-button pascalCase-text"
                     style={{ background: "#2d3480 !important" }}
                 >
@@ -256,4 +201,4 @@ const ExamInfo = ({ handleNext,id}) => {
         </div>
     );
 };
-export default ExamInfo
+export default ExamInfo;

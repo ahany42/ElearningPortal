@@ -544,13 +544,15 @@ class AssignmentController {
                                     startDate: {
                                         $dateToString: {
                                             format: "%d %b %Y (%H:%M)",
-                                            date: "$$assignment.startDate"
+                                            date: "$$assignment.startDate",
+                                            timezone: "Egypt"
                                         }
                                     },
                                     endDate: {
                                         $dateToString: {
                                             format: "%d %b %Y (%H:%M)",
-                                            date: "$$assignment.endDate"
+                                            date: "$$assignment.endDate",
+                                            timezone: "Egypt"
                                         }
                                     }
                                 }
@@ -587,13 +589,15 @@ class AssignmentController {
                                     startDate: {
                                         $dateToString: {
                                             format: "%d %b %Y (%H:%M)",
-                                            date: "$$exam.startDate"
+                                            date: "$$exam.startDate",
+                                            timezone: "Egypt"
                                         }
                                     },
                                     endDate: {
                                         $dateToString: {
                                             format: "%d %b %Y (%H:%M)",
-                                            date: "$$exam.endDate"
+                                            date: "$$exam.endDate",
+                                            timezone: "Egypt"
                                         }
                                     }
                                 }
@@ -604,7 +608,7 @@ class AssignmentController {
                                 input: "$posts",
                                 as: "post",
                                 in: {
-                                    id: "$$post._id",
+                                    id: "$$post.id",
                                     materialType: "post",
                                     creator: {
                                         $arrayElemAt: [
@@ -621,7 +625,8 @@ class AssignmentController {
                                     createdAt: {
                                         $dateToString: {
                                             format: "%d %b %Y (%H:%M)",
-                                            date: "$$post.createdAt"
+                                            date: "$$post.createdAt",
+                                            timezone: "Egypt"
                                         }
                                     },
                                     editedAt: {
@@ -630,7 +635,8 @@ class AssignmentController {
                                             then: {
                                                 $dateToString: {
                                                     format: "%d %b %Y (%H:%M)",
-                                                    date: "$$post.editedAt"
+                                                    date: "$$post.editedAt",
+                                                    timezone: "Egypt"
                                                 }
                                             },
                                             else: null
@@ -660,6 +666,9 @@ class AssignmentController {
                 },
                 {
                     $replaceRoot: { newRoot: "$material" }
+                },
+                {
+                    $sort: { startDate: 1 }
                 }
             ]);
 

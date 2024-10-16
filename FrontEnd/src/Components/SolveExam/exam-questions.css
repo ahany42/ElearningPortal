@@ -4,6 +4,13 @@ div h2,
   padding: 10px;
 }
 
+.exam-title {
+  width: fit-content;
+  margin: auto;
+  padding: 20px;
+  border-radius: 20px;
+}
+
 .edit-exam-title > button,
 .edit-exam-title > input {
   width: fit-content;
