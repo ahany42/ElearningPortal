@@ -154,7 +154,6 @@ module.exports = {
         });
 
         if (user.id !== postCreator.id) {
-          console.log(user.id, postCreator.id);
           return res.status(200).json({ error: "User not authorized" });
         }
       }

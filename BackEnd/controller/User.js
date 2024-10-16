@@ -81,7 +81,7 @@ module.exports.logout = async (req, res, next) => {
   try {
     res.status(201).json({ message: "Logged out successfully" });
   } catch (err) {
-    res.status(200).json({ error: "Unexpected Error Occured" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: Logout Function => ${err}`);
   }
 };
@@ -275,7 +275,6 @@ module.exports.resetPassword = async (req, res, next) => {
     }
 
     if (mode === "ChangePassword") { // Validate the old password ONLY
-      console.warn(oldpassword + ", " + user.password)
         const isValidOldPassword = await bcrypt.compare(oldpassword, user.password);
         if (!isValidOldPassword) {
           return res.status(200).json({error: "Invalid old password provided"});

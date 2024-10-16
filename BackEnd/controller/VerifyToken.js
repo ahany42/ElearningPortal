@@ -20,7 +20,7 @@ const VerifyTokenForAdmin = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "You are not authorised" });
+      res.status(200).json({ error: "You are not authorized" });
       next("ERROR IN: VerifyTokenForAdmin function => Invalid role");
     }
   } catch (error) {
@@ -50,7 +50,7 @@ const VerifyTokenForInstructor = async (req, res, next) => {
       req.user = decoded
       next();
     } else {
-      res.status(200).json({ error: "You are not authorised" });
+      res.status(200).json({ error: "You are not authorized" });
       next("ERROR IN: VerifyTokenForInstructor function => Invalid role");
     }
   } catch (error) {
@@ -80,7 +80,7 @@ const VerifyTokenForStudent = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "You are not authorised" });
+      res.status(200).json({ error: "You are not authorized" });
       next("ERROR IN: VerifyTokenForStudent function => Invalid role");
     }
   } catch (error) {
@@ -111,7 +111,7 @@ const VerifyTokenForUser = async (req, res, next) => {
       req.user = decoded;
       next();
     } else {
-      res.status(200).json({ error: "You are not authorised" });
+      res.status(200).json({ error: "You are not authorized" });
       next("ERROR IN: VerifyTokenForUser function => Invalid role");
     }
   } catch (error) {
