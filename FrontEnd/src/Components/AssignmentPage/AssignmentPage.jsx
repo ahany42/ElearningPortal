@@ -129,6 +129,7 @@ const AssignmentPage = ({ assignments }) => {
     if(data.error){
       showMessage(data.error,true);
       setFile("")
+      document.getElementById("pdfInput").value = ""
     }
     else{
       showMessage(data.message,false);
@@ -331,7 +332,7 @@ const AssignmentPage = ({ assignments }) => {
     <div className="pdf-upload-container">
       <h3>Upload PDF</h3>
       <form onSubmit={handleSubmitPdf}>
-        <input type="file" accept="application/pdf" onChange={handleFileChangePdf} />
+        <input type="file" accept="application/pdf" onChange={handleFileChangePdf} id="pdfInput"/>
         <button type="submit">Upload</button>
       </form>
       {file && <p>Selected file: {file.name}</p>}
