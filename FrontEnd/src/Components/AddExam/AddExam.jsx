@@ -17,17 +17,12 @@ const AddExam = () => {
 
     const handleNext = (examTitle) => {
         navigate(`/AddExam/${id}`, {state: {activeStep: ++route.state.activeStep}});
-        console.log(route.state.activeStep)
         setExamTitleValue(examTitle);
-        // setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleBack = () => {
         navigate(`/AddExam/${id}`, {state: {activeStep: --route.state.activeStep}});
-        // setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-
-    console.log(route.state.activeStep)
 
 
     return (
@@ -48,7 +43,7 @@ const AddExam = () => {
                 </svg>
                 <span>Back</span>
             </button>
-            <Box sx={{ width: "80%", margin: "80px auto" }}>
+            <Box sx={{ width: "80%", margin: "100px auto 50px" }}>
                 <Stepper activeStep={route.state.activeStep}>
                     {steps.map((label, index) => (
                         <Step key={label}>
@@ -81,7 +76,7 @@ const AddExam = () => {
                 </Stepper>
             </Box>
 
-            <Box sx={{ mt: 2, mb: 2 }}>
+            <Box sx={{ mt: 0, mb: 2 }}>
                 {route.state.activeStep === 0 ? (
                     <ExamInfo
                         handleNext={handleNext}
