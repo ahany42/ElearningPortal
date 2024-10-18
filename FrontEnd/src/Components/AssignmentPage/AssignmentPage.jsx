@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./AssignmentPage.css";
 import { set } from "date-fns";
+import {getCookie} from "../Cookie/Cookie.jsx";
 
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
@@ -104,7 +105,7 @@ const AssignmentPage = ({ assignments }) => {
   if (selectedFile && selectedFile.type === 'application/pdf') {
     setFile(selectedFile);
   } else {
-    alert('Please upload a valid PDF file.');
+    showMessage('Please upload a valid PDF file.',true);
   }
 };
  const handleSubmitPdf = async (event) => {
@@ -113,23 +114,27 @@ const AssignmentPage = ({ assignments }) => {
     showMessage("Please Attach PDF File",true);
     return;
   }
-
   const formData = new FormData();
-  formData.append('pdf', file);
-  // to be linked with backend
+  formData.append('assignmentID', assignment.id);
+  formData.append('pdf',file);
   try {
-    const response = await axios.post('', formData, {
+    const response = await fetch('http://localhost:3008/solveAssignment', {
+      method: 'POST',
+      body: formData,
       headers: {
-        'Content-Type': 'multipart/form-data',
+      'authorization': getCookie('token')
       },
     });
-    if(response.error){
-      showMessage(response.error,true);
+    const data = await response.json();
+    if(data.error){
+      showMessage(data.error,true);
+      setFile("")
     }
     else{
-      showMessage(response.message,false);
+      showMessage(data.message,false);
     }
   } catch (error) {
+    showMessage('Error uploading file', true);
   }
 };
   return (
@@ -140,7 +145,6 @@ const AssignmentPage = ({ assignments }) => {
     >
       <Card elevation={3} style={{ padding: "1.5rem", position: 'relative' }}>
         <CardContent>
-          {/* Assignment Title */}
           <Typography variant="h4" gutterBottom
                       style={!isEditing? {marginBottom: "15px"} : {}}>
             {isEditing ? (
@@ -324,7 +328,7 @@ const AssignmentPage = ({ assignments }) => {
       </Card>
     </Container>:<>
     <div className="pdf-upload-container">
-      <h2>Upload PDF</h2>
+      <h3>Upload PDF</h3>
       <form onSubmit={handleSubmitPdf}>
         <input type="file" accept="application/pdf" onChange={handleFileChangePdf} />
         <button type="submit">Upload</button>

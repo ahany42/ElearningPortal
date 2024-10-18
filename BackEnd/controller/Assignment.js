@@ -140,7 +140,6 @@ class AssignmentController {
             const { assignmentID } = req.body; // assignmentID as v4 uuid
             const document = req.file ? req.file.path : null; // Store document path from multer
             const student = req.user;
-
             const user = await User.findOne({ id: student.id });
 
             // Validate input
@@ -179,7 +178,7 @@ class AssignmentController {
             const savedAnswer = await newAssignmentAnswer.save();
             return res.status(201).json({ message: "Assignment submitted successfully", data: savedAnswer });
         } catch (err) {
-            res.status(200).json({ error: "Unexpected Error Occured" });
+            res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Solve Assignment Function => ${err}`);
         }
     }
