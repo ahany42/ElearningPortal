@@ -65,3 +65,8 @@ user-select: none;
 .backButton-AssignmentPage:hover {
     background: #fb8928 !important;
 }
+@media(max-width:400px){
+  .pdf-upload-container{
+    width:300px;
+  }
+}
