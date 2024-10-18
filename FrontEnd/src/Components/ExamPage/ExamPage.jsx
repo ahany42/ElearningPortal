@@ -17,7 +17,6 @@ import {Back_Origin} from '../../../Front_ENV.jsx';
 import "./ExamPage.css";
 
 const ExamPage = ({ exams }) => {
-  console.log(exams);
   const navigate = useNavigate();
   const location = useLocation();
   const { showMessage, currentUser, setExams, courses } =
@@ -33,6 +32,7 @@ const ExamPage = ({ exams }) => {
   const [editableExam, setEditableExam] = useState(exam);
 
   useEffect(() => {
+    console.log(location.state, exams)
     if (location.state?.eid) {
       const examData = exams.find((el) => el.id === location.state.eid);
       if (examData) {
@@ -65,15 +65,14 @@ const ExamPage = ({ exams }) => {
             Authorization: getCookie("token"),
           },
         }
-      );
+      ).then((res) => res.json());
 
-      if (response.ok) {
+      if (!response.error) {
         setExams((prevState) => prevState.filter((exam) => exam.id !== examId));
         showMessage("Exam deleted successfully", false);
         navigate("/deadline");
       } else {
-        const data = await response.json();
-        showMessage(data.error, true);
+        showMessage(response.error, true);
       }
     } catch (error) {
       showMessage("Unexpected Error Occurred", true);
@@ -101,10 +100,9 @@ const ExamPage = ({ exams }) => {
             eDate: editableExam.endDate,
           }),
         }
-      );
+      ).then((res) => res.json());
 
-      const result = await response.json();
-      if (response.ok) {
+      if (!response.error) {
         setExams((prevExams) =>
           prevExams.map((e) =>
             e.id === exam.id
@@ -122,7 +120,7 @@ const ExamPage = ({ exams }) => {
         setIsEditing(false);
         showMessage("Exam updated successfully", false);
       } else {
-        showMessage(result.error, true);
+        showMessage(response.error, true);
       }
     } catch (error) {
       showMessage("Unexpected Error Occurred", true);
@@ -289,7 +287,13 @@ const ExamPage = ({ exams }) => {
               <div className="d-flex justify-content-center gap-5">
                 <Button
                   variant="contained"
-                  onClick={() => navigate(-1)}
+                  onClick={() => {
+                    if (location.state?.mode) {
+                      navigate(-1)
+                    } else {
+                      navigate("/deadline")
+                    }
+                  }}
                   className="pascalCase-text dark-bg light-text backButton-ExamPage"
                 >
                   Back

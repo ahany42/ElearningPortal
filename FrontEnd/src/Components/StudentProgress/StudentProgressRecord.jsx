@@ -22,11 +22,11 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
                 <span title={`${record.isExam? "Exam" : "Assignment"} Name`} onClick={() => {
                     record.isExam?
                         navigate("/ExamPage", {
-                            state: { eid: record.id },
+                            state: { eid: record.id, mode: "progress" },
                         })
                     :
                         navigate("/AssignmentPage", {
-                            state: { aid: record.id },
+                            state: { aid: record.id, mode: "progress" },
                         })
                 }}>
                     {record.title}

@@ -95,7 +95,7 @@ const StudentProgress = () => {
                         );
                       })
                   :
-                      <tr>
+                      <tr style={{background: "none"}}>
                         <td colSpan="5">
                           <Placeholder text="No progress for in this course" img={CaughtUp}/>
                         </td>

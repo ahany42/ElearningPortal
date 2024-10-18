@@ -160,7 +160,7 @@ const ExamQuestions = () => {
       <div className="buttons-container">
         <button className="goBackBtn" style={{top: "12px", left: "60px"}}
                 onClick={() => {
-                  navigate(`/CourseDetails/${route.state.courseID}`)
+                  navigate(`/ExamPage`, {state: {eid: examId}});
                 }}>
           <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
             <path
@@ -197,15 +197,19 @@ const ExamQuestions = () => {
               <Placeholder style={{marginTop: "80px"}}
                            text={`No qustions available for ${exam.ExamTitle}`} img={CaughtUp}/>
           }
-          <div className="text-end mx-5">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={submitAnswersHandler}
-            >
-              Submit
-            </button>
-          </div>
+          {
+            !!exam.questions.length && (
+              <div className="text-end mx-5">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={submitAnswersHandler}
+                >
+                  Submit
+                </button>
+              </div>
+            )
+          }
         </div>
       )}
       {userData.role === "Instructor" && (

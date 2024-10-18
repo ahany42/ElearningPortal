@@ -498,17 +498,41 @@ const INITIAL_EXAMS = [
     title: "Midterm Exam",
     courseID: "6ad77ebe-1397-4903-8360-ad58a9d18679",
     dueDate: "2024-09-30",
-    startDate: "2024-09-28",
-    description: "This is a React assignment",
+    startDate: "2024-10-01",
+    duration: 60,
+    endDate: "2024-10-05",
+    description: "This is a midterm exam",
   },
   {
     id: "a6bc188c-0cac-4407-9ac7-da47f1b66d4c",
     title: "Final Exam",
     courseID: "e55d8be9-d517-4fdb-a813-7314410d920f",
     dueDate: "2024-10-05",
-    description: "This is a Node.js assignment",
-    startDate:"2024-10-01"
+    startDate:"2024-10-01",
+    duration: 30,
+    endDate: "2024-10-05",
+    description: "This is a final exam"
   },
+  {
+    id: "994dd950-6315-4351-b4f9-01b446613e93",
+    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
+    title: "Midterm Exam 2",
+    dueDate: "2024-08-05",
+    startDate: "2024-08-15",
+    duration: 120,
+    endDate: "2024-09-01",
+    description: "This is second midterm exam"
+  },
+  {
+    id: "a6bc188c-0cac-4407-9ac7-da47f1b66d7e",
+    courseID: "ae1ebe8c-143d-460a-9452-50597ff2a790",
+    title: "Final Exam 2",
+    dueDate: "2024-10-05",
+    startDate: "2024-10-08",
+    duration: 90,
+    endDate: "2024-10-05",
+    description: "This is second final exam"
+  }
 ];
 
 export default App;
