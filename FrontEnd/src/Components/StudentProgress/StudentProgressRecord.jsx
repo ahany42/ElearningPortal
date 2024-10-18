@@ -1,11 +1,12 @@
 import './StudentProgress.css';
 import {useNavigate} from "react-router";
+import {Link} from "react-router-dom";
 import {useContext} from "react";
 import {CurrentUserContext} from "../../App.jsx";
 
 const StudentProgressRecord = ({record, courseName, highlighted}) => {
     const navigate = useNavigate();
-    const { courses } = useContext(CurrentUserContext);
+    const { currentUser,courses } = useContext(CurrentUserContext);
 
     return (
         <tr style={ highlighted? { background: "yellow", transition: "all 0.1s ease-in-out" }
@@ -37,10 +38,15 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
             <td>
                 <h6 className={record.isSubmitted ? "on-time bold-text blue-text" : "late bold-text"}>{record.isSubmitted ? "Yes" : "No"}</h6>
             </td>
+             {currentUser.role === "Instructor" &&
+            <td>
+                {record.assignmentAnswer?<Link to={`/ViewPdf/${record.assignmentAnswer}/Assignment`}>View</Link>:null}
+            </td>}
             <td style={{ borderRadius: "0 20px 20px 0" }}>
                 {(record.isSubmitted) && !isNaN(record.grade) ?
                     parseFloat(record.grade).toFixed(2) : "-"}
             </td>
+           
         </tr>
     )
 }

@@ -68,7 +68,10 @@ const StudentProgress = () => {
               <th>Exam/Assignment</th>
               <th>Deadline</th>
               <th>Submitted</th>
-              <th style={{paddingRight: "15px"}}>Grade</th>
+              {currentUser.role === "Instructor" &&
+              <th>Submission</th>
+            }
+            <th style={{paddingRight: "15px"}}>Grade</th>
             </tr>
             </thead>
             <tbody>
