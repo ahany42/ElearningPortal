@@ -1,7 +1,7 @@
 import { Button, TextField, Box } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { CurrentUserContext } from '../../App';
 import { getCookie } from "../Cookie/Cookie.jsx";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ const ExamInfo = ({ handleNext, id }) => {
     const [sDate, setSDate] = useState(null);
     const [eDate, setEDate] = useState(null);
     const { courses, showMessage } = useContext(CurrentUserContext);
+    const formRef = useRef(null);
     const currentCourse = courses.find(course => course.id === id);
     const [formData, setFormData] = useState({
         title: '',
@@ -55,10 +56,45 @@ const ExamInfo = ({ handleNext, id }) => {
                             }
                         });
                     })
-                    .catch(error => { });
+                    .catch(error => {
+                        showMessage(error.message, true);
+                    });
             }
         } else {
             showMessage("Please Fill All Fields", true);
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+
+            const isValidDate = (dateValue) => {
+                return dateValue !== "MM/DD/YYYY hh:mm aa" && !isNaN(new Date(dateValue).getTime());
+            };
+
+            // Check if it's a date field
+            if (e.target.name === "sDate" || e.target.name === "eDate") {
+                if (!isValidDate(e.target.value)) {
+                    e.target.setCustomValidity("Please select a valid date"); // Custom error message
+                    e.target.reportValidity();
+                    return; // Stop if the date is invalid
+                } else {
+                    e.target.setCustomValidity(""); // Clear any previous error
+                }
+            }
+
+            if (!formRef.current.checkValidity()) {
+                formRef.current.reportValidity();
+                return;
+            }
+
+            if (e.target.name === "title") {
+                e.target.parentNode.parentNode.nextSibling.nextSibling.querySelector("input").focus()
+            } else if (e.target.name === "duration" || e.target.name === "sDate") {
+                e.target.parentNode.parentNode.nextSibling.querySelector("input").focus()
+            } else {
+                handleExamInfo(formData.title);
+            }
         }
     }
 
@@ -66,11 +102,12 @@ const ExamInfo = ({ handleNext, id }) => {
         <div>
             <Box sx={{ width: "80%", margin: "80px auto" }}>
                 <h4 className="mb-3">Exam Info</h4>
-                <form onSubmit={handleExamInfo}>
+                <form ref={formRef}>
                     <TextField
                         label="Exam Title"
                         name="title"
                         fullWidth
+                        onKeyDown={handleKeyDown}
                         type="text"
                         value={formData.title}
                         onChange={(e) => {
@@ -101,7 +138,8 @@ const ExamInfo = ({ handleNext, id }) => {
                     <TextField
                         label="Course Title"
                         name="courseTitle"
-                        readOnly
+                        disabled
+                        onKeyDown={handleKeyDown}
                         fullWidth
                         type="text"
                         value={currentCourse ? currentCourse.title : '"Course Not Available"'}
@@ -132,6 +170,7 @@ const ExamInfo = ({ handleNext, id }) => {
                         label="Duration"
                         name="duration"
                         fullWidth
+                        onKeyDown={handleKeyDown}
                         type="number"
                         value={formData.duration}
                         onChange={(e) => {
@@ -171,20 +210,24 @@ const ExamInfo = ({ handleNext, id }) => {
                             <DateTimePicker
                                 label="Select Start Date"
                                 value={sDate}
+                                name={"sDate"}
                                 onChange={(newDate) => {
                                     setFormData({ ...formData, sDate: newDate });
                                 }}
-                                slots={{ textField: (params) => <TextField {...params} /> }}
+                                slots={{ textField: (params) =>
+                                        <TextField {...params} onKeyDown={handleKeyDown} />
+                                }}
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DateTimePicker
                                 label="Select End Date"
                                 value={eDate}
+                                name={"eDate"}
                                 onChange={(newDate) => {
                                     setFormData({ ...formData, eDate: newDate });
                                 }}
-                                slots={{ textField: (params) => <TextField {...params} /> }}
+                                slots={{ textField: (params) => <TextField {...params} onKeyDown={handleKeyDown} /> }}
                             />
                         </LocalizationProvider>
                     </Box>

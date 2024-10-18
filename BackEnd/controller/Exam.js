@@ -58,7 +58,7 @@ module.exports.addQuestions = async (req, res, next) => {
   try {
     const { examTitle, questions } = req.body;
     const examID = await findExamIdByTitle(examTitle);
-    if (examID === null) {
+    if (!examID) {
       return res.status(200).json({ error: "Exam not found" });
     }
 
@@ -89,7 +89,7 @@ module.exports.addQuestions = async (req, res, next) => {
 
     res.status(201).json({ message: "Questions were added successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Unexpected Error Occurred" });
+    res.status(200).json({ error: "Unexpected Error Occurred" });
     next(`ERROR IN: addQuestions function => ${error}`);
   }
 };
@@ -192,7 +192,7 @@ module.exports.getExamQuestions = async (req, res, next) => {
         data: exam.title,
       });
     }
-    responsedQuestionData = [];
+    let responsedQuestionData = [];
     for (const question of questions) {
       responsedQuestionData.push({
         id: question.id,
@@ -245,16 +245,16 @@ module.exports.updateExam = async (req, res, next) => {
     if (!title || !sDate || !duration || !eDate) {
       return res.status(200).json({ error: "All fields are required" });
     }
-    if (exam.title != title) {
+    if (exam.title !== title) {
       exam.title = title;
     }
-    if (exam.startDate != sDate) {
+    if (exam.startDate !== sDate) {
       exam.startDate = sDate;
     }
-    if (exam.duration != duration) {
+    if (exam.duration !== duration) {
       exam.duration = duration;
     }
-    if (exam.endDate != eDate) {
+    if (exam.endDate !== eDate) {
       exam.endDate = eDate;
     }
     await exam.save();
@@ -279,13 +279,13 @@ module.exports.updateQuestion = async (req, res, next) => {
     if (!title || !answers || indexOfCorrectAnswer === undefined) {
       return res.status(200).json({ error: "All fields are required" });
     }
-    if (question.title != title) {
+    if (question.title !== title) {
       question.title = title;
     }
-    if (question.answers != answers) {
+    if (question.answers !== answers) {
       question.answers = answers;
     }
-    questionAnswers = question.answers;
+    let questionAnswers = question.answers;
 
     if (questionAnswers[indexOfCorrectAnswer] !== question.correctAnswer) {
       question.correctAnswer = questionAnswers[indexOfCorrectAnswer];
