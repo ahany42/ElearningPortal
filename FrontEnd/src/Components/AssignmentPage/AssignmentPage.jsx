@@ -132,6 +132,7 @@ const AssignmentPage = ({ assignments }) => {
     }
     else{
       showMessage(data.message,false);
+      navigate('/deadline')
     }
   } catch (error) {
     showMessage('Error uploading file', true);
