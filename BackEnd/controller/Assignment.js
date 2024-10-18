@@ -346,6 +346,13 @@ class AssignmentController {
                                 then: false,
                                 else: true
                             }
+                        },
+                        assignmentAnswer: {
+                            $cond: {
+                                if: { $gt: [{ $size: "$assignment_answers" }, 0] },
+                                then: { $arrayElemAt: ["$assignment_answers.document", 0] },
+                                else: null
+                            }
                         }
                     }
                 }
