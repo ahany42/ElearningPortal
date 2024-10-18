@@ -1,13 +1,28 @@
 const { v4 } = require("uuid");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { Secret_Key } = require("../../env");
+const { Database_URI } = require("../../env");
 
-// Connect to MongoDB
-mongoose
-  .connect("mongodb://localhost:27017/e-learning")
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log(err));
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+
+async function run() {
+    try {
+        // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+        await mongoose.connect(Database_URI, clientOptions);
+        await mongoose.connection.db.admin().command({ ping: 1 });
+        console.log("Connected to MongoDB (Online - Cloud)");
+    } catch (e) {
+        throw new Error("Error connecting to MongoDB (Online - Cloud)");
+    }
+}
+
+run().catch(e => console.error(e));
+
+// Connect to MongoDB (Local)
+// mongoose
+//   .connect("mongodb://localhost:27017/e-learning")
+//   .then(() => console.log("Connected to MongoDB"))
+//   .catch((err) => console.log(err));
 
 // Create the User model
 const User = mongoose.model(
