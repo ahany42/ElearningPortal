@@ -141,7 +141,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                         </div>
                         <div className="course-icons" style={{top: 0, left: 0}}>
                             {
-                                enrolled ? (
+                                enrolled ? !mode && (
                                     <span className="enroll-text enrolled-button bold-text blue-text">
                                     Teaching
                                 </span>
