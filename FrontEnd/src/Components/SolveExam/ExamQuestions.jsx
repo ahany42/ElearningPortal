@@ -8,6 +8,7 @@ import Loader from "../Loader/Loader";
 import "./exam-questions.css";
 import CaughtUp from "../../assets/Grades.svg";
 import Placeholder from "../Placeholder/Placeholder.jsx";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 
 const ExamQuestions = () => {
   const { showMessage } = useContext(CurrentUserContext);
@@ -23,7 +24,7 @@ const ExamQuestions = () => {
 
   const fetchExamHandler = async () => {
     try {
-      const response = await fetch(`http://localhost:3008/getExam/${examId}`, {
+      const response = await fetch(`${Back_Origin}/getExam/${examId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,8 +65,7 @@ const ExamQuestions = () => {
     const numberOfQuestions = answers.length;
     const grade = (numberOfCorrectAnswers / numberOfQuestions) * 100;
     try {
-      const response = await fetch(
-        `http://localhost:3008/solveExam/${examId}`,
+      const response = await fetch(`${Back_Origin}/solveExam/${examId}`,
         {
           method: "POST",
           headers: {
@@ -108,8 +108,7 @@ const ExamQuestions = () => {
     console.log(exam.questions[index]);
     if (editingIndex === index) {
       try {
-        const response = await fetch(
-          `http://localhost:3008/updateQuestion/${questionId}`,
+        const response = await fetch(`${Back_Origin}/updateQuestion/${questionId}`,
           {
             method: "PUT",
             headers: {
@@ -138,8 +137,7 @@ const ExamQuestions = () => {
   const deleteQuestionHandler = async (index) => {
     const questionId = exam.questions[index].id;
     try {
-      const response = await fetch(
-        `http://localhost:3008/deleteQuestion/${questionId}`,
+      const response = await fetch(`${Back_Origin}/deleteQuestion/${questionId}`,
         {
           method: "DELETE",
           headers: {

@@ -7,6 +7,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { useNavigate } from "react-router-dom";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 
 const ChangePassword = () => {
     const location = useLocation();
@@ -32,7 +33,7 @@ const ChangePassword = () => {
     const checkToken = async () => {
         try {
             const response = await fetch(
-                `http://localhost:3008/verifyRestToken/${token}`, {
+                `${Back_Origin}/verifyRestToken/${token}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

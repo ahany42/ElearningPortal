@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CurrentUserContext } from "../../App";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 import "./ExamPage.css";
 
 const ExamPage = ({ exams }) => {
@@ -56,7 +57,7 @@ const ExamPage = ({ exams }) => {
   const deleteExamHandler = async (examId) => {
     try {
       const response = await fetch(
-        `http://localhost:3008/deleteExam/${examId}`,
+        `${Back_Origin}/deleteExam/${examId}`,
         {
           method: "DELETE",
           headers: {
@@ -86,7 +87,7 @@ const ExamPage = ({ exams }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3008/updateExam/${exam.id}`,
+        `${Back_Origin}/updateExam/${exam.id}`,
         {
           method: "PUT",
           headers: {

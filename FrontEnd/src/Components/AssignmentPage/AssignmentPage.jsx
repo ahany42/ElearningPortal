@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./AssignmentPage.css";
 import { set } from "date-fns";
 import {getCookie} from "../Cookie/Cookie.jsx";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
@@ -118,7 +119,7 @@ const AssignmentPage = ({ assignments }) => {
   formData.append('assignmentID', assignment.id);
   formData.append('pdf',file);
   try {
-    const response = await fetch('http://localhost:3008/solveAssignment', {
+    const response = await fetch(`${Back_Origin}/solveAssignment`, {
       method: 'POST',
       body: formData,
       headers: {

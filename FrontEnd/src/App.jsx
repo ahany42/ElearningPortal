@@ -126,7 +126,7 @@ function App() {
   const routes = useLocation();
 
   const fetchCourses = async () => {
-    const response = await fetch(`http://localhost:3008/getCourses`, {
+    const response = await fetch(`${Front_ENV.Back_Origin}/getCourses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ function App() {
   };
 
   const fetchAssignments = async () => {
-    const response = await fetch(`http://localhost:3008/getAssignments/`, {
+    const response = await fetch(`${Front_ENV.Back_Origin}/getAssignments/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -160,7 +160,7 @@ function App() {
   };
 
   const fetchExams = async () => {
-    const response = await fetch(`http://localhost:3008/course-exams/`, {
+    const response = await fetch(`${Front_ENV.Back_Origin}/course-exams/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

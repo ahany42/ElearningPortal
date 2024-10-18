@@ -7,6 +7,7 @@ import {
   MDBCardBody,
   MDBCardImage,
 } from "mdb-react-ui-kit";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 import { TextField } from '@mui/material' ;
 import { CurrentUserContext } from "../../App";
 import { getCookie, updateCookie } from "../Cookie/Cookie.jsx";
@@ -46,7 +47,7 @@ const UserProfile = () => {
     }
     setTimeout(async () => {
       setLoading(true);
-      await fetch(`http://localhost:3008/updateUser/${currentUser.id}`, {
+      await fetch(`${Back_Origin}updateUser/${currentUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +81,7 @@ const UserProfile = () => {
 
   const changePassword = async () => {
     setLoading(true);
-    await fetch("http://localhost:3008/forgotPassword", {
+    await fetch(`${Back_Origin}/forgotPassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

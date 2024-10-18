@@ -24,6 +24,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined'; // Import Info icon
 import { NavLink } from "react-router-dom";
 import {setCookie} from "../Cookie/Cookie.jsx";
 import {jwtDecode} from "jwt-decode";
+import {Back_Origin} from '../../../Front_ENV.jsx';
 
 
 const SignUp = ({isInstructor,adminId}) => {
@@ -65,7 +66,7 @@ const SignUp = ({isInstructor,adminId}) => {
       showMessage('Password and Confirm Password are not matching', true);
     else {
       try {
-        const res = await fetch('http://localhost:3008/register', {
+        const res = await fetch( `${Back_Origin}/register`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(formData),
@@ -85,7 +86,7 @@ const SignUp = ({isInstructor,adminId}) => {
           }
           else{
             setLoading(true);
-            const loginResponse = await fetch('http://localhost:3008/login', {
+            const loginResponse = await fetch(`${Back_Origin}/login`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({username: formData.username, password: formData.password}),

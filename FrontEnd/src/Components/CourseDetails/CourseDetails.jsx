@@ -50,7 +50,7 @@ const CourseDetails = () => {
             courseId: id,
         });
         // Fetch materials for the student
-        const response = await fetch(`http://localhost:3008/getCourseMaterials?${params}`, {
+        const response = await fetch(`${Front_ENV.Back_Origin}/getCourseMaterials?${params}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
