@@ -14,5 +14,10 @@
   },
   "dependencies": {
     "concurrently": "^6.0.0"
-  }
+  },
+  "description": "This eLearning platform enables users to enroll in courses, submit assignments, and take exams. The platform supports four types of users: Students, Instructors, Admins, and Super Admins. Each role has distinct functionalities, ensuring the system is secure and efficient in managing courses and student progress.",
+  "main": "env.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
 }
