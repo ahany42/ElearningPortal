@@ -223,6 +223,12 @@ module.exports.deleteExam = async (req, res, next) => {
     if (!exam) {
       return res.status(200).json({ error: "Exam not found" });
     }
+    const questions = await Question.find({ examID: exam._id });
+    if (questions.length > 0) {
+      for (const question of questions) {
+        await Question.deleteOne({ id: question.id });
+      }
+    }
     await Exam.deleteOne({ id: examId });
     res.status(201).json({ message: "Exam deleted successfully" });
   } catch (error) {
