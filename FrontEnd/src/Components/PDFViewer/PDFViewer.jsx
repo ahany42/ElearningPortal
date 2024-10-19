@@ -15,7 +15,7 @@ const PdfViewer = () => {
         // Fetch the PDF URL from the backend
         const fetchPdf = async () => {
             try {
-                const response = await fetch(`${ENV.Back_Origin}/${pdfURL}`, {
+                const response = await fetch(`${ENV.Back_Origin}/${pdfUrl}`, {
                     method: 'GET',
                     credentials: 'include', // If you need cookies/credentials
                 });
