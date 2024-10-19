@@ -87,6 +87,6 @@ The platform uses *MongoDB* as the primary database, with the following collecti
 - *Posts*: Stores the Announcements added by instructors
 
 ## 8. Deployment
-
+https://elearning-portal-bice.vercel.app/
 
 
