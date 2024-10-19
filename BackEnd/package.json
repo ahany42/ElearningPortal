@@ -22,6 +22,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
+    "start": "nodemon index.js",
     "test": "mocha --timeout 10000 './test/assignmentControllerTest.js' --exit"
   },
   "author": "",
