@@ -7,10 +7,10 @@ import './PdfViewer.css'; // Import your custom CSS for further styling
 import ENV from '../../../Front_ENV';
 import Loader from "../Loader/Loader.jsx";
 
-const PdfViewer = () => {
+const PdfViewer = ({document,name}) => {
     const {url,pdfTitle} = useParams();
-    const [title, setTitle] = useState(pdfTitle);
-    const [pdfUrl, setPdfUrl] = useState(url);
+    const [title, setTitle] = useState(name);
+    const [pdfUrl, setPdfUrl] = useState(document);
     useEffect(() => {
         // Fetch the PDF URL from the backend
         const fetchPdf = async () => {

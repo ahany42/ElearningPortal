@@ -8,10 +8,13 @@ import { getCookie } from "../Cookie/Cookie.jsx";
 import './StudentProgress.css';
 import Front_ENV from "../../../Front_ENV.jsx";
 import Loader from "../Loader/Loader.jsx";
+import PdfViewer from '../PDFViewer/PDFViewer.jsx';
 
 const StudentProgress = () => {
   const { currentUser, showMessage, courses } = useContext(CurrentUserContext);
   const [progress, setProgress] = useState([]);
+  const [viewPdf,setViewPdf] = useState(false);
+  const [viewedDocument,setViewedDocument] = useState(null);
   const { id } = useParams();
   const { name } = useParams();
   const studentId = id || currentUser.id;
@@ -39,9 +42,6 @@ const StudentProgress = () => {
   }, [studentId]);
 
   return (
-      !progress.length? (
-          <Loader />
-      ) :
         <div className="mt-5">
           {
             route.state && route.state.courseID &&
@@ -64,7 +64,7 @@ const StudentProgress = () => {
               </button>
           }
           <h5 className="alignCenter-text">{name || currentUser.name}'s Progress</h5>
-          <div className="student-progress-table-container">
+          {!viewPdf? <div className="student-progress-table-container">
             <table className="student-progress-table">
               <thead>
               <tr>
@@ -93,22 +93,25 @@ const StudentProgress = () => {
                           return (
                               route.state && (route.state.courseID === record.course) ?
                                   <StudentProgressRecord highlighted={true} key={record.id} record={record}
-                                                         courseName={course.title}/>
+                                                         courseName={course.title} setViewPdf={setViewPdf} setViewedDocument={setViewedDocument}/>
                                   :
-                                  <StudentProgressRecord key={record.id} record={record} courseName={course.title}/>
+                                  <StudentProgressRecord key={record.id} record={record} courseName={course.title} setViewPdf={setViewPdf} setViewedDocument={setViewedDocument}/>
                           );
                         })
                     :
                         <tr style={{background: "none"}}>
                           <td colSpan="5">
-                            <Placeholder text="No progress for in this course" img={CaughtUp}/>
+                            <Placeholder text="No progress for in this student" img={CaughtUp}/>
                           </td>
                         </tr>
                 )
               }
               </tbody>
             </table>
-          </div>
+          </div>:<>
+          <PdfViewer document={viewedDocument.document} name={viewedDocument.name}/>
+          </>}
+
         </div>
   );
 }

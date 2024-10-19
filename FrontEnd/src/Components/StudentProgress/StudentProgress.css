@@ -59,6 +59,10 @@
 font-weight: 600;
 font-size: 16px;
 color:blue;
+border: none;
+}
+.view-pdf-button:hover{
+    background-color: transparent;
 }
 @media (max-width: 768px) {
     .student-progress-table-container {

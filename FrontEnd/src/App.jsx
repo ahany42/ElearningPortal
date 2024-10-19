@@ -468,15 +468,9 @@ function App() {
                 element={<StudentProgress />}
               />{" "}
               <Route path="/ViewProgress" element={<StudentProgress />} />
-              <Route path="/ViewPdf/:url/:pdfTitle" element={<PdfViewer />} />
               <Route path="/AddInstructor" element={<AddInstructor />} />
               <Route path="/InstructorsPage" element={<InstructorsPage />} />
-              <Route
-                path="*"
-                element={
-                  <Placeholder
-                    text="Page Not Found"
-                    img={NotFoundImg}
+              <Route path="*"element={<Placeholder text="Page Not Found" img={NotFoundImg}
                     buttonText="Back To Home"
                     buttonRoute="/"
                   />
