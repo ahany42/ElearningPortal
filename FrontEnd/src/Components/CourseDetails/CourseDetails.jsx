@@ -70,7 +70,7 @@ const CourseDetails = () => {
 
     const fetchData = async () => {
         await fetchCourses();
-        await fetchMaterials();
+        isAuthenticated && await fetchMaterials();
     }
 
     useEffect(() => {
