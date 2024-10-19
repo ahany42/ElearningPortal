@@ -29,7 +29,7 @@ import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
-import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
+import Front_ENV from "../Front_ENV.jsx";
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
 import InstructorsPage from "./Components/AdminInstructorsPage/AdminInstructorsPage.jsx";
@@ -366,24 +366,15 @@ function App() {
   return (
     <CurrentUserContext.Provider
       value={{
-        currentUser,
-        setCurrentUser,
-        isAuthenticated,
-        showMessage,
-        confirmationToast,
-        fetchCourses,
-        fetchAll,
-        setIsAuthenticated,
-        courses,
-        setCourses,
-        setLoading,
-        progress,
-        instructorsList,
-        setAssignments,
-        setExams,
-        setMaterials,
-        materials,
-        studentsList,
+        currentUser, setCurrentUser,
+        isAuthenticated, showMessage,
+        confirmationToast, fetchCourses,
+        fetchAll, setIsAuthenticated,
+        courses, setCourses, loading,
+        setLoading, progress,
+        instructorsList, setAssignments,
+        setExams, setMaterials,
+        materials, studentsList,
       }}
     >
       <div className="body-container">

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { CurrentUserContext } from "../../App";
 import { toast } from 'react-toastify';
 import { jwtDecode } from "jwt-decode";
@@ -10,35 +10,21 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { setCookie } from "../Cookie/Cookie.jsx";
 import {Back_Origin} from '../../../Front_ENV.jsx';
 import './Login.css';
+import Loader from "../Loader/Loader.jsx";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [activeErrors, setActiveErrors] = useState([]);
+  const [loader, setLoader] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
-  const { setCurrentUser, setIsAuthenticated } = useContext(CurrentUserContext);
+  const { setCurrentUser, setIsAuthenticated, showMessage } = useContext(CurrentUserContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (error && !activeErrors.includes(error)) {
-      setActiveErrors([...activeErrors, error]);
-      toast.error(error, {
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        onClose: () => {
-          setError('') // Reset the error message
-          setActiveErrors(prevState => prevState.filter(e => e !== error))
-        }
-      });
-    }
-  }, [error]);
+  if (loader) {
+    return <Loader />;
+  }
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => event.preventDefault();
@@ -48,11 +34,10 @@ const Login = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (!e.target.value) {
-        setError(' Please enter your ' + field);
+        showMessage(' Please enter your ' + field, true);
         return;
       }
       if (field === 'username') {
-        setError('');
         // Move focus to the password field
         e.target.parentElement.parentElement.nextElementSibling.children[1].children[0].focus()
       } else if (field === 'password') {
@@ -64,7 +49,7 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
+    setLoader(true);
     try {
       const response = await fetch(`${Back_Origin}/login`, {
         method: 'POST',
@@ -73,31 +58,21 @@ const Login = () => {
       });
 
       const data = await response.json();
+      setLoader(false);
       if (!data.error) {
-        toast.success(data.message, {
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: {
-            userSelect: 'none',
-            gap: '10px',
-            padding: '20px',
-          }
-        });
-
+        showMessage(data.message, false);
         setCookie('token', data.data);
         setIsAuthenticated(true);
         setCurrentUser(jwtDecode(data.data));
         navigate('/courses');
       } else {
         // Show error message
-        setError(data.error);
+        showMessage(data.error, true);
         setIsAuthenticated(false);
       }
     } catch (error) {
-      setError(error);
+      setLoader(false);
+      showMessage('An error occurred. Please try again later.', true);
       setIsAuthenticated(false);
     }
   };
@@ -117,7 +92,6 @@ const Login = () => {
             onKeyDown={(e) => handleKeyPress(e, "username")}
             onChange={(e) => {
               setFormData({ ...formData, username: e.target.value });
-              setError("");
               toast.dismiss();
             }}
             required
@@ -172,7 +146,6 @@ const Login = () => {
               value={formData.password}
               onChange={(e) => {
                 setFormData({ ...formData, password: e.target.value });
-                setError("");
               }}
               type={showPassword ? "text" : "password"}
               onKeyDown={(e) => handleKeyPress(e, "password")}

@@ -6,7 +6,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import {useState, useContext} from "react";
+import {useState, useContext, useEffect} from "react";
 import {CurrentUserContext} from "../../App";
 import {NavLink, useLocation} from "react-router-dom";
 import {v4} from "uuid";
@@ -36,7 +36,7 @@ const burgerListPages = [
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElProfile, setAnchorElProfile] = useState(null);
-  const { isAuthenticated, currentUser } = useContext(CurrentUserContext);
+  const { isAuthenticated, currentUser, loading } = useContext(CurrentUserContext);
   const route = useLocation().pathname;
 
   const profileOptions = isAuthenticated ? [
@@ -67,7 +67,8 @@ const Header = () => {
     <header className="header"
             style={route === "/"? {position: "absolute", top: 0, zIndex: "100"} : {}}>
       <nav className="navbar"
-           style={route === "/"? {boxShadow: "0 0 20px 2px #00000052", background: "#3d673400"} : {}}>
+           style={route === "/"? loading? {boxShadow: "0 0 20px 2px #00000052"}
+                : {boxShadow: "0 0 20px 2px #00000052", background: "#3d673400"} : {}}>
           <NavLink to='/' style={{textDecoration: 'none'}}
                    onDragStart={(e) => e.preventDefault()}>
               <div className="logo">E-Learning</div>
