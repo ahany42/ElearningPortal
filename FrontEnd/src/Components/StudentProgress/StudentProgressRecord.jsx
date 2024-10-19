@@ -40,10 +40,10 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
             </td>
              {currentUser.role === "Instructor" &&
             <td>
-                {record.assignmentAnswer?<Link to={`/ViewPdf/${record.assignmentAnswer}/Assignment`}>View</Link>:null}
+                {record.assignmentAnswer?<Link to={`/ViewPdf/${record.assignmentAnswer}/Assignment`} className="view-pdf-button">View</Link>:null}
             </td>}
-            <td style={{ borderRadius: "0 20px 20px 0" }}>
-                {(record.isSubmitted) && !isNaN(record.grade) ?
+            <td style={{ borderRadius: "0 20px 20px 0" }} >
+                {(record.isSubmitted && record.isExam) && !isNaN(record.grade) ?
                     parseFloat(record.grade).toFixed(2) : "-"}
             </td>
            

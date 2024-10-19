@@ -55,6 +55,11 @@
     color:red;
     margin: 5px 4px;
 }
+.view-pdf-button{
+font-weight: 600;
+font-size: 16px;
+color:blue;
+}
 @media (max-width: 768px) {
     .student-progress-table-container {
         padding: 10px;

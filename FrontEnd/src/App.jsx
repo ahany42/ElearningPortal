@@ -468,7 +468,7 @@ function App() {
                 element={<StudentProgress />}
               />{" "}
               <Route path="/ViewProgress" element={<StudentProgress />} />
-              <Route path="/ViewPdf/:url/:title" element={<PdfViewer />} />
+              <Route path="/ViewPdf/:url/:pdfTitle" element={<PdfViewer />} />
               <Route path="/AddInstructor" element={<AddInstructor />} />
               <Route path="/InstructorsPage" element={<InstructorsPage />} />
               <Route
