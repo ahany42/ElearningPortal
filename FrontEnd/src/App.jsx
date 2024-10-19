@@ -2,7 +2,7 @@ import { useEffect, useState, createContext } from "react";
 import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
-import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
+import ForgotPassword from './Components/Forgotpassword/Forgotpassword.jsx';
 import SignUp from "./Components/Signup/Signup.jsx";
 import UserProfile from "./Components/UserProfile/UserProfile.jsx";
 import StudentList from "./Components/StudentsList/StudentList.jsx";

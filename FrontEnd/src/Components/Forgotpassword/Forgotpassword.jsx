@@ -100,6 +100,6 @@ const ForgotPassword = () => {
       </Box>
     
   );
-};
+}
 
-export default ForgotPassword;
+export default ForgotPassword

@@ -1,7 +1,7 @@
 import {useContext, useEffect, useRef, useState} from 'react'
 import { CurrentUserContext } from "../../App.jsx";
 import CourseCard from '../CourseCard/CourseCard';
-import AddCourseForm from '../addCourseForm/AddCourseForm';
+import AddCourseForm from '../AddCourseForm/AddCourseForm.jsx';
 import Placeholder from '../Placeholder/Placeholder';
 import SearchBar from '../Search-MUI/Search-MUI';
 import NoCoursesImg from '../../assets/Student.svg';

@@ -3,12 +3,11 @@ import { useParams } from 'react-router';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import './PdfViewer.css'; // Import your custom CSS for further styling
+import './PDFViewer.css'; // Import your custom CSS for further styling
 import ENV from '../../../Front_ENV';
 import Loader from "../Loader/Loader.jsx";
 
 const PdfViewer = ({document,name}) => {
-    const {url,pdfTitle} = useParams();
     const [title, setTitle] = useState(name);
     const [pdfUrl, setPdfUrl] = useState(document);
     useEffect(() => {
