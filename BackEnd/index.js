@@ -18,7 +18,7 @@ app.use(limiter);
 
 const cors = require("cors");
 
-const allowedOrigins = [ENV.Front_Origin, 'https://elearning-portal-bice.vercel.app/'];
+const allowedOrigins = [ENV.Front_Origin, 'https://elearning-portal-bice.vercel.app'];
 
 // Middleware to allow requests from other origins
 app.use(

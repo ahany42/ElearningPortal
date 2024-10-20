@@ -81,7 +81,7 @@ const StudentProgress = () => {
               <tbody>
               {
                 progress.length === 0 ? (
-                    <tr>
+                    <tr style={{background: "none"}}>
                       <td colSpan="5">
                         <Placeholder text="You're all caught up" img={CaughtUp}/>
                       </td>

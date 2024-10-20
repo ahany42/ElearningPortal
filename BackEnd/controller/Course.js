@@ -318,7 +318,7 @@ class CourseController {
                             courseID: course._id,
                             duration
                      });
-                     if(user.role === "student"){
+                     if(user.role.toLowerCase() === "student"){
                             res.status(201).json({
                                    data: {
                                           course: course.id,
