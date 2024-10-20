@@ -8,13 +8,14 @@ import Loader from "../Loader/Loader";
 import "./exam-questions.css";
 import CaughtUp from "../../assets/Grades.svg";
 import Placeholder from "../Placeholder/Placeholder.jsx";
-import {Back_Origin} from '../../../Front_ENV.jsx';
+import { Back_Origin } from "../../../Front_ENV.jsx";
 
 const ExamQuestions = () => {
   const { showMessage } = useContext(CurrentUserContext);
   const navigate = useNavigate();
   const { examId } = useParams();
   const route = useLocation();
+  const courseId = route.state.courseID;
   const yourToken = getCookie("token");
   const userData = jwtDecode(yourToken);
   const [exam, setExam] = useState(null);
@@ -65,20 +66,18 @@ const ExamQuestions = () => {
     const numberOfQuestions = answers.length;
     const grade = (numberOfCorrectAnswers / numberOfQuestions) * 100;
     try {
-      const response = await fetch(`${Back_Origin}/solveExam/${examId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${yourToken}`,
-          },
-          body: JSON.stringify({
-            studentId: `${userData.id}`,
-            grade,
-            submissionDate: new Date(),
-          }),
-        }
-      );
+      const response = await fetch(`${Back_Origin}/solveExam/${examId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${yourToken}`,
+        },
+        body: JSON.stringify({
+          studentId: `${userData.id}`,
+          grade,
+          submissionDate: new Date(),
+        }),
+      });
       const result = await response.json();
       showMessage(result.message, false);
       navigate(`/deadline/`);
@@ -89,7 +88,6 @@ const ExamQuestions = () => {
 
   const handleEditChange = (index, field, value) => {
     const question = exam.questions[index];
-    console.log(question);
     const updatedQuestions = [...exam.questions];
     if (field === "title") {
       updatedQuestions[index].title = value;
@@ -104,11 +102,10 @@ const ExamQuestions = () => {
 
   const editQuestionHandler = async (index) => {
     const questionId = exam.questions[index].id;
-    console.log(editingIndex);
-    console.log(exam.questions[index]);
     if (editingIndex === index) {
       try {
-        const response = await fetch(`${Back_Origin}/updateQuestion/${questionId}`,
+        const response = await fetch(
+          `${Back_Origin}/updateQuestion/${questionId}`,
           {
             method: "PUT",
             headers: {
@@ -125,7 +122,6 @@ const ExamQuestions = () => {
           }
         );
         const result = await response.json();
-        console.log(result);
         showMessage(result.message, false);
       } catch (error) {}
       setEditingIndex(null); // Save and exit editing mode
@@ -137,7 +133,8 @@ const ExamQuestions = () => {
   const deleteQuestionHandler = async (index) => {
     const questionId = exam.questions[index].id;
     try {
-      const response = await fetch(`${Back_Origin}/deleteQuestion/${questionId}`,
+      const response = await fetch(
+        `${Back_Origin}/deleteQuestion/${questionId}`,
         {
           method: "DELETE",
           headers: {
@@ -158,25 +155,57 @@ const ExamQuestions = () => {
   return (
     <>
       <div className="buttons-container">
-        <button className="goBackBtn" style={{top: "12px", left: "60px"}}
-                onClick={() => {
-                  navigate(`/ExamPage`, {state: {eid: examId}});
-                }}>
-          <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
-            <path
-                d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
+        <button
+          className="goBackBtn"
+          style={{ top: "12px", left: "60px" }}
+          onClick={() => {
+            navigate(`/ExamPage`, { state: { eid: examId } });
+          }}
+        >
+          <svg
+            height="16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            viewBox="0 0 1024 1024"
+          >
+            <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
           </svg>
           <span>Back</span>
         </button>
       </div>
+      {userData.role === "Instructor" && (
+        <div className="buttons-container">
+          <button
+            className="goBackBtn"
+            style={{ top: "12px", right: "60px" }}
+            onClick={() => {
+              navigate(`/AddExam/${courseId}`, {
+                state: { activeStep: 1, eid: exam.ExamTitle },
+              });
+            }}
+          >
+            <svg
+              height="16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              viewBox="0 0 1024 1024"
+            >
+              <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path>
+            </svg>
+            <span>Add Questions</span>
+          </button>
+        </div>
+      )}
       {userData.role === "Student" && (
         <div className="container">
-          {
-              !!exam.questions.length &&
-                <h2 className="text-center text-white exam-title">{exam.ExamTitle}</h2>
-          }
-          {
-            !exam.questions.map((question, index) => (
+          {!!exam.questions.length && (
+            <h2 className="text-center text-white exam-title">
+              {exam.ExamTitle}
+            </h2>
+          )}
+          {!exam.questions.map((question, index) => (
             <div key={index} className="mx-5 my-4 px-3 py-2 exam-question">
               <h3 className="mb-3">{question.title}</h3>
               {question.answers.map((answer, idx) => (
@@ -193,122 +222,129 @@ const ExamQuestions = () => {
                 </div>
               ))}
             </div>
-          )).length &&
-              <Placeholder style={{marginTop: "80px"}}
-                           text={`No qustions available for ${exam.ExamTitle}`} img={CaughtUp}/>
-          }
-          {
-            !!exam.questions.length && (
-              <div className="text-end mx-5">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={submitAnswersHandler}
-                >
-                  Submit
-                </button>
-              </div>
-            )
-          }
+          )).length && (
+            <Placeholder
+              style={{ marginTop: "80px" }}
+              text={`No qustions available for ${exam.ExamTitle}`}
+              img={CaughtUp}
+            />
+          )}
+          {!!exam.questions.length && (
+            <div className="text-end mx-5">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={submitAnswersHandler}
+              >
+                Submit
+              </button>
+            </div>
+          )}
         </div>
       )}
       {userData.role === "Instructor" && (
         <div className="container">
-          {
-            !!exam.questions.length &&
-              <h2 className="text-center text-white exam-title">{exam.ExamTitle}</h2>
-          }
-          {
-              !exam.questions.length?
-                <Placeholder style={{marginTop: "80px"}}
-                             text={`No qustions available for ${exam.ExamTitle}`} img={CaughtUp}/>
-              :
-                  exam.questions.map((question, index) => (
-                      <div key={index} className="form-check mx-5 my-2 bg-body-secondary px-3 py-2">
-                        <div className="d-flex justify-content-between align-items-center edit-question-info">
-                          <div>
-                            <label htmlFor={`questionTitle-${index}`} className="me-1">
-                              Question title:
-                            </label>
-                            <input
-                                id={`questionTitle-${index}`}
-                                value={
-                                  editingIndex === index ? question.title : question.title
-                                }
-                                disabled={editingIndex !== index}
-                                onChange={(e) =>
-                                    handleEditChange(index, "title", e.target.value)
-                                }
-                            />
-                          </div>
-                        </div>
-                        {question.answers.map((answer, idx) => (
-                            <div key={idx} className="form-check mb-3">
-                              <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  name={question.title}
-                                  value={answer}
-                                  id={`${question.title}-${idx}`}
-                                  disabled={editingIndex !== index}
-                              />
-                              <label htmlFor={`${question.title}-${idx}`}>
-                                <input
-                                    type="text"
-                                    value={editingIndex === index ? answer : answer}
-                                    disabled={editingIndex !== index}
-                                    onChange={(e) =>
-                                        handleEditChange(index, idx, e.target.value)
-                                    }
-                                />
-                              </label>
-                            </div>
-                        ))}
-                        <div className="d-flex justify-content-between align-items-center edit-question-info">
-                          <div>
-                            <label htmlFor={`correctAnswer-${index}`} className="me-1">
-                              Index of Correct Answer:
-                            </label>
-                            <input
-                                id={`correctAnswer-${index}`}
-                                type="number"
-                                value={
-                                  editingIndex === index
-                                      ? question.answers.indexOf(question.correctAnswer)
-                                      : question.answers.indexOf(question.correctAnswer)
-                                }
-                                disabled={editingIndex !== index}
-                                min="0"
-                                max="3"
-                                onChange={(e) =>
-                                    handleEditChange(
-                                        index,
-                                        "indexOfCorrectAnswer",
-                                        e.target.value
-                                    )
-                                }
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-end">
-                          <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => editQuestionHandler(index)}
-                          >
-                            {editingIndex === index ? "Save" : "Edit"}
-                          </button>
-                          <button
-                              type="button"
-                              className="btn btn-danger ms-2"
-                              onClick={() => deleteQuestionHandler(index)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                  ))
-          }
+          {!!exam.questions.length && (
+            <h2 className="text-center text-white exam-title">
+              {exam.ExamTitle}
+            </h2>
+          )}
+          {!exam.questions.length ? (
+            <Placeholder
+              style={{ marginTop: "80px" }}
+              text={`No qustions available for ${exam.ExamTitle}`}
+              img={CaughtUp}
+            />
+          ) : (
+            exam.questions.map((question, index) => (
+              <div
+                key={index}
+                className="form-check mx-5 my-2 bg-body-secondary px-3 py-2"
+              >
+                <div className="d-flex justify-content-between align-items-center edit-question-info">
+                  <div>
+                    <label htmlFor={`questionTitle-${index}`} className="me-1">
+                      Question title:
+                    </label>
+                    <input
+                      id={`questionTitle-${index}`}
+                      value={
+                        editingIndex === index ? question.title : question.title
+                      }
+                      disabled={editingIndex !== index}
+                      onChange={(e) =>
+                        handleEditChange(index, "title", e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+                {question.answers.map((answer, idx) => (
+                  <div key={idx} className="form-check mb-3">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name={question.title}
+                      value={answer}
+                      id={`${question.title}-${idx}`}
+                      disabled={editingIndex !== index}
+                    />
+                    <label htmlFor={`${question.title}-${idx}`}>
+                      <input
+                        type="text"
+                        value={editingIndex === index ? answer : answer}
+                        disabled={editingIndex !== index}
+                        onChange={(e) =>
+                          handleEditChange(index, idx, e.target.value)
+                        }
+                      />
+                    </label>
+                  </div>
+                ))}
+                <div className="d-flex justify-content-between align-items-center edit-question-info">
+                  <div>
+                    <label htmlFor={`correctAnswer-${index}`} className="me-1">
+                      Index of Correct Answer:
+                    </label>
+                    <input
+                      id={`correctAnswer-${index}`}
+                      type="number"
+                      value={
+                        editingIndex === index
+                          ? question.answers.indexOf(question.correctAnswer)
+                          : question.answers.indexOf(question.correctAnswer)
+                      }
+                      disabled={editingIndex !== index}
+                      min="0"
+                      max="3"
+                      onChange={(e) =>
+                        handleEditChange(
+                          index,
+                          "indexOfCorrectAnswer",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => editQuestionHandler(index)}
+                  >
+                    {editingIndex === index ? "Save" : "Edit"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger ms-2"
+                    onClick={() => deleteQuestionHandler(index)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
     </>
