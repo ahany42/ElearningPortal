@@ -40,9 +40,27 @@
 
 @media (max-width: 768px) {
     .CarouselContainer {
-        /*width: 90%;*/
+        position: absolute;
+        width: 350px;
+    }
+    .leftPart {
+        width: 50%;
+        position: fixed;
     }
 }
+
+@media (max-width: 570px) {
+    .CarouselContainer {
+        width: 70%;
+    }
+    .CarouselContainer h4 {
+        font-size: 1.2rem !important;
+    }
+    .leftPart {
+        width: 65%;
+    }
+}
+
 h3,p{
     color:black;
 }
