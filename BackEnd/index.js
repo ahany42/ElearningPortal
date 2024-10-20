@@ -18,10 +18,19 @@ app.use(limiter);
 
 const cors = require("cors");
 
+const allowedOrigins = [ENV.Front_Origin, 'https://elearning-portal-bice.vercel.app/'];
+
 // Middleware to allow requests from other origins
 app.use(
   cors({
-    origin: ENV.Front_Origin, // Allow all origins during development
+    origin: function (origin, callback) {
+      // Check if the origin is in the allowedOrigins array
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],

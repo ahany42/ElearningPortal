@@ -10,6 +10,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import NoExamImg from '../../assets/Student.svg';
 import Placeholder from "../Placeholder/Placeholder";
 import AddAssignment from "../AddAssignment/AddAssignment";
+
 const DeadlinesPage = ({ assignments, exams }) => {
   const [activeTab, setActiveTab] = useState("assignments");
   const [showForm, setShowForm] = useState(false);
