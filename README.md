@@ -27,7 +27,7 @@ The platform is developed using the MERN stack along with additional tools like 
 
 ### Student
 - **Enroll in Courses**: Students can enroll in available courses.
-- **Submit Assignments**: Students can upload their assignment submissions for each course.
+- **Submit Assignments**: Students can upload their assignment submissions for each course as a pdf.
 - **Solve Exams**: Students can participate in multiple-choice exams and submit answers.
 - **View Deadlines**: Students can see upcoming deadlines for assignments and exams.
 - **Track Progress**: Students can view their progress for each course they are enrolled in, including marks for assignments and exams.
@@ -87,6 +87,6 @@ The platform uses *MongoDB* as the primary database, with the following collecti
 - *Posts*: Stores the Announcements added by instructors
 
 ## 8. Deployment
-
+https://elearning-portal-bice.vercel.app/
 
 

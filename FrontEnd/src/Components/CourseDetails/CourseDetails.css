@@ -89,3 +89,8 @@ top:20px;
 .stats-button:hover{
     color:#1330BE ;
 }
+@media(max-width:750px){
+    .course-description{
+    margin-top: 10px !important;
+    }
+}

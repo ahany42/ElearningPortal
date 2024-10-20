@@ -4,7 +4,7 @@ import { Button, TextField, Box } from "@mui/material";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import {CurrentUserContext} from "../../App.jsx";
-
+import Front_ENV from "../../../Front_ENV.jsx";
 const ForgotPassword = () => {
   // const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -18,7 +18,7 @@ const ForgotPassword = () => {
     setTimeout(async () => {
       try {
         const response = await axios.post(
-            "http://localhost:3008/forgotpassword",
+          `${Front_ENV.Back_Origin}/forgotpassword`,
             JSON.stringify({...formData, isedit: false}),
             {
               headers: { "Content-Type": "application/json" },
@@ -100,6 +100,6 @@ const ForgotPassword = () => {
       </Box>
     
   );
-};
+}
 
-export default ForgotPassword;
+export default ForgotPassword

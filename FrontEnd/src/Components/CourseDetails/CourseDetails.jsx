@@ -60,7 +60,6 @@ const CourseDetails = () => {
   const [loader, setLoader] = useState(true);
   const route = useLocation();
   const course = courses.find((course) => course.id === id);
-  console.log(course.id);
 
   const fetchMaterials = async () => {
     const params = new URLSearchParams({
@@ -90,7 +89,7 @@ const CourseDetails = () => {
 
   const fetchData = async () => {
     await fetchCourses();
-    await fetchMaterials();
+    isAuthenticated && (await fetchMaterials());
   };
 
   useEffect(() => {
@@ -112,6 +111,7 @@ const CourseDetails = () => {
       "Are you sure you want to enroll in this course?"
     );
     if (confirm) {
+      setLoader(true);
       const response = await fetch(`${Front_ENV.Back_Origin}/enroll-course`, {
         method: "POST",
         headers: {
@@ -124,7 +124,7 @@ const CourseDetails = () => {
           duration: course.hours,
         }),
       }).then((response) => response.json());
-
+      setLoader(false);
       if (response.error) {
         showMessage(response.error, true);
       } else {
@@ -138,6 +138,7 @@ const CourseDetails = () => {
     navigate(`/AddMaterial/${course.id}`);
   };
   const AssignInstructor = async (courseId) => {
+    setLoader(true);
     const response = await fetch(
       `${Front_ENV.Back_Origin}/getUsers?role=Instructor`,
       {
@@ -148,11 +149,13 @@ const CourseDetails = () => {
         },
       }
     ).then((response) => response.json());
+    setLoader(false);
     navigate(`/AssignInstructor/${courseId}`, {
       state: { instructorsList: response.data, assignInstructor: true },
     });
   };
   const StudentsList = async () => {
+    setLoader(true);
     const params = new URLSearchParams({
       courseId: id,
       type: "students",
@@ -167,13 +170,14 @@ const CourseDetails = () => {
         },
       }
     ).then((response) => response.json());
-
+    setLoader(false);
     navigate(`/CourseDetails/${id}/StudentsList`, {
       state: { studentsList: response.data },
     });
   };
 
   const InstructorsList = async () => {
+    setLoader(true);
     const params = new URLSearchParams({
       courseId: id,
       type: "instructors",
@@ -188,7 +192,7 @@ const CourseDetails = () => {
         },
       }
     ).then((response) => response.json());
-
+    setLoader(false);
     navigate(`/CourseDetails/${id}/InstructorsList`, {
       state: { instructorsList: response.data },
     });
@@ -315,7 +319,7 @@ const CourseDetails = () => {
               <Loader />
             ) : materials.length ? (
               <div className="material-list">
-                <CourseMaterial courseId={course.id} />
+                <CourseMaterial />
               </div>
             ) : (
               <Placeholder text="You're all caught up" img={CaughtUp} />

@@ -2,7 +2,7 @@ import { useEffect, useState, createContext } from "react";
 import Login from "./Components/Login/Login.jsx";
 import CoursesPage from "./Components/CoursesPage/CoursesPage.jsx";
 import DeadlinesPage from "./Components/DeadlinesPage/DeadlinesPage.jsx";
-import ForgotPassword from "./Components/ForgotPassword/ForgotPassword.jsx";
+import ForgotPassword from './Components/Forgotpassword/Forgotpassword.jsx';
 import SignUp from "./Components/Signup/Signup.jsx";
 import UserProfile from "./Components/UserProfile/UserProfile.jsx";
 import StudentList from "./Components/StudentsList/StudentList.jsx";
@@ -29,7 +29,7 @@ import Loader from "./Components/Loader/Loader.jsx";
 import AssignmentPage from "./Components/AssignmentPage/AssignmentPage.jsx";
 import ExamPage from "./Components/ExamPage/ExamPage.jsx";
 import StudentProgress from "./Components/StudentProgress/StudentProgress.jsx";
-import Front_ENV from "../Front_ENV.jsx"; // To Be Used Later
+import Front_ENV from "../Front_ENV.jsx";
 import AddMaterial from "./Components/AddMaterial/AddMaterial.jsx";
 import AddInstructor from "./Components/AddInstructor/AddInstructor.jsx";
 import InstructorsPage from "./Components/AdminInstructorsPage/AdminInstructorsPage.jsx";
@@ -366,24 +366,15 @@ function App() {
   return (
     <CurrentUserContext.Provider
       value={{
-        currentUser,
-        setCurrentUser,
-        isAuthenticated,
-        showMessage,
-        confirmationToast,
-        fetchCourses,
-        fetchAll,
-        setIsAuthenticated,
-        courses,
-        setCourses,
-        setLoading,
-        progress,
-        instructorsList,
-        setAssignments,
-        setExams,
-        setMaterials,
-        materials,
-        studentsList,
+        currentUser, setCurrentUser,
+        isAuthenticated, showMessage,
+        confirmationToast, fetchCourses,
+        fetchAll, setIsAuthenticated,
+        courses, setCourses, loading,
+        setLoading, progress,
+        instructorsList, setAssignments,
+        setExams, setMaterials,
+        materials, studentsList,
       }}
     >
       <div className="body-container">
@@ -468,15 +459,9 @@ function App() {
                 element={<StudentProgress />}
               />{" "}
               <Route path="/ViewProgress" element={<StudentProgress />} />
-              <Route path="/ViewPdf/:url/:title" element={<PdfViewer />} />
               <Route path="/AddInstructor" element={<AddInstructor />} />
               <Route path="/InstructorsPage" element={<InstructorsPage />} />
-              <Route
-                path="*"
-                element={
-                  <Placeholder
-                    text="Page Not Found"
-                    img={NotFoundImg}
+              <Route path="*"element={<Placeholder text="Page Not Found" img={NotFoundImg}
                     buttonText="Back To Home"
                     buttonRoute="/"
                   />

@@ -9,12 +9,13 @@ import "./AssignmentPage.css";
 import { set } from "date-fns";
 import {getCookie} from "../Cookie/Cookie.jsx";
 import {Back_Origin} from '../../../Front_ENV.jsx';
-
+import PdfViewer from "../PDFViewer/PDFViewer.jsx";
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { showMessage, currentUser, setAssignments, courses } = useContext(CurrentUserContext);
   const [file, setFile] = useState(null);
+  const [viewPdf, setViewPdf] = useState(false);
   const [assignment, setAssignment] = useState({
     title: "",
     courseID: "",
@@ -98,10 +99,11 @@ const AssignmentPage = ({ assignments }) => {
     showMessage("Assignment updated successfully", false);
   };
  const SubmitAssignment= ()=>{
+     setViewPdf(false);
      navigate("/AssignmentPage", {state: {...location.state, submitMode: "submit"}})
  }
  const ViewAssignment = ()=>{
-  navigate(`ViewPdf/${assignment.document}/${assignment.title}`)
+  setViewPdf(true);
  }
  const handleFileChangePdf = (event) => {
   const selectedFile = event.target.files[0];
@@ -148,8 +150,8 @@ const AssignmentPage = ({ assignments }) => {
       maxWidth="md"
       style={{ marginTop: "2rem", position: "relative" }}
     >
-      <Card elevation={3} style={{ padding: "1.5rem", position: 'relative' }}>
-        <CardContent>
+      {!viewPdf && <Card elevation={3} style={{ padding: "1.5rem", position: 'relative' }}>
+      <CardContent>
           <Typography variant="h4" gutterBottom
                       style={!isEditing? {marginBottom: "15px"} : {}}>
             {isEditing ? (
@@ -170,7 +172,7 @@ const AssignmentPage = ({ assignments }) => {
           </Typography>
 
           {/* Assignment Information */}
-          <Table className="table table-bordered">
+           <Table className="table table-bordered">
             <thead>
               <tr>
                 <th>Field</th>
@@ -336,7 +338,7 @@ const AssignmentPage = ({ assignments }) => {
             }
           </div>
         </CardContent>
-      </Card>
+      </Card>}
     </Container>
      :
         <>
@@ -360,6 +362,12 @@ const AssignmentPage = ({ assignments }) => {
             </div>
         </>
     }
+    <>
+  
+    {viewPdf &&
+    <PdfViewer document= {assignment.document} name={assignment.title}/>
+    }
+      </>
     </>
   );
 };

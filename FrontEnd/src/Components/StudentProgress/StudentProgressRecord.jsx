@@ -1,14 +1,17 @@
 import './StudentProgress.css';
 import {useNavigate} from "react-router";
-import {Link} from "react-router-dom";
 import {useContext} from "react";
 import {CurrentUserContext} from "../../App.jsx";
 
-const StudentProgressRecord = ({record, courseName, highlighted}) => {
+const StudentProgressRecord = ({record, courseName, highlighted,setViewPdf,setViewedDocument}) => {
     const navigate = useNavigate();
     const { currentUser,courses } = useContext(CurrentUserContext);
-
+    const ViewPdf = ()=>{
+    setViewPdf(true)
+    setViewedDocument({document:record.assignmentAnswer,name:record.title})
+    }
     return (
+        <>
         <tr style={ highlighted? { background: "yellow", transition: "all 0.1s ease-in-out" }
                     : { transition: "all 0.1s ease-in-out"} }>
             <td className="stud-prog-hover-cell" style={{ paddingLeft: "15px", borderRadius: "20px 0 0 20px" }}>
@@ -40,14 +43,15 @@ const StudentProgressRecord = ({record, courseName, highlighted}) => {
             </td>
              {currentUser.role === "Instructor" &&
             <td>
-                {record.assignmentAnswer?<Link to={`/ViewPdf/${record.assignmentAnswer}/Assignment`}>View</Link>:null}
+                {record.assignmentAnswer?<button className="view-pdf-button" onClick={ViewPdf}>View</button>:null}
             </td>}
-            <td style={{ borderRadius: "0 20px 20px 0" }}>
-                {(record.isSubmitted) && !isNaN(record.grade) ?
+            <td style={{ borderRadius: "0 20px 20px 0" }} >
+                {(record.isSubmitted && record.isExam) && !isNaN(record.grade) ?
                     parseFloat(record.grade).toFixed(2) : "-"}
             </td>
            
         </tr>
+        </>
     )
 }
 
