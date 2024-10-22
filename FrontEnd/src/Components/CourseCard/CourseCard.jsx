@@ -85,7 +85,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
             return (
                 <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                     <div className="card-header course-card-header-img">
-                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
+                        <img src={image? `${image}` : CoursePlaceHolder } alt="Course"/>
                     </div>
                     <div className="card-body" style={enrolled? {position: 'unset'} : {position: 'relative'}}>
                         <div className="card-header-container"
@@ -127,7 +127,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
             return (
                 <div className="card course-card card-shadow" key={id}>
                     <div className="card-header course-card-header-img">
-                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
+                        <img src={image? `${image}` : CoursePlaceHolder } alt="Course"/>
                     </div>
                     <div className="card-body" style={{position: 'unset'}}>
                         <div className="card-header-container"
@@ -168,7 +168,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
         else return (
                 <div className="card course-card card-shadow" key={id}>
                     <div className="card-header position-relative course-card-header-img">
-                        <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course" />
+                        <img src={image? `${image}` : CoursePlaceHolder } alt="Course" />
                         <div className="course-icons admin-icons">
                             <FontAwesomeIcon
                                 icon={faEdit}
@@ -209,7 +209,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
         return (
             <div className="card course-card card-shadow" key={id} style={{minHeight: "405px"}}>
                 <div className="card-header course-card-header-img">
-                    <img src={image? `${Front_ENV.Back_Origin}/${image}` : CoursePlaceHolder } alt="Course"/>
+                    <img src={image? `${image}` : CoursePlaceHolder } alt="Course"/>
                 </div>
                 <div className="card-body">
                     <div className="card-header-container">

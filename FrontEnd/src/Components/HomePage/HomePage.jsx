@@ -11,7 +11,7 @@ import CoursePlaceHolder from "../../assets/Course_Placeholder.svg";
 const CarouselItemDiv = styled.div`
       &::before {
           content: "";
-          background-image: url(${props => props.$image? `${Front_ENV.Back_Origin}/${props.$image}` : CoursePlaceHolder});
+          background-image: url(${props => props.$image? `${props.$image}` : CoursePlaceHolder});
           background-size: cover;
           background-repeat: no-repeat;
           background-position: center;
@@ -45,7 +45,7 @@ const HomePage = () => {
                   .map((course) => {
                     return (
                         <Carousel.Item key={course.id}>
-                          <CarouselItemDiv $image={course.image ? course.image.replaceAll("\\", "/") : ""}
+                          <CarouselItemDiv $image={course.image ? course.image : ""}
                                            className="background-image-item w-100"></CarouselItemDiv>
                           <div className="CarouselText">
                             <h3>{course.title}</h3>

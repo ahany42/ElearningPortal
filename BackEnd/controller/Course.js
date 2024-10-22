@@ -3,20 +3,22 @@ const multer = require('multer');
 const { v4 } = require('uuid');
 const path = require("path");
 const fs = require("fs");
+const { put, del, list} = require("@vercel/blob");
+const url = require('url'); // To parse the URL if needed
 
 // Configure multer for image uploads
-const storage = multer.diskStorage({
-       destination: function (req, file, cb) {
-              cb(null, 'static/courses'); // Folder where images will be stored
-       },
-       filename: function (req, file, cb) {
-              let fileName = file.originalname;
-              if (/^(\d+(?:_\d+)*)_/.test(file.originalname)) {
-                     fileName = file.originalname.replace(/^(\d+(?:_\d+)*)_/, '');
-              }
-              cb(null, `${Date.now()}_${fileName.replaceAll(' ', '_')}`); // Naming the file
-       }
-});
+// const storage = multer.diskStorage({
+//        destination: function (req, file, cb) {
+//               cb(null, 'static/courses'); // Folder where images will be stored
+//        },
+//        filename: function (req, file, cb) {
+//               let fileName = file.originalname;
+//               if (/^(\d+(?:_\d+)*)_/.test(file.originalname)) {
+//                      fileName = file.originalname.replace(/^(\d+(?:_\d+)*)_/, '');
+//               }
+//               cb(null, `${Date.now()}_${fileName.replaceAll(' ', '_')}`); // Naming the file
+//        }
+// });
 
 // File filter to only accept PDFs
 const fileFilter = (req, file, cb) => {
@@ -33,7 +35,6 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-       storage: storage,
        fileFilter: fileFilter,
        limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
@@ -44,18 +45,18 @@ class CourseController {
               try {
                      // Image handling added here
                      const { title, desc, hours, instructorId } = req.body;
-                     const image = req.file ? req.file.path : null; // Store image path from multer
+                     const image = req.file ? req.imageURL : null; // Store image path from multer
                      const id = v4();
 
                      const user =
                          await User.findOne({ id: instructorId });
 
                      if (!title || !desc || !hours) {
-                            return deleteAssociateFiles(image, "All fields are required", res, next);
+                            return await deleteAssociateFiles(image, "All fields are required", res, next);
                      }
 
                      if (user && user.role.toLowerCase() !== "instructor") {
-                            return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
+                            return await deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
                      }
                      const course = await Course.create({
                             title,
@@ -136,37 +137,31 @@ class CourseController {
                      // Image handling added here
                      const { title, desc, hours, instructorId } = req.body;
                      const { courseId } = req.params;
-                     const image = req.file ? req.file.path : null; // Store image path from multer
-                     console.log(image)
+                     const image = req.file ? req.imageURL : null; // Store image path from multer
 
                      const course = await Course.findOne({ id: courseId });
                      if (!course) {
-                            return deleteAssociateFiles(image, "Invalid Course", res, next);
+                            return await deleteAssociateFiles(image, "Invalid Course", res, next);
                      }
 
                      const user =
                          await User.findOne({ id: instructorId });
 
                      if (!title || !desc || !hours) {
-                            return deleteAssociateFiles(image, "All fields are required", res, next);
+                            return await deleteAssociateFiles(image, "All fields are required", res, next);
                      }
 
                      if ( isNaN(hours) || (!isNaN(hours) && (hours < 0) )) {
-                            return deleteAssociateFiles(image, "Invalid hours", res, next);
+                            return await deleteAssociateFiles(image, "Invalid hours", res, next);
                      }
 
                      if (user && user.role.toLowerCase() !== "instructor") {
-                            return deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
+                            return await deleteAssociateFiles(image, "Invalid role of instructorId", res, next);
                      }
 
                      // Delete the old course image (file) from the file system (if it exists)
-                     if (course.image && fs.existsSync(course.image)) {
-                            fs.unlink(course.image, (err) => {
-                                   if (err) {
-                                          return deleteAssociateFiles(course.image, "Error updating course image", res, next);
-                                   }
-                            });
-                     }
+                     await deleteAssociateFiles(course.image, "Remove old course image", res, next);
+
                      const updatedCourse = await Course.findOne({ _id: course._id });
 
                      updatedCourse.title = title; updatedCourse.desc = desc;
@@ -254,14 +249,8 @@ class CourseController {
                               return res.status(200).json({error: "Invalid course"});
                        }
 
-                       // Delete the course image (file) from the file system
-                       if (course.image && fs.existsSync(course.image)) {
-                              fs.unlink(course.image, (err) => {
-                                     if (err) {
-                                            next(`WARNING IN: Delete Course Image Function => ${err}`);
-                                     }
-                              });
-                       }
+                       // Delete the old course image (file) from the file system (if it exists)
+                       await deleteAssociateFiles(course.image, "Remove old course image", res, next)
 
                        // Delete the associated exams and assignments
                        await Exam.deleteMany({courseID: course._id});
@@ -672,44 +661,48 @@ class CourseController {
 }
 
 // Function to delete associated files if error
-function deleteAssociateFiles(document, errMsg, res, next) {
-       if (document && fs.existsSync(document)) {
-              fs.unlink(document, (err) => {
-                     if (err) {
-                            next(`WARNING IN: Delete Course Image Function => ${err}`);
-                            return res.status(200).json({ error: errMsg });
-                     }
-              });
+async function deleteAssociateFiles(document, errMsg, res, next) {
+       if (document) {
+              const parsedUrl = url.parse(document); // Parses the URL to extract the path
+              const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+              let oldCourseImage = await list({prefix: fileKey});
+              // Delete the old course image (file) from the file system (if it exists)
+              if (oldCourseImage.blobs.length > 0) {
+                     await del(fileKey);
+                     return;
+              }
        }
        return res.status(200).json({ error: errMsg });
 }
 
 // Middleware to handle the file upload
-const uploadCourseImage = (req, res, next) => {
+const uploadCourseImage = async (req, res, next) => {
        try {
-
-              const uploadSingle = upload.single('image');
-
-              uploadSingle(req, res, function (err) {
-                     if (err instanceof multer.MulterError) {
-                            // Multer-specific error occurred
-                            res.status(200).json({error: err.message});
-                            next(`ERROR IN: uploadCourseImage function => ${err.message}`);
-                            return;
-                     } else if (err) {
-                            // Other errors like invalid file types
-                            res.status(200).json({error: err.message});
-                            next(`ERROR IN: uploadCourseImage function => ${err.message}`);
-                            return;
-                     }
-
+              const file = req.file || null;
+              if (!file) {
+                     req.file = null; req.imageURL = null;
                      next();
+                     return;
+              }
+              const originalFilename = file.originalname; // Get the original file name
+              let blobName = `courses/${Date.now()}_${originalFilename.replaceAll(" ", "_")}`; // Define the blob name
+
+              if (file.size > 5 * 1024 * 1024) {
+                     return res.status(200).json({ error: 'File size must be less than 5MB' });
+              }
+              // Upload the file to Vercel Blob Storage
+              let {url} = await put(blobName, file.buffer, {
+                     access: 'public', // Or 'private' based on your requirement
               });
-       } catch (e) {
-              res.status(200).json({error: e.message});
-              next(`ERROR IN: uploadCourseImage function => ${e.message}`);
+
+              req.imageURL = url; // Set the file path to the request object
+
+              next();
+       } catch (error) {
+              res.status(200).json({ error: 'Failed to upload the image' });
+              next(`ERROR IN: uploadCourseImage function => ${error.message}`);
        }
 };
 
 // Export the controller and middleware
-module.exports = { Controller: new CourseController(), uploadCourseImage };
+module.exports = { Controller: new CourseController(), uploadCourseImage, upload };
