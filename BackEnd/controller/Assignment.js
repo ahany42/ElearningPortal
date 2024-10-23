@@ -5,26 +5,28 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require("mongoose");
+const {put, list, del} = require("@vercel/blob");
+const url = require("url");
 
 // Configure multer for assignment uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'static/assignments'); // Folder where images will be stored
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
-    }
-});
-
-// Configure multer for assignments solution uploads
-const storage2 = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'static/assignments_solutions'); // Folder where images will be stored
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, '/var/task/BackEnd/static/assignments'); // Folder where images will be stored
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
+//     }
+// });
+//
+// // Configure multer for assignments solution uploads
+// const storage2 = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, '/var/task/BackEnd/static/assignments_solutions'); // Folder where images will be stored
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
+//     }
+// });
 
 // File filter to only accept PDFs
 const fileFilter = (req, file, cb) => {
@@ -40,13 +42,11 @@ const fileFilter = (req, file, cb) => {
 };
 
 const assignment_doc_upload = multer({
-    storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
 
 const assignment_answer_upload = multer({
-    storage: storage2,
     fileFilter: fileFilter,
     limits: { fileSize: 1024 * 1024 * 50 }, // Limit file size to 50MB
 });
@@ -58,7 +58,7 @@ class AssignmentController {
     async createAssignment(req, res, next) {
         try {
             const { courseID, startDate, duration, endDate, title, description } = req.body; // courseID as v4 uuid
-            const document = req.file ? req.file.path : null; // Store document path from multer
+            const document = req.file ? req.pdfURL : null; // Store document path from multer
 
             // Validate input
             if (!courseID || !startDate || !duration || !endDate || !title) {
@@ -138,7 +138,7 @@ class AssignmentController {
     async solveAssignment(req, res, next) {
         try {
             const { assignmentID } = req.body; // assignmentID as v4 uuid
-            const document = req.file ? req.file.path : null; // Store document path from multer
+            const document = req.file ? req.pdfURL : null; // Store document path from multer
             const student = req.user;
             const user = await User.findOne({ id: student.id });
 
@@ -213,16 +213,15 @@ class AssignmentController {
                 return res.status(200).json({ error: "You have not submitted this assignment" });
             }
 
-            // Delete the student's answer file from the file system
-            const filePath = existingAnswer.document ? path.join(__dirname, '..', existingAnswer.document) : null;
-            if (filePath && fs.existsSync(filePath)) {
-                fs.unlink(filePath, async (err) => {
-                    if (err) {
-                        next(`WARNING IN: Delete Assignment Answer Function => ${err}`);
-                        await AssignmentAnswer.findOneAndDelete({ _id: existingAnswer._id });
-                        return res.status(201).json({ message: "Assignment answer deleted successfully" });
-                    }
-                });
+            if (existingAnswer.document) {
+                const parsedUrl = url.parse(existingAnswer.document); // Parses the URL to extract the path
+                const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+                let oldCourseImage = await list({prefix: fileKey});
+                // Delete the old course image (file) from the file system (if it exists)
+                if (oldCourseImage.blobs.length > 0) {
+                    await del(fileKey);
+                    return;
+                }
             }
 
             // Delete the student's answer from the database
@@ -813,14 +812,14 @@ class AssignmentController {
             }
 
             return res.status(201).json({data: {
-                id: assignment.id,
-                title: assignment.title,
-                startDate: assignment.startDate,
-                endDate: assignment.endDate,
-                duration: assignment.duration,
-                document: assignment.document,
-                courseID: assignment.courseID.id
-            }});
+                    id: assignment.id,
+                    title: assignment.title,
+                    startDate: assignment.startDate,
+                    endDate: assignment.endDate,
+                    duration: assignment.duration,
+                    document: assignment.document,
+                    courseID: assignment.courseID.id
+                }});
         } catch (err) {
             res.status(200).json({ error: "Unexpected Error Occurred" });
             next(`ERROR IN: Get Assignment By ID Function => ${err}`);
@@ -832,7 +831,7 @@ class AssignmentController {
         try {
             const assignmentID = req.params.id; // assignmentID as v4 uuid
             const { title, startDate, endDate, duration, description } = req.body;
-            const document = req.file ? req.file.path : null; // Store document path from multer
+            const document = req.file ? req.pdfURL : null; // Store document path from multer
 
             // Find the assignment
             const assignment = await Assignment.findOne({ id: assignmentID });
@@ -845,13 +844,15 @@ class AssignmentController {
                 return deleteAssociateFiles(document, "All fields are required", res, next);
             }
 
-            // Delete the old assignment document (file) from the file system (if it exists)
-            if (assignment.document && fs.existsSync(assignment.document)) {
-                fs.unlink(assignment.document, (err) => {
-                    if (err) {
-                        return deleteAssociateFiles(document, "Error updating assignment", res, next);
-                    }
-                });
+            if (assignment.document) {
+                const parsedUrl = url.parse(assignment.document); // Parses the URL to extract the path
+                const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+                let oldCourseImage = await list({prefix: fileKey});
+                // Delete the old course image (file) from the file system (if it exists)
+                if (oldCourseImage.blobs.length > 0) {
+                    await del(fileKey);
+                    return;
+                }
             }
 
             // Update assignment fields
@@ -872,7 +873,7 @@ class AssignmentController {
     async updateAssignmentAnswer(req, res, next) {
         try {
             const assignmentID = req.params.id; // assignmentID as v4 uuid
-            const document = req.file ? req.file.path : null; // Store document path from multer
+            const document = req.file ? req.pdfURL : null; // Store document path from multer
 
             if (req.user.role.toLowerCase() === "student") {
                 // Find the assignment
@@ -899,12 +900,15 @@ class AssignmentController {
                     return deleteAssociateFiles(document, "Assignment answer not found", res, next);
                 }
 
-                if (assignmentAnswer.document && fs.existsSync(assignmentAnswer.document)) {
-                    fs.unlink(assignmentAnswer.document, (err) => {
-                        if (err) {
-                            return deleteAssociateFiles(document, "Error updating assignment answer", res, next);
-                        }
-                    });
+                if (assignmentAnswer.document) {
+                    const parsedUrl = url.parse(assignmentAnswer.document); // Parses the URL to extract the path
+                    const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+                    let oldCourseImage = await list({prefix: fileKey});
+                    // Delete the old course image (file) from the file system (if it exists)
+                    if (oldCourseImage.blobs.length > 0) {
+                        await del(fileKey);
+                        return;
+                    }
                 }
 
                 // Update assignment answer document (For both Instructor and Student)
@@ -935,21 +939,17 @@ class AssignmentController {
                 return res.status(200).json({ error: "Assignment not found" });
             }
 
-            // Get the path to the assignment document (file)
-            const filePath = assignment.document ? path.join(__dirname, '..', assignment.document) : null;
-
-            // If a document is associated with the assignment, delete the file from the file system
-            if (filePath && fs.existsSync(filePath)) {
-                fs.unlink(filePath, async (err) => {
-                    if (err) {
-                        next(`WARNING IN: Delete Assignment Function => ${err}`);
-                        // CREATE FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
-                        await deleteAssignmentFiles(assignment._id);
-                        await Assignment.findOneAndDelete({ id: assignmentID });
-                        return res.status(201).json({ message: `Assignment (${assignment.title}) deleted successfully` });
-                    }
-                });
+            if (assignment.document) {
+                const parsedUrl = url.parse(assignment.document); // Parses the URL to extract the path
+                const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+                let oldCourseImage = await list({prefix: fileKey});
+                // Delete the old course image (file) from the file system (if it exists)
+                if (oldCourseImage.blobs.length > 0) {
+                    await del(fileKey);
+                    return;
+                }
             }
+
             // CREATE FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
             await deleteAssignmentFiles(assignment._id);
             await Assignment.findOneAndDelete({ id: assignmentID });
@@ -963,98 +963,101 @@ class AssignmentController {
 
 // FUNCTION TO DELETE THE FILE & ALL ANSWERS RELATED TO THE ASSIGNMENT
 async function deleteAssignmentFiles(assignmentID) {
-    const assignmentAnswers = await AssignmentAnswer.find({ assignmentID: assignmentID });
-    let errors = [];
+    const assignmentAnswers =
+        await AssignmentAnswer.find({ assignmentID: assignmentID });
 
     // Delete all answers related to the assignment
     for (const answer of assignmentAnswers) {
         await AssignmentAnswer.findOneAndDelete({ _id: answer._id });
 
-        // Get the path to the assignment answer document (file)
-        const filePath = answer.document ? path.join(__dirname, '..', answer.document) : null;
-
-        // If a document is associated with the assignment answer, delete the file from the file system
-        if (filePath && fs.existsSync(filePath)) {
-            fs.unlink(filePath, async (err) => {
-                if (err) {
-                    errors.push(`WARNING IN: Delete Assignment File Function => ${err}`);
-                }
-            });
+        if (answer.document) {
+            const parsedUrl = url.parse(answer.document); // Parses the URL to extract the path
+            const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+            let oldAssignmentImage = await list({prefix: fileKey});
+            // Delete the old assignment answer image (file) from the file system (if it exists)
+            if (oldAssignmentImage.blobs.length > 0) {
+                await del(fileKey);
+                return;
+            }
         }
     }
 
-    if (errors.length > 0) {
-        return {error: errors };
-    } else {
-        return {message: "Assignment file and all related answers deleted successfully"};
-    }
+    return {message: "Assignment file and all related answers deleted successfully"};
 }
 
 // Function to delete associated files if error
-function deleteAssociateFiles(document, errMsg, res, next) {
-    if (document && fs.existsSync(document)) {
-        fs.unlink(document, (err) => {
-            if (err) {
-                next(`WARNING IN: Delete Assignment Answer Function => ${err}`);
-                return res.status(200).json({ error: errMsg });
-            }
-        });
+async function deleteAssociateFiles(document, errMsg, res, next) {
+    if (document) {
+        const parsedUrl = url.parse(document); // Parses the URL to extract the path
+        const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
+        let oldCourseImage = await list({prefix: fileKey});
+        // Delete the old course image (file) from the file system (if it exists)
+        if (oldCourseImage.blobs.length > 0) {
+            await del(fileKey);
+            return;
+        }
     }
     return res.status(200).json({ error: errMsg });
 }
 
 // Middleware to handle the file upload
-const uploadAssignmentDoc = (req, res, next) => {
+const uploadAssignmentDoc = async (req, res, next) => {
     try {
-
-        const uploadSingle = assignment_doc_upload.single('pdf');
-
-        uploadSingle(req, res, function (err) {
-            if (err instanceof multer.MulterError) {
-                // Multer-specific error occurred
-                res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadAssignmentDoc function => ${err.message}`);
-                return;
-            } else if (err) {
-                // Other errors like invalid file types
-                res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadAssignmentDoc function => ${err.message}`);
-                return;
-            }
-
+        const file = req.file || null;
+        if (!file) {
+            req.file = null; req.pdfURL = null;
             next();
+            return;
+        }
+        const originalFilename = file.originalname; // Get the original file name
+        let pdfName = `assignments/${Date.now()}_${originalFilename.replaceAll(" ", "_")}`; // Define the blob name
+
+        if (file.size > 50 * 1024 * 1024) {
+            return res.status(200).json({ error: 'File size must be less than 5MB' });
+        }
+        // Upload the file to Vercel Blob Storage
+        let {url} = await put(pdfName, file.buffer, {
+            access: 'public', // Or 'private' based on your requirement
         });
-    } catch (e) {
-        res.status(200).json({error: e.message});
-        next(`ERROR IN: uploadAssignmentDoc function => ${e.message}`);
+
+        req.pdfURL = url; // Set the file path to the request object
+
+        next();
+    } catch (error) {
+        res.status(200).json({ error: 'Failed to upload the pdf' });
+        next(`ERROR IN: uploadAssignmentDoc function => ${error.message}`);
     }
 };
 
 // Middleware to handle the file upload
-const uploadAssignmentAnswerDoc = (req, res, next) => {
+const uploadAssignmentAnswerDoc = async (req, res, next) => {
     try {
-        const uploadSingle = assignment_answer_upload.single('pdf');
-
-        uploadSingle(req, res, function (err) {
-            if (err instanceof multer.MulterError) {
-                // Multer-specific error occurred
-                res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadAssignmentAnswerDoc function => ${err.message}`);
-                return;
-            } else if (err) {
-                // Other errors like invalid file types
-                res.status(200).json({error: err.message});
-                next(`ERROR IN: uploadAssignmentAnswerDoc function => ${err.message}`);
-                return;
-            }
-
+        const file = req.file || null;
+        if (!file) {
+            req.file = null; req.pdfURL = null;
             next();
+            return;
+        }
+        const originalFilename = file.originalname; // Get the original file name
+        let pdfName = `assignments_solutions/${Date.now()}_${originalFilename.replaceAll(" ", "_")}`; // Define the blob name
+
+        if (file.size > 50 * 1024 * 1024) {
+            return res.status(200).json({ error: 'File size must be less than 5MB' });
+        }
+        // Upload the file to Vercel Blob Storage
+        let {url} = await put(pdfName, file.buffer, {
+            access: 'public', // Or 'private' based on your requirement
         });
-    } catch (e) {
-        res.status(200).json({error: e.message});
-        next(`ERROR IN: uploadAssignmentAnswerDoc function => ${e.message}`);
+
+        req.pdfURL = url; // Set the file path to the request object
+
+        next();
+    } catch (error) {
+        res.status(200).json({ error: 'Failed to upload the pdf' });
+        next(`ERROR IN: uploadAssignmentDoc function => ${error.message}`);
     }
 };
 
 // Export the controller instance
-module.exports = { Controller: new AssignmentController(), uploadAssignmentDoc, uploadAssignmentAnswerDoc };
+module.exports = { Controller: new AssignmentController(),
+    uploadAssignmentDoc, uploadAssignmentAnswerDoc, assignment_doc_upload, assignment_answer_upload };

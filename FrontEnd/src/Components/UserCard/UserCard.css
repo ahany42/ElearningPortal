@@ -43,6 +43,9 @@
 .user-details{
     display: flex;
 }
+.user-details h6, .user-details-container {
+    text-align: center;
+}
 .progress-button{
     position:absolute;
     right:10px;

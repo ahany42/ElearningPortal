@@ -319,7 +319,7 @@ const CourseDetails = () => {
               <Loader />
             ) : materials.length ? (
               <div className="material-list">
-                <CourseMaterial />
+                <CourseMaterial courseId={course.id} />
               </div>
             ) : (
               <Placeholder text="You're all caught up" img={CaughtUp} />

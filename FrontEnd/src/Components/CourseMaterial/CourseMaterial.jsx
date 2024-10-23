@@ -6,7 +6,6 @@ import Placeholder from "../Placeholder/Placeholder.jsx";
 import NoMaterialsImg from "../../assets/Student.svg";
 
 const CourseMaterial = ({ courseId }) => {
-  console.log(courseId);
   const { materials } = useContext(CurrentUserContext);
   return (
     <>

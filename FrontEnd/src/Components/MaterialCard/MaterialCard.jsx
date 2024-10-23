@@ -16,7 +16,6 @@ import { jwtDecode } from "jwt-decode";
 import Front_ENV, { Back_Origin } from "../../../Front_ENV.jsx";
 
 const MaterialCard = ({ material, courseId }) => {
-  console.log(courseId);
   const { showMessage, materials, setExams, confirmationToast, currentUser } =
     useContext(CurrentUserContext);
   const navigate = useNavigate();
@@ -123,7 +122,7 @@ const MaterialCard = ({ material, courseId }) => {
 
   const editExamHandler = async () => {
     navigate(`/examQuestions/${material.id}`, {
-      state: { courseID: courseId },
+      state: { courseID: courseId, materialCard: true },
     });
   };
 

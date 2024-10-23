@@ -152,6 +152,8 @@ const ExamQuestions = () => {
     } catch (error) {}
   };
 
+  console.log(route.state)
+
   return (
     <>
       <div className="buttons-container">
@@ -159,7 +161,11 @@ const ExamQuestions = () => {
           className="goBackBtn"
           style={{ top: "12px", left: "60px" }}
           onClick={() => {
-            navigate(`/ExamPage`, { state: { eid: examId } });
+            if (route.state?.materialCard) {
+              navigate(`/CourseDetails/${route.state.courseID}`, {state: {courseID: route.state.courseID}});
+            } else {
+              navigate(`/ExamPage`, { state: { eid: examId } });
+            }
           }}
         >
           <svg
@@ -181,7 +187,7 @@ const ExamQuestions = () => {
             style={{ top: "12px", right: "60px" }}
             onClick={() => {
               navigate(`/AddExam/${courseId}`, {
-                state: { activeStep: 1, eid: exam.ExamTitle },
+                state: { activeStep: 1, eid: examId, mode: "editQuestion", cid: courseId, materialCard: true},
               });
             }}
           >

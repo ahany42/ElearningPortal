@@ -9,7 +9,6 @@ import "./AddExam.css";
 
 const AddExam = () => {
   const { id } = useParams();
-  const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [examTitleValue, setExamTitleValue] = useState();
   const navigate = useNavigate();
@@ -27,13 +26,26 @@ const AddExam = () => {
       state: { activeStep: --route.state.activeStep },
     });
   };
+  console.log(route.state)
 
   return (
     <Box sx={{ width: "100%" }}>
       <button
         className="goBackBtn"
         style={{ top: "5px" }}
-        onClick={() => navigate(`/AddMaterial/${id}`)}
+        onClick={() => {
+            if (route.state?.materialCard) {
+                navigate(`/examQuestions/${route.state.eid}`, {
+                    state: { courseID: route.state.cid, materialCard: true },
+                });
+            } else if (route.state?.mode) {
+                navigate(`/examQuestions/${route.state.eid}`, {
+                    state: { courseID: route.state.cid },
+                });
+            } else {
+                navigate(`/AddMaterial/${id}`)
+            }
+        }}
       >
         <svg
           height="16"
