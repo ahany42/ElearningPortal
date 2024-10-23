@@ -66,7 +66,7 @@ const CourseCard = ({ id, title, image, desc, hours, showEditFormHandler,
                 },
                 body: JSON.stringify({
                     userId: currentUser.id,
-                    courseId: id,
+                    courseId: id ,
                     duration: hours
                 })})
                 .then(response => response.json());
