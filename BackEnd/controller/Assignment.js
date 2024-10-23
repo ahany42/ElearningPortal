@@ -159,6 +159,7 @@ class AssignmentController {
             }
 
             // Check if the student has already submitted an answer for this assignment
+            console.log("Hii")
             const existingAnswer =
                 await AssignmentAnswer.findOne({ assignmentID: assignment._id, studentID: user._id });
             if (existingAnswer) {

@@ -13,7 +13,7 @@ import { CurrentUserContext } from "../../App";
 import { getCookie, updateCookie } from "../Cookie/Cookie.jsx";
 import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import './UserProfile.css'
+import './UserProfile.css';
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -47,7 +47,7 @@ const UserProfile = () => {
     }
     setTimeout(async () => {
       setLoading(true);
-      await fetch(`${Back_Origin}updateUser/${currentUser.id}`, {
+      await fetch(`${Back_Origin}/updateUser/${currentUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

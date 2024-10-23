@@ -8,6 +8,7 @@ const {
   Instructor_Course,
 } = require("../db/Database");
 const { v4: uuidv4 } = require("uuid");
+
 async function findCOurseIdByTitle(title) {
   return Course.findOne({ title: title }).then((course) => {
     if (!course) return null;

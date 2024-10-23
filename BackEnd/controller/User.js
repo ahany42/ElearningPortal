@@ -262,7 +262,7 @@ module.exports.forgotPassword = async (req, res, next) => {
     await user.save();
 
     // Construct the password reset URL
-    const resetUrl = `http://localhost:7000/resetPassword/?token=${resetToken}`; // Change localhost to your actual frontend URL
+    const resetUrl = `https://elearning-portal-bice.vercel.app/resetPassword/?token=${resetToken}`;
 
     if (isedit) {
         return res.status(201).json({ data: { resetToken } });
