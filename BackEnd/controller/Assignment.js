@@ -8,26 +8,6 @@ const mongoose = require("mongoose");
 const {put, list, del} = require("@vercel/blob");
 const url = require("url");
 
-// Configure multer for assignment uploads
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, '/var/task/BackEnd/static/assignments'); // Folder where images will be stored
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
-//     }
-// });
-//
-// // Configure multer for assignments solution uploads
-// const storage2 = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, '/var/task/BackEnd/static/assignments_solutions'); // Folder where images will be stored
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, `${Date.now()}_${file.originalname.replaceAll(' ', '_')}`); // Naming the file
-//     }
-// });
-
 // File filter to only accept PDFs
 const fileFilter = (req, file, cb) => {
     const filetypes = /pdf/;
@@ -159,7 +139,6 @@ class AssignmentController {
             }
 
             // Check if the student has already submitted an answer for this assignment
-            console.log("Hii")
             const existingAnswer =
                 await AssignmentAnswer.findOne({ assignmentID: assignment._id, studentID: user._id });
             if (existingAnswer) {
@@ -217,11 +196,10 @@ class AssignmentController {
             if (existingAnswer.document) {
                 const parsedUrl = url.parse(existingAnswer.document); // Parses the URL to extract the path
                 const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-                let oldCourseImage = await list({prefix: fileKey});
+                let oldAssignmentDoc = await list({prefix: fileKey});
                 // Delete the old course image (file) from the file system (if it exists)
-                if (oldCourseImage.blobs.length > 0) {
-                    await del(fileKey);
-                    return;
+                if (oldAssignmentDoc.blobs.length > 0) {
+                    await del(oldAssignmentDoc.blobs[0].url);
                 }
             }
 
@@ -848,11 +826,10 @@ class AssignmentController {
             if (assignment.document) {
                 const parsedUrl = url.parse(assignment.document); // Parses the URL to extract the path
                 const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-                let oldCourseImage = await list({prefix: fileKey});
+                let oldAssignmentDoc = await list({prefix: fileKey});
                 // Delete the old course image (file) from the file system (if it exists)
-                if (oldCourseImage.blobs.length > 0) {
-                    await del(fileKey);
-                    return;
+                if (oldAssignmentDoc.blobs.length > 0) {
+                    await del(oldAssignmentDoc.blobs[0].url);
                 }
             }
 
@@ -904,11 +881,10 @@ class AssignmentController {
                 if (assignmentAnswer.document) {
                     const parsedUrl = url.parse(assignmentAnswer.document); // Parses the URL to extract the path
                     const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-                    let oldCourseImage = await list({prefix: fileKey});
+                    let oldAssignmentDoc = await list({prefix: fileKey});
                     // Delete the old course image (file) from the file system (if it exists)
-                    if (oldCourseImage.blobs.length > 0) {
-                        await del(fileKey);
-                        return;
+                    if (oldAssignmentDoc.blobs.length > 0) {
+                        await del(oldAssignmentDoc.blobs[0].url);
                     }
                 }
 
@@ -943,11 +919,10 @@ class AssignmentController {
             if (assignment.document) {
                 const parsedUrl = url.parse(assignment.document); // Parses the URL to extract the path
                 const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-                let oldCourseImage = await list({prefix: fileKey});
+                let oldAssignmentDoc = await list({prefix: fileKey});
                 // Delete the old course image (file) from the file system (if it exists)
-                if (oldCourseImage.blobs.length > 0) {
-                    await del(fileKey);
-                    return;
+                if (oldAssignmentDoc.blobs.length > 0) {
+                    await del(oldAssignmentDoc.blobs[0].url);
                 }
             }
 
@@ -974,11 +949,10 @@ async function deleteAssignmentFiles(assignmentID) {
         if (answer.document) {
             const parsedUrl = url.parse(answer.document); // Parses the URL to extract the path
             const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-            let oldAssignmentImage = await list({prefix: fileKey});
+            let oldAssignmentDoc = await list({prefix: fileKey});
             // Delete the old assignment answer image (file) from the file system (if it exists)
-            if (oldAssignmentImage.blobs.length > 0) {
-                await del(fileKey);
-                return;
+            if (oldAssignmentDoc.blobs.length > 0) {
+                await del(oldAssignmentDoc.blobs[0].url);
             }
         }
     }
@@ -988,14 +962,14 @@ async function deleteAssignmentFiles(assignmentID) {
 
 // Function to delete associated files if error
 async function deleteAssociateFiles(document, errMsg, res, next) {
+
     if (document) {
         const parsedUrl = url.parse(document); // Parses the URL to extract the path
         const fileKey = parsedUrl.pathname.replace(/^\/+/, ''); // Removes leading slashes from the path
-        let oldCourseImage = await list({prefix: fileKey});
+        let oldAssignmentDoc = await list({prefix: fileKey});
         // Delete the old course image (file) from the file system (if it exists)
-        if (oldCourseImage.blobs.length > 0) {
-            await del(fileKey);
-            return;
+        if (oldAssignmentDoc.blobs.length > 0) {
+            await del(oldAssignmentDoc.blobs[0].url);
         }
     }
     return res.status(200).json({ error: errMsg });

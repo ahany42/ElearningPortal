@@ -668,8 +668,7 @@ async function deleteAssociateFiles(document, errMsg, res, next) {
               let oldCourseImage = await list({prefix: fileKey});
               // Delete the old course image (file) from the file system (if it exists)
               if (oldCourseImage.blobs.length > 0) {
-                     await del(fileKey);
-                     return;
+                     await del(oldCourseImage.blobs[0].url);
               }
        }
        return res.status(200).json({ error: errMsg });

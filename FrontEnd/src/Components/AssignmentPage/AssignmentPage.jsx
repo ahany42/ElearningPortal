@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import {useState, useEffect, useContext} from "react";
 import {Container,Card,CardContent,Typography,Button,Table,TextField} from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Select, MenuItem } from "@mui/material";
@@ -11,6 +11,7 @@ import {getCookie} from "../Cookie/Cookie.jsx";
 import {Back_Origin} from '../../../Front_ENV.jsx';
 import PdfViewer from "../PDFViewer/PDFViewer.jsx";
 import Loader from "../Loader/Loader.jsx";
+
 const AssignmentPage = ({ assignments }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -117,12 +118,12 @@ const AssignmentPage = ({ assignments }) => {
 };
  const handleSubmitPdf = async (event) => {
   event.preventDefault();
-  setLoader(true);
   if (!file) {
-    showMessage("Please Attach PDF File",true);
-    return;
+      showMessage("Please Attach PDF File",true);
+      return;
   }
-  const formData = new FormData();
+ setLoader(true);
+ const formData = new FormData();
   formData.append('assignmentID', assignment.id);
   formData.append('pdf',file);
   try {
@@ -137,8 +138,7 @@ const AssignmentPage = ({ assignments }) => {
     if(data.error){
         setLoader(false);
         showMessage(data.error,true);
-        setFile("")
-        document.getElementById("pdfInput").value = ""
+        setFile("");
     }
     else{
         setLoader(false);
@@ -365,7 +365,7 @@ const AssignmentPage = ({ assignments }) => {
                 <div className="pdf-upload-container mt-5">
                     <h3>Upload PDF</h3>
                     <form onSubmit={handleSubmitPdf}>
-                        <input type="file" accept="application/pdf" onChange={handleFileChangePdf} id="pdfInput"/>
+                        <input type="file" accept="application/pdf" onChange={handleFileChangePdf}/>
                         <button type="submit">Upload</button>
                     </form>
                     {file && <p>Selected file: {file.name}</p>}
